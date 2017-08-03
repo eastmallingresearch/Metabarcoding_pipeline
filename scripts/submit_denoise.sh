@@ -6,7 +6,7 @@
 DATA=$1
 OUT=$2
 
-usearch9 -unoise $DATA -tabbedout ${OUT}.txt -fastaout ${OUT}.fa
+usearch -unoise $DATA -tabbedout ${OUT}.txt -fastaout ${OUT}.fa
 perl -pi -e 's/uniq.*/OTU . ++$n/ge' ${OUT}.fa
 
 

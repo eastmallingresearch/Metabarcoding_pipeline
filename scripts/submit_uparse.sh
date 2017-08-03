@@ -3,15 +3,16 @@
 #$ -cwd
 #$ -l virtual_free=4G
 
-FILTDIR=$1
-OUTDIR=$2
+OUTDIR=$1/$2
 PREFIX=$3
+FILTDIR=$OUTDIR/$PREFIX/filtered
 SL=$4
 SR=$5
+MINSIZE=${6:-2}
 
 for SCRIPT_DIR; do true; done
 
-cd $OUTDIR
+cd $TMP
 
 #### Concatenate files
 cat ${FILTDIR}/*.fa > ${PREFIX}.temp.fa
@@ -26,9 +27,7 @@ awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}'
 rm ${PREFIX}.fa
 
 #### Clustering (Cluster dereplicated seqeunces and produce OTU fasta (also filters for chimeras))
-usearch8.1 -cluster_otus ${PREFIX}.sorted.fasta -otus ${PREFIX}.otus.fa -uparseout ${PREFIX}.out.up -relabel OTU -minsize 2
+usearch8.1 -cluster_otus ${PREFIX}.sorted.fasta -otus ${PREFIX}.otus.$MINSIZE.fa -uparseout ${PREFIX}.out.$MINSIZE.up -relabel OTU -minsize $MINSIZE
 rm ${PREFIX}.sorted.fasta
 
-#### Assign Taxonomy
-#usearch8.1 -utax ${PREFIX}.otus.fa -db $SCRIPT_DIR/../taxonomies/utax/${PREFIX}_ref.udb -strand both -utaxout ${PREFIX}.reads.utax -rdpout ${PREFIX}.rdp -alnout ${PREFIX}.aln.txt
-#cat ${PREFIX}.rdp|$SCRIPT_DIR/mod_taxa.pl > ${PREFIX}.taxa 
+cp * $OUTDIR/.
