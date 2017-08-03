@@ -13,13 +13,14 @@ RUN=.
 mkdir -p $PROJECT_FOLDER/data/$RUN/fastq
 mkdir $PROJECT_FOLDER/data/$RUN/quality
 mkdir $PROJECT_FOLDER/data/$RUN/ambiguous
-mkdir -p $PROJECT_FOLDER/data/$RUN/16S/fastq
-mkdir $PROJECT_FOLDER/data/$RUN/16S/filtered
-mkdir $PROJECT_FOLDER/data/$RUN/16S/unfiltered
-mkdir -p $PROJECT_FOLDER/data/$RUN/ITS/fastq
-mkdir $PROJECT_FOLDER/data/$RUN/ITS/filtered
-mkdir $PROJECT_FOLDER/data/$RUN/ITS/unfiltered
-mkdir $PROJECT_FOLDER/data/$RUN/ITS/fasta
+
+RIB="BAC FUN OO NEM"
+for s in $RIB; do
+mkdir -p $PROJECT_FOLDER/data/$RUN/$s/fastq
+mkdir $PROJECT_FOLDER/data/$RUN/$s/filtered
+mkdir $PROJECT_FOLDER/data/$RUN/$s/unfiltered
+mkdir $PROJECT_FOLDER/data/$RUN/$s/fasta
+done
 ```
 
 Copy raw Fastq files (or link to) to $PROJECT_FOLDER/data/$RUN/fastq
