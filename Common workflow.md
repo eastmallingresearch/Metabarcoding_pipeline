@@ -96,6 +96,8 @@ mv $ARDERI/data/$RUN/fastq/*ambig* $ARDERI/data/$RUN/ambiguous/.
 Ambiguous data should not be used for OTU clustering/denoising, but it can be counted in the OTU tables.
 Requires converting to FASTA with approprite labels
 
-
 ### [16S workflow](../master/16S%20%20workflow.md)
 ### [ITS workflow](../master//ITS%20workflow.md)
+### [Oomycete workflow](../master/Oomycota%20workflow.md)
+### [Nematode workflow](../master/Nematoda%20workflow.md)
+### [Statistical analysis](../master/statistical%20analysis.md)
