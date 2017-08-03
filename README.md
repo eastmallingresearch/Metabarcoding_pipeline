@@ -7,14 +7,19 @@
  22. [Nematode workflow](../master/Nematoda%20workflow.md)
  24. [Statistical analysis](../master/statistical%20analysis.md)
  
+## Setup pipeline
+```shell
+MBPL=~/metabarcoding_pipeline
+```
+
 ## HMM Preperation for ITS analysis
 Using HHMMER v 3.1b2 (http://hmmer.janelia.org/)
 
 Used HMM files from ITSx (http://microbiology.se/software/itsx/)
 
 ```shell
-perl $ARDERI/metabarcoding_pipeline/scripts/cut_hmm v.3.1 $ARDERI/metabarcoding_pipeline/hmm/chopped_hmm fungi
-cd $ARDERI/metabarcoding_pipeline/hmm/chopped_hmm
+perl $MBPL/scripts/cut_hmm v.3.1 $MBPL/hmm/chopped_hmm fungi
+cd $MBPL/metabarcoding_pipeline/hmm/chopped_hmm
 cat *SSU*> t1
 cat *58S_start* > t2
 cat *58S_end* > t3
@@ -36,7 +41,7 @@ hmmpress 58s_end.hmm
 hmmpress 58s_start.hmm
 hmmpress lsu_start.hmm
 ```
-Ouptut files were copied to $METAGENOMICS/hmm. Hacked the HMM files to include a MAXL satement (required) and manually split out SSU,58S and LSU into seperate files (only fungal hmms are implemented in this pipeline)
+Ouptut files were copied to $MBPL/hmm. Hacked the HMM files to include a MAXL satement (required) and manually split out SSU,58S and LSU into seperate files (only fungal hmms are implemented in this pipeline)
 
 ## Taxonomy reference databases
 Reference databases were downloaded from:
