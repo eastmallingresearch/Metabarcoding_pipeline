@@ -1,12 +1,20 @@
 # Index 
- 1. HMM Preperation for ITS analysis  
- 2. [Common workflow](../master/Common%20workflow.md)
- 6. [16S workflow](../master/16S%20%20workflow.md)
- 18. [ITS workflow](../master/ITS%20workflow.md)
- 20. [Oomycete workflow](../master/Oomycota%20workflow.md)
+ 1. Description
+ 3. HMM Preperation for ITS analysis  
+ 5. [Common workflow](../master/Common%20workflow.md)
+ 7. [Bacterial 16S workflow](../master/16S%20%20workflow.md)
+ 18. [Fungal ITS workflow](../master/ITS%20workflow.md)
+ 20. [Oomycete ITS workflow](../master/Oomycota%20workflow.md)
  22. [Nematode workflow](../master/Nematoda%20workflow.md)
  24. [Statistical analysis](../master/statistical%20analysis.md)
  
+
+## Description
+Metabarcoding pipeline for Illumina MiSeq data. 
+This pipeline is designed to run on a Sun gridengine cluster. 
+
+Tested for bacterial 16S, fungal ITS, Oomycete ITS and Nematode amplicons
+
 ## Setup pipeline
 ```shell
 MBPL=~/metabarcoding_pipeline
