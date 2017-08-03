@@ -4,14 +4,14 @@ use strict;
 use Scalar::Util qw(looks_like_number);
 use List::Util qw(sum);;
 
-############################################################
+#################################################################################
 #
 # Demultiplex paired fastq with a set of primers
 # Unidentified sequences are written ambig output files
 #
 # Usage: demulti.pl forward_read reverse_read mismatch i1 i2 i..n i..n+1
 #
-###########################################################
+################################################################################
 
 pop(@ARGV);
 

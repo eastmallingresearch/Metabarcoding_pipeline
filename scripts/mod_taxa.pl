@@ -2,13 +2,13 @@
 
 use Switch;
 
-my $d ="unknown,100";
-my $p ="unknown,100";
-my $c ="unknown,100";
-my $o ="unknown,100";
-my $f ="unknown,100";
-my $g ="unknown,100";
-my $s ="unknown,100";
+my $d ="unknown,0";
+my $p ="unknown,0";
+my $c ="unknown,0";
+my $o ="unknown,0";
+my $f ="unknown,0";
+my $g ="unknown,0";
+my $s ="unknown,0";
 
 while(<>) {
 
@@ -28,13 +28,13 @@ while(<>) {
 	chomp $g;
 	chomp $s;
 	print"$l[0],$d,$p,$c,$o,$f,$g,$s\n";
-	$d ="unknown,100";
-	$p ="unknown,100";
-	$c ="unknown,100";
-	$o ="unknown,100";
-	$f ="unknown,100";
-	$g ="unknown,100";
-	$s ="unknown,100";
+	$d ="unknown,0";
+	$p ="unknown,0";
+	$c ="unknown,0";
+	$o ="unknown,0";
+	$f ="unknown,0";
+	$g ="unknown,0";
+	$s ="unknown,0";
 
 }
 

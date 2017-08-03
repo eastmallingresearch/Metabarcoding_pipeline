@@ -2,7 +2,7 @@
 ######################################################
 # makes a biom table from sparse data
 #
-# ./biom_maker.pl row_file col_file data_file 
+# ./otu_to_biom.pl row_file col_file data_file 
 #	
 #######################################################
 
@@ -22,7 +22,7 @@ my $shape=scalar @rows;
 $shape.=",". scalar @cols;
 
 print"{\n";
-print"\t\"id\":\"16S.otu_table.biom\",\n";
+print"\t\"id\":\"otu_table.biom\",\n";
 print"\t\"format\": \"Biological Observation Matrix 1.0\",\n";
 print"\t\"format_url\": \"http:\/\/biom-format.org\",\n";
 print"\t\"generated_by\": \"otu_to_biom\.pl_v1\",\n";
