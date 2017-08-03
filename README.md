@@ -11,7 +11,7 @@
 
 ## Description
 Metabarcoding pipeline for Illumina MiSeq data. 
-This pipeline is designed to run on a Sun gridengine cluster. 
+This pipeline is designed to run on a Sun Grid Engine cluster. 
 
 Tested for bacterial 16S, fungal ITS, Oomycete ITS and Nematode amplicons
 
