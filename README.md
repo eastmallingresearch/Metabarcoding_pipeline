@@ -3,8 +3,8 @@
  2. [Common workflow](../master/Common%20workflow.md)
  6. [16S workflow](../master/16S%20%20workflow.md)
  18. [ITS workflow](../master/ITS%20workflow.md)
- 20. [Oomycete workflow](../master/Oomycete%20workflow.md)
- 22. [Nematode workflow](../master/Nematode%20workflow.md)
+ 20. [Oomycete workflow](../master/Oomycota%20workflow.md)
+ 22. [Nematode workflow](../master/Nematoda%20workflow.md)
  24. [Statistical analysis](../master/statistical%20analysis.md)
  
 ## HMM Preperation for ITS analysis
