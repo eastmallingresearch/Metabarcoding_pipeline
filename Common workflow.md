@@ -1,6 +1,6 @@
 # Common workflow
 
-## Set up project folders.
+## Set up project folders
 
 If the project has multiple sequencing runs, RUN should be set to location where files are to be stored.
 
