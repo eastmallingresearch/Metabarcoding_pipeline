@@ -22,6 +22,8 @@ mkdir $PROJECT_FOLDER/data/$RUN/ITS/unfiltered
 mkdir $PROJECT_FOLDER/data/$RUN/ITS/fasta
 ```
 
+Copy raw Fastq files (or link to) to $PROJECT_FOLDER/data/$RUN/fastq
+
 ## Decompress files (not required by pipeline)
 
 ```shell
