@@ -6,9 +6,10 @@ If the project has multiple sequencing runs, RUN should be set to location where
 
 ```shell
 PROJECT_FOLDER=~/projects/my_project_folder
-RUN=.
+mkdir -p $PROJECT_FOLDER
 ln -s $PROJECT_FOLDER/metabarcoding_pipeline $MBPL
 
+RUN=.
 mkdir -p $PROJECT_FOLDER/data/$RUN/fastq
 mkdir $PROJECT_FOLDER/data/$RUN/quality
 mkdir $PROJECT_FOLDER/data/$RUN/ambiguous
@@ -18,11 +19,10 @@ mkdir $PROJECT_FOLDER/data/$RUN/16S/unfiltered
 mkdir -p $PROJECT_FOLDER/data/$RUN/ITS/fastq
 mkdir $PROJECT_FOLDER/data/$RUN/ITS/filtered
 mkdir $PROJECT_FOLDER/data/$RUN/ITS/unfiltered
+mkdir $PROJECT_FOLDER/data/$RUN/ITS/fasta
 ```
 
-## Decompress files
-
-The demultiplexing step will accept gz compressed files - so this step may not be necessary
+## Decompress files (not required by pipeline)
 
 ```shell
 for FILE in $PROJECT_FOLDER/data/$RUN/fastq/*.gz; do 
@@ -40,56 +40,47 @@ done
 
 ## Demultiplexing
 
-We have multiplexed 16S and ITS PCR reactions in same sequencing run which can be seperated by the index
-Run demulti.pl to demultiplex these into fungal and bacterial fastq files. Ambiguous reads are written to two (f & r) seperate files.
+Script demulti.pl demultiplexs mixed (e.g. ITS and 16S) libraries based on the primer sequence. Number of acceptable mismatches in the primer sequence can be specified (0 by default). Any sequence which has too many mismatches, or none mathching primers is removed is written to ambiguous.fq (f & r seperately). The script accepts multiple primer pairs.
 
-Running something like the below should give a good indication of what index_1 and index_2 should be - this is useful if you don't knwo what the primer sequences are and to get a feel of how many mismatches (if necesary) to use. 
+<table>
+Possible primers:
+<tr><td><td>Forward<td>Reverse</tr>
+<tr><td>Bacteria<td>CCTACGGGNGGCWGCAG<td>GACTACHVGGGTATCTAATCC</tr>
+<tr><td>Fungi<td>CTTGGTCATTTAGAGGAAGTAA<td>ATATGCTTAAGTTCAGCGGG</tr>
+<tr><td>Oomycete<td>GAAGGTGAAGTCGTAACAAGG<td>AGCGTTCTTCATCGATGTGC</tr>
+<tr><td>Nematode<td>CGCGAATRGCTCATTACAACAGC<td>GGCGGTATCTGATCGCC</tr>
+</table>
+
+If the primers are unknown, running something like the below should give a good indication of what they are. It will also give a good indication of how many mismatches (if any) to use for demulti.pl. 
 ```shell
 sed -n '2~4p' $(ls|head -n1)|grep -x "[ATCG]\+"|cut -c-16|sort|uniq| \
 tee zzexpressions.txt|xargs -I%  grep -c "^%" $(ls|head -n1) >zzcounts.txt
 ```
 
-Any sequence which has too many mismatches, or none mathching primers is removed to a file x.ambigous.fq
-
-demultiplex can accept any number of primer pairs (though for this project only 2 primer pairs are multiplexed)
-
-<table>
-Primers:
-<tr><td><td>Forward<td>Reverse</tr>
-<tr><td>16S<td>CCTACGGGNGGCWGCAG<td>GACTACHVGGGTATCTAATCC</tr>
-<tr><td>ITS<td>CTTGGTCATTTAGAGGAAGTAA<td>ATATGCTTAAGTTCAGCGGG</tr>
-<tr><td>OO<td>GAAGGTGAAGTCGTAACAAGG<td>AGCGTTCTTCATCGATGTGC</tr>
-<tr><td>Nem<td>CGCGAATRGCTCATTACAACAGC<td>GGCGGTATCTGATCGCC</tr>
-</table>
-
-
 ```shell
-#bacteria and fungi
+# e.g. for bacteria and fungi
 P1F=CCTACGGGNGGCWGCAG
 P1R=GACTACHVGGGTATCTAATCC
 P2F=CTTGGTCATTTAGAGGAAGTAA
 P2R=ATATGCTTAAGTTCAGCGGG
 
 $PROJECT_FOLDER/mbpl/scripts/PIPELINE.sh -c demultiplex \
-	"$PROJECT_FOLDER/data/$RUN/fastq/*_R1_*" 0 \
-	$P1F $P1R $P2F $P2R
-
+"$PROJECT_FOLDER/data/$RUN/fastq/*_R1_*" 0 \
+$P1F $P1R $P2F $P2R
 
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ps1* $PROJECT_FOLDER/data/$RUN/16S/fastq/.
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ps2* $PROJECT_FOLDER/data/$RUN/ITS/fastq/.
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ambig* $PROJECT_FOLDER/data/$RUN/ambiguous/.
 
-
-#nematode and oomycete
+# e.g. nematode and oomycete
 P1F=CGCGAATRGCTCATTACAACAGC
 P1R=GGCGGTATCTGATCGCC
 P2F=GAAGGTGAAGTCGTAACAAGG
 P2R=AGCGTTCTTCATCGATGTGC
 
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c demultiplex \
-	"$PROJECT_FOLDER/data/$RUN/fastq/*Nem*_R1_*" 0 \
-	$P1F $P1R $P2F $P2R
-
+"$PROJECT_FOLDER/data/$RUN/fastq/*Nem*_R1_*" 0 \
+$P1F $P1R $P2F $P2R
 
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ps1* $PROJECT_FOLDER/data/$RUN/NEM/fastq/.
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ps2* $PROJECT_FOLDER/data/$RUN/OO/fastq/.
