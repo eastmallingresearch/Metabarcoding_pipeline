@@ -50,8 +50,11 @@ hmmpress 58s_start.hmm
 hmmpress lsu_start.hmm
 ```
 NOTES:
+
 Ouptut files copied to $MBPL/hmm. 
+
 Hacked the HMM files to include a MAXL satement (required) 
+
 Manually split out SSU,58S and LSU into seperate files
 
 ## Taxonomy reference databases
