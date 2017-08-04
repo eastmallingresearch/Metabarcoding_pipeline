@@ -10,8 +10,7 @@
  
 
 ## Description
-Metabarcoding pipeline for Illumina MiSeq data. 
-This pipeline is designed to run on a Sun Grid Engine cluster. 
+Metabarcoding pipeline for Illumina MiSeq data. This pipeline is base in the main part on usearch (v10 currently) 32 bit (http://www.drive5.com/usearch/) and is designed to run on a Sun Grid Engine cluster. 
 
 Tested for bacterial 16S, fungal ITS, Oomycete ITS and Nematode amplicons
 
@@ -24,10 +23,10 @@ MBPL=~/metabarcoding_pipeline
 
 The ITS pipelines are more involved and include scripts for removing common regions of 18S (SSU, 5.8S and LSU). The current implementation uses hidden markov models provided with ITSx (http://microbiology.se/software/itsx/) of these regions and HHMMER v 3.1b2 (http://hmmer.janelia.org/) to find them within the seqeunces. Scripts are provided to then remove the regions. 
 
-The HMM file need to be pepared before using the pipeline
+The HMM files need to be pepared before using the pipeline
 
 ```shell
-perl $MBPL/scripts/cut_hmm v.3.1 $MBPL/hmm/chopped_hmm fungi
+perl $MBPL/scripts/cut_hmm v.3.1 $MBPL/hmm/F.hmm fungi
 cd $MBPL/metabarcoding_pipeline/hmm/chopped_hmm
 cat *SSU*> t1
 cat *58S_start* > t2
@@ -49,22 +48,26 @@ hmmpress 58s_end.hmm
 hmmpress 58s_start.hmm
 hmmpress lsu_start.hmm
 ```
-NOTES:
-
-Ouptut files copied to $MBPL/hmm.  
-Hacked the HMM files to include a MAXL satement (required)  
-Manually split out SSU,58S and LSU into seperate files
+####NOTES
+Files copied to $MBPL/hmm  
+Repeat for O.hmm for oomycetes (or for any of the other HMMs you want to include)
 
 ## Taxonomy reference databases
-Reference databases were downloaded from:
-http://drive5.com/usearch/manual/utax_downloads.html
-(Unite V7 and RDP trainset 15)
+Assigning taxonomy to OTUs requires a reference database(s) and these will need to be configured for use with the pipeline.
+
+The Unite V7 (bacteria) and RDP trainset 15 (fungi) reference database were downloaded from  
+http://drive5.com/usearch/manual/utax_downloads.html  
+Configuration has been tested with usearch8.1 (probably works the same for 10)
 ```shell
 usearch8.1 -makeudb_utax refdb.fa -output 16s_ref.udb -report 16s_report.txt
 usearch8.1 -makeudb_utax refdb.fa -utax_trainlevels kpcofgs ‑utax_splitlevels NVpcofgs -output ITS_ref.udb -report ITS_report.txt
 ```
 
-Oomycota database was created from a subset of the silva_ssu (stamenopiles) database
+Oomycota database was created from a subset of the silva_ssu (stramenopiles) database  
+https://www.arb-silva.de/browser/
+
+#### NOTE
+It is now possible to download just the stramenopiles subset from silva - the below code may need modifying 
 ```shell
 #combine and replace fasta headers with headers including full taxonomy
 awk -F";" 'NR==FNR{a[$1]=$0;next;}a[$1]{$0=a[$1]}1' Oomycota.txt Oomycota.fasta > Oomycota_new.fasta
