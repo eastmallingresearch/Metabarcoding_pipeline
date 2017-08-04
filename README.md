@@ -16,7 +16,10 @@ Tested for bacterial 16S, fungal ITS, Oomycete ITS and Nematode amplicons
 
 ## Setup pipeline
 ```shell
+# set MBPL variable to pipeline folder
 MBPL=~/metabarcoding_pipeline
+# to set permanetly for future (bash) shell sessions (be careful with this, if you have settings in ~/.profile they will no longer load)
+echo export MBPL=~/metabarcoding_pipeline >>~/.bash_profile
 ```
 
 ## HMM Preperation for ITS analysis
@@ -66,8 +69,7 @@ usearch8.1 -makeudb_utax refdb.fa -utax_trainlevels kpcofgs ‑utax_splitlevels 
 Oomycota database was created from a subset of the silva_ssu (stramenopiles) database  
 https://www.arb-silva.de/browser/
 
-#### NOTE
-It is now possible to download just the stramenopiles subset from silva - the below code may need modifying 
+NOTE: It is now possible to download just the stramenopiles subset from silva - the below code may need modifying 
 ```shell
 #combine and replace fasta headers with headers including full taxonomy
 awk -F";" 'NR==FNR{a[$1]=$0;next;}a[$1]{$0=a[$1]}1' Oomycota.txt Oomycota.fasta > Oomycota_new.fasta
@@ -78,7 +80,9 @@ usearch9 -makeudb_sintax Oomycota_new.fasta -output Oomycota.udp
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < oomycetes.ITS1.fa | tail -n +2 > out.fasta
 
 ```
-Nematode database is also a subset of Silva_ssu - I've made a second taxonomy file containing other, non nematode eukaryotes.
+Nematode database is also a subset of Silva_ssu  
+Again note that as the required section of the database can be downloaded directly the below (prior to the usearch command) may not be required
+
 ```shell
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < SILVA_123_SSURef_Nr99_tax_silva.fasta | tail -n +2 >silva.fa
 
@@ -109,21 +113,5 @@ ___
 ### [16S workflow](../master/16S%20%20workflow.md)
 ### [ITS workflow](../master//ITS%20workflow.md)
 ### [Statistical analysis](../master/statistical%20analysis.md)
-
-## Combine samples from multiple NGS runs
-
-Biom table for samples from multiple NGS runs are required.
-
-This will mean the names of each fasta will need to be made unique and the sequence lengths will need to be set to the same.
-
-Something like the below will copy samples with the wholename string to a new location. Uses original fastq file name and reconsructing the sample ID for each sample used in the workflow.
-```shell
-find .. -type f -wholename "*[0-9]/fastq/G[0|O]*R1*"|awk -F"/" '{print $2"_"$4}'|awk -F"_" '{print "cp ../"$1"/16S/filtered/"$3"D"$1".filtered.fa 16S/filtered/."}' > runme.sh
-find .. -type f -wholename "*[0-9]/fastq/G[0|O]*R1*"|awk -F"/" '{print $2"_"$4}'|awk -F"_" '{print "cp ../"$1"/16S/unfiltered/"$3"D"$1".unfiltered.fastq 16S/unfiltered/."}' >> runme.sh
-find .. -type f -wholename "*[0-9]/fastq/G[0|O]*R1*"|awk -F"/" '{print $2"_"$4}'|awk -F"_" '{print "cp ../"$1"/ITS/filtered/"$3"D"$1".fa ITS/filtered/."}' >> runme.sh
-find .. -type f -wholename "*[0-9]/fastq/G[0|O]*R1*"|awk -F"/" '{print $2"_"$4}'|awk -F"_" '{print "cp ../"$1"/ITS/unfiltered/"$3"D"$1".r1.unfiltered.fastq ITS/unfiltered/."}' >> runme.sh
-find .. -type f -wholename "*[0-9]/fastq/G[0|O]*R2*"|awk -F"/" '{print $2"_"$4}'|awk -F"_" '{print "cp ../"$1"/ITS/unfiltered/"$3"D"$1".r2.unfiltered.fastq ITS/unfiltered/."}' >> runme.sh
-./runme.sh
-```
 
 
