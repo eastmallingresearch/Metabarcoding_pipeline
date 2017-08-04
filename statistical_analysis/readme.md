@@ -35,7 +35,7 @@ otu_file = "16S.otus.fa" # might be useful at some stage
 colData = "colData"
 mybiom <- import_biom(biom_file) # ,refseqfilename=out_file
 sample_data(mybiom) <- read.table(colData,header=T,sep="\t",row.names=1)
-tax_table(mybiom) <- phyloTaxaTidy(tax_table(mybiom),0.65)
+tax_table(mybiom) <- tax_table(phyloTaxaTidy(tax_table(mybiom),0.65))
 
 # An example of removing certain OTUs from a phyloseq object - and using S4 methods to access the data.
 # This will filter based on OTU present in the first column "condition" of colData 
@@ -54,7 +54,7 @@ ITS2 = "ITS2.taxa.biom"
 colData = "colData"
 mybiom <- merge_phyloseq(import_biom(ITS1),import_biom(ITS2))
 sample_data(mybiom) <- read.table(colData,header=T,sep="\t",row.names=1)
-tax_table(mybiom) <- phyloTaxaTidy(tax_table(mybiom),0.65)
+tax_table(mybiom) <- tax_table(phyloTaxaTidy(tax_table(mybiom),0.65))
 ```
 
 ##### Create and add phylogentic tree to mybiom - need to add step for creating phy object
