@@ -21,9 +21,10 @@ MBPL=~/metabarcoding_pipeline
 ```
 
 ## HMM Preperation for ITS analysis
-Using HHMMER v 3.1b2 (http://hmmer.janelia.org/)
 
-Used HMM files from ITSx (http://microbiology.se/software/itsx/)
+The ITS pipelines are more involved and include scripts for removing common regions of 18S (SSU, 5.8S and LSU). The current implementation uses hidden markov models provided with ITSx (http://microbiology.se/software/itsx/) of these regions and HHMMER v 3.1b2 (http://hmmer.janelia.org/) to find them within the seqeunces. Scripts are provided to then remove the regions. 
+
+The HMM file need to be pepared before using the pipeline
 
 ```shell
 perl $MBPL/scripts/cut_hmm v.3.1 $MBPL/hmm/chopped_hmm fungi
@@ -36,7 +37,6 @@ hmmconvert t1 > ssu_end.hmm
 hmmconvert t2 > 58s_end.hmm
 hmmconvert t3 > 58s_start.hmm
 hmmconvert t4 > lsu_start.hmm
-
 rm t1 t2 t3 t4
 
 for f in *.hmm
@@ -49,7 +49,10 @@ hmmpress 58s_end.hmm
 hmmpress 58s_start.hmm
 hmmpress lsu_start.hmm
 ```
-Ouptut files were copied to $MBPL/hmm. Hacked the HMM files to include a MAXL satement (required) and manually split out SSU,58S and LSU into seperate files (only fungal hmms are implemented in this pipeline)
+NOTES:
+Ouptut files copied to $MBPL/hmm. 
+Hacked the HMM files to include a MAXL satement (required) 
+Manually split out SSU,58S and LSU into seperate files
 
 ## Taxonomy reference databases
 Reference databases were downloaded from:
