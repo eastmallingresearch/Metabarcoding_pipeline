@@ -75,7 +75,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
 
 Correct fasta if just R1 is to be used
 ```
-for f in $ARDERI/data/$RUN/ITS/unfiltered/*r1*; do
+for f in $PROJECT_FOLDER/data/$RUN/$SSU/unfiltered/*r1*; do
 F=$(echo $f|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}')
 L=$(echo $f|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") 
 awk -v L=$L '/>/{sub(".*",">"L"."(++i))}1' $F > $F.tmp && mv $F.tmp $F
