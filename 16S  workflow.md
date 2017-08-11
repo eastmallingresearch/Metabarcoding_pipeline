@@ -24,10 +24,10 @@ Unfiltered joined reads are saved to unfiltered folder, filtered reads are saved
 16Spre.sh forward_read reverse_read output_file_name output_directory adapters min_size percent_diff max_errrors 
 
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c 16Spre \
-"$PROJECT_FILE/data/$RUN/$SSU/fastq/*R1*.fastq" \
-$PROJECT_FILE/data/$RUN/$SSU \
-$PROJECT_FILE/metabarcoding_pipeline/primers/adapters.db \
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c 16Spre \
+"$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
+$PROJECT_FOLDER/data/$RUN/$SSU \
+$PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
 $MINL $MINOVER $QUAL
 ```
 ## UPARSE
@@ -37,10 +37,10 @@ This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory 
 
 ```shell
 #denoise
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FILE $RUN $SSU $FPL $RPL
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FILE $RUN $SSU $FPL $RPL
 
 #clustering with cluser_otu
-#$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c UCLUS $PROJECT_FILE $RUN $SSU $FPL $RPL
+#$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UCLUS $PROJECT_FILE $RUN $SSU $FPL $RPL
 ```
 
 #### Work around for usearch bug 10.1
@@ -52,7 +52,7 @@ sed -i -e 's/Zotu/OTU/' 16S.zotus.fa
 NOTE:- I still need to build nematode utax taxonomy database from Silva_SSU.
 
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FILE $RUN $SSU 
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FILE $RUN $SSU 
 ```
 
 ### OTU evolutionary distance
@@ -66,7 +66,7 @@ usearch8.1 -calc_distmx 16S.otus.fa -distmxout 16S.phy -distmo fractdiff -format
 ### Create OTU table 
 
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FILE $RUN $SSU $FPL $RPL
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FILE $RUN $SSU $FPL $RPL
 ```
 
 If unfiltered data is too much for usearch(32) to handle :
@@ -81,7 +81,7 @@ $PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTUS $PROJECT_FILE $
 biom_maker.pl will take a hacked rdp taxonomy file (mod_taxa.pl) and UPARSE biome and output a combined taxa and biome file to standard out.
 
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/biom_maker.pl ITS.taxa ITS.otu_table.biom >ITS.taxa.biom
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/biom_maker.pl ITS.taxa ITS.otu_table.biom >ITS.taxa.biom
 ```
 
 ### Poor quality data work round 
@@ -89,17 +89,17 @@ Occasionally, due to v.poor reverse read quality, joining of f+r reads fails for
 I've also added a rev compliment routine to fq2fa_v2.pl, means the reverse reads can be called as plus strand by usearch_global.
 
 ```shell
-for f in $PROJECT_FILE/data/$RUN/16S/fastq/*R1*; do
+for f in $PROJECT_FOLDER/data/$RUN/16S/fastq/*R1*; do
  R1=$f
  R2=$(echo $R1|sed 's/\_R1_/\_R2_/')
  S=$(echo $f|awk -F"." '{print $1}'|awk -F"/" '{print $NF}')
- $PROJECT_FILE/metabarcoding_pipeline/scripts/fq2fa_v2.pl $R1 $PROJECT_FILE/data/$RUN/16S.r1.unfiltered.fa $S $fpl 0
- $PROJECT_FILE/metabarcoding_pipeline/scripts/fq2fa_v2.pl $R2 $PROJECT_FILE/data/$RUN/16S.r2.unfiltered.fa $S $rpl 30 rev
+ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/fq2fa_v2.pl $R1 $PROJECT_FOLDER/data/$RUN/16S.r1.unfiltered.fa $S $fpl 0
+ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/fq2fa_v2.pl $R2 $PROJECT_FOLDER/data/$RUN/16S.r2.unfiltered.fa $S $rpl 30 rev
 done
 usearch9 -usearch_global 16S.r1.unfiltered.fa -db 16S.otus.fa -strand plus -id 0.95 -userout hits.r1.txt -userfields query+target+id
 usearch9 -usearch_global 16S.r2.unfiltered.fa -db 16S.otus.fa -strand plus -id 0.95 -userout hits.r2.txt -userfields query+target+id
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c merge_hits $PROJECT_FILE/metabarcoding_pipeline/scripts/merge_hits.R hits.r1.txt hits.r2.txt 16S.otu_table.txt
-$PROJECT_FILE/metabarcoding_pipeline/scripts/otu_to_biom.pl row_biom col_biom data_biom >16S.otu_table.biom
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c merge_hits $PROJECT_FOLDER/metabarcoding_pipeline/scripts/merge_hits.R hits.r1.txt hits.r2.txt 16S.otu_table.txt
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/otu_to_biom.pl row_biom col_biom data_biom >16S.otu_table.biom
 rm row_biom col_biom data_biom
 ```
 
