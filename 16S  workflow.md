@@ -66,13 +66,13 @@ usearch8.1 -calc_distmx 16S.otus.fa -distmxout 16S.phy -distmo fractdiff -format
 ### Create OTU table 
 
 ```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FILE $RUN $SSU $FPL $RPL
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDER $RUN $SSU $FPL $RPL
 ```
 
 If unfiltered data is too much for usearch(32) to handle :
 
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTUS $PROJECT_FILE $RUN $SSU $FPL $RPL
+$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTUS $PROJECT_FOLDER $RUN $SSU $FPL $RPL
 ```
 (this may actually be quicker than OTU, need to check)
 
@@ -81,7 +81,7 @@ $PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTUS $PROJECT_FILE $
 biom_maker.pl will take a hacked rdp taxonomy file (mod_taxa.pl) and UPARSE biome and output a combined taxa and biome file to standard out.
 
 ```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/biom_maker.pl ITS.taxa ITS.otu_table.biom >ITS.taxa.biom
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/biom_maker.pl 16S.taxa 16S.otu_table.biom > 16S.taxa.biom
 ```
 
 ### Poor quality data work round 
