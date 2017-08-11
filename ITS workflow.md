@@ -73,8 +73,10 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
  $LOWQUAL
 ```
 
-Correct fasta if just R1 is to be used
-```
+
+
+ Not certain what this is for (correcting the fasta headers???)...
+```shell
 for f in $PROJECT_FOLDER/data/$RUN/$SSU/unfiltered/*r1*; do
 F=$(echo $f|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}')
 L=$(echo $f|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") 
@@ -83,6 +85,13 @@ done
 ```
 
 #### Return ITS1 where fasta header matches ITS2, unique ITS1 and unique ITS2
+Move merged fasta if just R1 is to be used
+```shell
+for f in $PROJECT_FOLDER/data/$RUN/$SSU/unfiltered/*r1*; do 
+ F=$(echo $f|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}'); 
+ L=$(echo $f|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") ; 
+ mv ../fasta/${L}_R1/$F ../filtered/$L; done
+```
 
 ```shell
 mkdir -p $PROJECT_FOLDER/data/$RUN/$SSU/filtered
