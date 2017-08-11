@@ -18,10 +18,10 @@ Script will:<br>
 
 ```shell
 
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
- "$PROJECT_FILE/data/$RUN/$SSU/fastq/*R1*.fastq" \
- $PROJECT_FILE/data/$RUN/$SSU \
- $PROJECT_FILE/metabarcoding_pipeline/primers/primers.db \
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
+ "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
+ $PROJECT_FOLDER/data/$RUN/$SSU \
+ $PROJECT_FOLDER/metabarcoding_pipeline/primers/primers.db \
  $MINL $MAXR2 $QUAL; 
 ```
 
@@ -34,18 +34,18 @@ It is debatable whether this is necessary - and it can take a while to run. Quic
 This will create a large number of array jobs on the cluster
 
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
-$PROJECT_FILE/data/$RUN/$SSU/fasta \
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
+$PROJECT_FOLDER/data/$RUN/$SSU/fasta \
 R1 \
-$PROJECT_FILE/metabarcoding_pipeline/hmm/ssu_end.hmm \
-$PROJECT_FILE/metabarcoding_pipeline/hmm/58s_start.hmm \
+$PROJECT_FOLDER/metabarcoding_pipeline/hmm/ssu_end.hmm \
+$PROJECT_FOLDER/metabarcoding_pipeline/hmm/58s_start.hmm \
 ssu 58ss 20
 
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
- $PROJECT_FILE/data/$RUN/$SSU/fasta \
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
+ $PROJECT_FOLDER/data/$RUN/$SSU/fasta \
  R2 \
- $PROJECT_FILE/metabarcoding_pipeline/hmm/lsu_start.hmm \
- $PROJECT_FILE/metabarcoding_pipeline/hmm/58s_end.hmm \
+ $PROJECT_FOLDER/metabarcoding_pipeline/hmm/lsu_start.hmm \
+ $PROJECT_FOLDER/metabarcoding_pipeline/hmm/58s_end.hmm \
  lsu 58se 20
 
 
@@ -58,16 +58,16 @@ If reverse read quality was poor and it was necessary to truncate reads to get m
 LOWQUAL keeps reads which lack 5.8S homology - this is necessary as trimming will in most instances have removed the homologous region
 
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
- "$PROJECT_FILE/data/$RUN/$SSU/fasta/*R1" \
- $PROJECT_FILE/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
+ "$PROJECT_FOLDER/data/$RUN/$SSU/fasta/*R1" \
+ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
  "*.\\.ssu" \
  "*.\\.58"
 
 LOWQUAL=FALSE   
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
- "$PROJECT_FILE/data/$RUN/$SSU/fasta/*R2" \
- $PROJECT_FILE/metabarcoding_pipeline/scripts/rm_58Se_LSU_v2.R \
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
+ "$PROJECT_FOLDER/data/$RUN/$SSU/fasta/*R2" \
+ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/rm_58Se_LSU_v2.R \
  "*.\\.58" \
  "*.\\.lsu" \
  $LOWQUAL
@@ -85,16 +85,16 @@ done
 #### Return ITS1 where fasta header matches ITS2, unique ITS1 and unique ITS2
 
 ```shell
-mkdir -p $PROJECT_FILE/data/$RUN/$SSU/filtered
-find $PROJECT_FILE/data/$RUN/$SSU/fasta -type f -name *.r*.fa|xargs -I myfile mv myfile $PROJECT_FILE/data/$RUN/$SSU/filtered/.
+mkdir -p $PROJECT_FOLDER/data/$RUN/$SSU/filtered
+find $PROJECT_FOLDER/data/$RUN/$SSU/fasta -type f -name *.r*.fa|xargs -I myfile mv myfile $PROJECT_FOLDER/data/$RUN/$SSU/filtered/.
 
-cd $PROJECT_FILE/data/$RUN/$SSU/filtered
-for f in $PROJECT_FILE/data/$RUN/$SSU/filtered/*r1.fa
+cd $PROJECT_FOLDER/data/$RUN/$SSU/filtered
+for f in $PROJECT_FOLDER/data/$RUN/$SSU/filtered/*r1.fa
 do
     R1=$f
     R2=$(echo $R1|sed 's/\.r1\.fa/\.r2\.fa/')
     S=$(echo $f|awk -F"." '{print $1}'|awk -F"/" '{print $NF}')
-    $PROJECT_FILE/metabarcoding_pipeline/scripts/catfiles_v2.pl $R1 $R2 $S;
+    $PROJECT_FOLDER/metabarcoding_pipeline/scripts/catfiles_v2.pl $R1 $R2 $S;
 done
 
 mkdir R1
@@ -111,7 +111,7 @@ RPL=21
 This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory for dereplication and subsequent steps. I've written my own scripts to do the dereplication and sorting 
 
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $ARDERI $RUN $SSU 0 0
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $ARDERI $RUN $SSU 0 0
 ```
 
 Work around for usearch bug 10.1
@@ -121,7 +121,7 @@ sed -ie 's/Zotu/OTU/' ITS.zotus.fa
 
 ### Assign taxonomy
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $ARDERI $RUN $SSU 
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $ARDERI $RUN $SSU 
 ```
 
 ### OTU evolutionary distance
@@ -137,7 +137,7 @@ usearch8.1 -calc_distmx ITS.otus.fa -distmxout ITS.phy -distmo fractdiff -format
 Concatenates unfiltered reads, then assigns forward reads to OTUs. For any non-hits, attemps to assign reverse read (ITS2) to an OTU. 
 
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FILE $RUN $SSU $FPL $RPL true
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FILE $RUN $SSU $FPL $RPL true
 ```
 
 
@@ -146,7 +146,7 @@ $PROJECT_FILE/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FILE $R
 biom_maker.pl will take a hacked rdp taxonomy file (mod_taxa.pl) and UPARSE biome and output a combined taxa and biome file to standard out.
 
 ```shell
-$PROJECT_FILE/metabarcoding_pipeline/scripts/biom_maker.pl ITS.taxa ITS.otu_table.biom >ITS.taxa.biom
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/biom_maker.pl ITS.taxa ITS.otu_table.biom >ITS.taxa.biom
 ```
 
 
