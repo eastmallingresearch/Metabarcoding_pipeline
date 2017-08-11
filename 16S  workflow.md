@@ -37,10 +37,10 @@ This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory 
 
 ```shell
 #denoise
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FILE $RUN $SSU $FPL $RPL
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FOLDER $RUN $SSU $FPL $RPL
 
 #clustering with cluser_otu
-#$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UCLUS $PROJECT_FILE $RUN $SSU $FPL $RPL
+#$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UCLUS $PROJECT_FOLDER $RUN $SSU $FPL $RPL
 ```
 
 #### Work around for usearch bug 10.1
@@ -52,7 +52,7 @@ sed -i -e 's/Zotu/OTU/' 16S.zotus.fa
 NOTE:- I still need to build nematode utax taxonomy database from Silva_SSU.
 
 ```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FILE $RUN $SSU 
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU 
 ```
 
 ### OTU evolutionary distance
