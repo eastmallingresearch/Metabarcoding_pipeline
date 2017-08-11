@@ -27,6 +27,8 @@ Copy raw Fastq files (or link to) to $PROJECT_FOLDER/data/$RUN/fastq
 
 ## Decompress files (not required, unless using none multiplexed data)
 
+Append 2 to decompress sym links
+
 ```shell
 for FILE in $PROJECT_FOLDER/data/$RUN/fastq/*.gz; do 
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c unzip $FILE 2
