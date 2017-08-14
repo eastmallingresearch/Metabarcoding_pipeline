@@ -58,7 +58,7 @@ Repeat for O.hmm for oomycetes (or for any of the other HMMs you want to include
 ## Taxonomy reference databases
 Assigning taxonomy to OTUs requires a reference database(s) and these will need to be configured for use with the pipeline.
 
-The Unite V7 (bacteria) and RDP trainset 15 (fungi) reference database were downloaded from  
+The Unite V7 (fungi) and RDP trainset 15 (bacteria) reference database were downloaded from  
 http://drive5.com/usearch/manual/utax_downloads.html  
 Configuration has been tested with usearch8.1 (probably works the same for 10)
 ```shell
