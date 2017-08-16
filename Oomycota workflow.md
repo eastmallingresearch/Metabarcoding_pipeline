@@ -94,10 +94,10 @@ rm $SSU_v2.otus.fa
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDER $RUN $SSU $FPL $RPL
 ```
 
-###[16S workflow](../master/16S%20%20workflow.md)  
-###[ITS workflow](../master//ITS%20workflow.md)  
-###[Nematode workflow](../master/Nematoda%20workflow.md)  
-###[Statistical analysis](../master/statistical%20analysis.md)  
+### [16S workflow](../master/16S%20%20workflow.md)  
+### [ITS workflow](../master//ITS%20workflow.md)  
+### [Nematode workflow](../master/Nematoda%20workflow.md)  
+### [Statistical analysis](../master/statistical%20analysis.md)  
 
 
 
