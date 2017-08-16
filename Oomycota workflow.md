@@ -24,11 +24,11 @@ Unfiltered joined reads are saved to unfiltered folder, filtered reads are saved
 16Spre.sh forward_read reverse_read output_file_name output_directory adapters min_size min_join_overlap max_errrors 
 
 ```shell
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c OOpre \
-	"$ARDERI/data/$RUN/$SSU/fastq/*R1*.fastq" \
-	$ARDERI/data/$RUN/$SSU/filtered \
-	$ARDERI/metabarcoding_pipeline/primers/adapters.db \
-	$MINL $MINOVER $QUAL
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OOpre \
+  "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
+  $PROJECT_FOLDER/data/$RUN/$SSU \
+  $PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
+  $MINL $MINOVER $QUAL
 ```
 ### SSU and 5.8S removal 
 
@@ -37,30 +37,30 @@ $ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c OOpre \
 This will create a large number of array jobs on the cluster
 
 ```shell
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
-	$ARDERI/data/$RUN/$SSU/filtered \
-	"" \
-	$ARDERI/metabarcoding_pipeline/hmm/others/Oomycota/ssu_end.hmm \
-	$ARDERI/metabarcoding_pipeline/hmm/others/Oomycota/58s_start.hmm \
-	ssu 58ss 20
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
+ $PROJECT_FOLDER/data/$RUN/$SSU/filtered \
+ "" \
+ $PROJECT_FOLDER/metabarcoding_pipeline/hmm/others/Oomycota/ssu_end.hmm \
+ $PROJECT_FOLDER/metabarcoding_pipeline/hmm/others/Oomycota/58s_start.hmm \
+ ssu 58ss 20
 ```
 
 #### Remove identified SSU and 5.8S regions
 
 ```shell
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
-	"$ARDERI/data/$RUN/$SSU/filtered/*D*" \
-	$ARDERI/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
-	"*.\\.ssu" "*.\\.58" 1
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
+  "$PROJECT_FOLDER/data/$RUN/$SSU/filtered/*D*" \
+  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
+  "*.\\.ssu" "*.\\.58" 1
 
 ```
 
 There's a slight problem with one of the scripts and the fasta names...
 ```shell
-find $ARDERI/data/$RUN/$SSU/filtered -type f -name *r1.fa|xargs -I myfile mv myfile $ARDERI/data/$RUN/$SSU/filtered/.
+find $PROJECT_FOLDER/data/$RUN/$SSU/filtered -type f -name *r1.fa|xargs -I myfile mv myfile $PROJECT_FOLDER/data/$RUN/$SSU/filtered/.
 
-mkdir $ARDERI/data/$RUN/$SSU/filtered/intermediate
-mv *filtered* $ARDERI/data/$RUN/$SSU/filtered/intermediate/.
+mkdir $PROJECT_FOLDER/data/$RUN/$SSU/filtered/intermediate
+mv *filtered* $PROJECT_FOLDER/data/$RUN/$SSU/filtered/intermediate/.
 find . -maxdepth 1 -type d -name "S*" -exec mv '{}' intermediate \;
 rename 's/\.r1//' *.fa
 
@@ -74,19 +74,19 @@ This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory 
 
 ### Cluster 
 ```shell
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $ARDERI $RUN $SSU 0 0
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FOLDER $RUN $SSU 0 0
 ```
 ### Assign taxonomy
 ```shell
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $ARDERI $RUN $SSU 
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU 
 cp $SSU.otus.fa $SSU_v2.otus.fa
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $ARDERI $RUN $SSU_v2
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU_v2
 rm $SSU_v2.otus.fa
 ```
 
 ### Create OTU tables
 ```shell
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $ARDERI $RUN $SSU $FPL $RPL
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDER $RUN $SSU $FPL $RPL
 ```
 
 ###[16S workflow](../master/16S%20%20workflow.md)
