@@ -32,7 +32,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OOpre \
 ```
 ### SSU and 5.8S removal 
 
-# move files to keep consistent with Fungal ITS workflow
+#### move files to keep consistent with Fungal ITS workflow
 ```shell
 mv $PROJECT_FOLDER/data/$RUN/$SSU/filtered/* $PROJECT_FOLDER/data/$RUN/$SSU/fasta.
 rename 's/filtered\.//' $PROJECT_FOLDER/data/$RUN/OO/fasta/*.fa
