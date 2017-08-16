@@ -32,13 +32,19 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OOpre \
 ```
 ### SSU and 5.8S removal 
 
+# move files to keep consistent with Fungal ITS workflow
+```shell
+mv $PROJECT_FOLDER/data/$RUN/$SSU/filtered/* $PROJECT_FOLDER/data/$RUN/$SSU/fasta.
+rename 's/filtered\.//' $PROJECT_FOLDER/data/$RUN/OO/fasta/*.fa
+```
+
 #### Identify SSU and 5.8S regions
 
 This will create a large number of array jobs on the cluster
 
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
- $PROJECT_FOLDER/data/$RUN/$SSU/filtered \
+ $PROJECT_FOLDER/data/$RUN/$SSU/fasta \
  "" \
  $PROJECT_FOLDER/metabarcoding_pipeline/hmm/others/Oomycota/ssu_end.hmm \
  $PROJECT_FOLDER/metabarcoding_pipeline/hmm/others/Oomycota/58s_start.hmm \
@@ -47,21 +53,20 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
 
 #### Remove identified SSU and 5.8S regions
 ```shell
-rename 's/filtered\.//' $PROJECT_FOLDER/data/$RUN/OO/filtered/*.fa
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
-  "$PROJECT_FOLDER/data/$RUN/$SSU/filtered/*D*" \
+  "$PROJECT_FOLDER/data/$RUN/$SSU/fasta/*[^fa]" \
   $PROJECT_FOLDER/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
-  "*.\\.ssu" "*.\\.58" 1
-
+  "*.\\.ssu" "*.\\.58"
 ```
 
 There's a slight problem with one of the scripts and the fasta names...
 ```shell
-find $PROJECT_FOLDER/data/$RUN/$SSU/filtered -type f -name *r1.fa|xargs -I myfile mv myfile $PROJECT_FOLDER/data/$RUN/$SSU/filtered/.
+find $PROJECT_FOLDER/data/$RUN/$SSU/fasta -type f -name *r1.fa|xargs -I myfile mv myfile $PROJECT_FOLDER/data/$RUN/$SSU/filtered/.
 
-mkdir $PROJECT_FOLDER/data/$RUN/$SSU/filtered/intermediate
-mv *filtered* $PROJECT_FOLDER/data/$RUN/$SSU/filtered/intermediate/.
-find . -maxdepth 1 -type d -name "S*" -exec mv '{}' intermediate \;
+#mkdir $PROJECT_FOLDER/data/$RUN/$SSU/filtered/intermediate
+#mv *filtered* $PROJECT_FOLDER/data/$RUN/$SSU/filtered/intermediate/.
+#find . -maxdepth 1 -type d -name "S*" -exec mv '{}' intermediate \;
+
 rename 's/\.r1//' *.fa
 
 #for f in *.fa; do
