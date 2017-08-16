@@ -46,8 +46,8 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
 ```
 
 #### Remove identified SSU and 5.8S regions
-
 ```shell
+rename 's/filtered\.//' $PROJECT_FOLDER/data/$RUN/OO/filtered/*.fa
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
   "$PROJECT_FOLDER/data/$RUN/$SSU/filtered/*D*" \
   $PROJECT_FOLDER/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
