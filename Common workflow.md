@@ -39,7 +39,7 @@ done
 Qualtiy checking with fastQC (http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 ```shell
 for FILE in $PROJECT_FOLDER/data/$RUN/fastq/*; do 
-  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c qcheck $FILE $$PROJECT_FOLDER/data/$RUN/quality
+  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c qcheck $FILE $PROJECT_FOLDER/data/$RUN/quality
 done
 ```
 
