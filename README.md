@@ -66,13 +66,23 @@ usearch8.1 -makeudb_utax refdb.fa -output 16s_ref.udb -report 16s_report.txt
 usearch8.1 -makeudb_utax refdb.fa -utax_trainlevels kpcofgs ‑utax_splitlevels NVpcofgs -output ITS_ref.udb -report ITS_report.txt
 ```
 
-Oomycota database was created from a subset of the silva_ssu (stramenopiles) database  
-https://www.arb-silva.de/browser/
+### Oomycota
+The oomycota database combines three sets of data; 1) a subset (stamenopiles) of the silva_ssu database https://www.arb-silva.de/browser/, 2) a supplied 3rd party database 3) and a usearch specific Unite database (https://unite.ut.ee/sh_files/utax_reference_dataset_28.06.2017.zip)
 
 NOTE: It is now possible to download just the stramenopiles subset from silva - the below code may need modifying 
+
+The silva_ssu and 3rd party databases required slight modification before use with usearch
+
 ```shell
-#combine and replace fasta headers with headers including full taxonomy
+# convert silva_ssu multiline to single line fasta
+awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < SILVA_123_SSURef_Nr99_tax_silva.fasta | tail -n +2 >silva.fa
+
+grep Peronosporomycetes -A1 --no-group-separator silva.fa | sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes/;tax=tax=k:SAR;p:Heterokontophyta;c:Oomycota;/' > oomycota.silva.fa
+
+
+# combine and replace fasta headers with headers including full taxonomy
 awk -F";" 'NR==FNR{a[$1]=$0;next;}a[$1]{$0=a[$1]}1' Oomycota.txt Oomycota.fasta > Oomycota_new.fasta
+
 
 usearch9 -makeudb_sintax Oomycota_new.fasta -output Oomycota.udp
 
@@ -80,6 +90,7 @@ usearch9 -makeudb_sintax Oomycota_new.fasta -output Oomycota.udp
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < oomycetes.ITS1.fa | tail -n +2 > out.fasta
 
 ```
+### Nematodes
 Nematode database is also a subset of Silva_ssu  
 Again note that as the required section of the database can be downloaded directly the below (prior to the usearch command) may not be required
 
