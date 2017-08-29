@@ -85,13 +85,7 @@ df  <- t(data.frame(t(mypca$x)*mypca$percentVar))
 pdf(paste(RHB,"PCA.pdf",sep="_"))
 
 # plot PC1 vs PC2
-plotOrd(df,dds@colData,design="Year",shape="Site",xlabel="PC1",ylabel="PC2",labels=T,textSize=8)
-
-# plot PC2 vs PC3
-plotOrd(df,dds@colData,design="Year",shape="Site",xlabel="PC2",ylabel="PC3",dimx="PC2",dimy="PC3")
-
-
-
+plotOrd(df,dds@colData,design="Year",shape="Site",xlabel="PC1",ylabel="PC2")
 
 # write to file
 dev.off()
