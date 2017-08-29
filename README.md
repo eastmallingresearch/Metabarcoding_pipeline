@@ -29,7 +29,7 @@ The ITS pipelines are more involved and include scripts for removing common regi
 The HMM files need to be pepared before using the pipeline
 
 ```shell
-perl $MBPL/scripts/cut_hmm v.3.1 $MBPL/hmm/F.hmm fungi
+perl $MBPL/scripts/cut_hmm.pl v.3.1 $MBPL/hmm/F.hmm fungi
 cd $MBPL/metabarcoding_pipeline/hmm/chopped_hmm
 cat *SSU*> t1
 cat *58S_start* > t2
@@ -51,7 +51,7 @@ hmmpress 58s_end.hmm
 hmmpress 58s_start.hmm
 hmmpress lsu_start.hmm
 ```
-####NOTES
+#### NOTES
 Files copied to $MBPL/hmm  
 Repeat for O.hmm for oomycetes (or for any of the other HMMs you want to include)
 
