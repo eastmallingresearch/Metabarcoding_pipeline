@@ -22,7 +22,7 @@ cd $TMP
 
 #cd $OUTDIR 
 
-usearch -fastq_mergepairs $F -reverse $R -fastqout ${OUTFILE}.t1  -fastq_pctid 0 -fastq_maxdiffs $(($MINL*${MAXDIFF}/100)) -fastq_minlen $MINL -fastq_minovlen 0 -fastq_trunctail 25
+usearch -fastq_mergepairs $F -reverse $R -fastqout ${OUTFILE}.t1  -fastq_pctid 0 -fastq_maxdiffs $(($MINL*${MAXDIFF}/100)) -fastq_minlen $MINL -fastq_minovlen 0 #-fastq_trunctail 25
 
 #usearch9 -fastq_mergepairs $F -reverse $R -fastqout ${OUTFILE}.t1  -fastq_maxdiffpct $MAXDIFF -fastq_maxdiffs $(($MINL*${MAXDIFF}/100)) -fastq_minlen $MINL 
 usearch -search_oligodb ${OUTFILE}.t1 -db $ADAPTERS -strand both -userout ${OUTFILE}.t1.txt -userfields query+target+qstrand+diffs+tlo+thi+trowdots 
