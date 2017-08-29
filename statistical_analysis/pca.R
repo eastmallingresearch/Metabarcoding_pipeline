@@ -44,7 +44,7 @@ myfilter <- rowSums(counts(dds,normalize=T))>5
 # filter out low abundance OTUs
 dds <- dds[myfilter,]
 
-# perform PC decompossion on DES object
+# perform PC decompossion on DES object (variance stabilised data)
 mypca <- des_to_pca(dds)
 
 #===============================================================================
