@@ -33,7 +33,7 @@ $MINL $MINOVER $QUAL
 ## UPARSE
 
 ### Cluster 
-This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory for dereplication and subsequent steps. I've written my own scripts to do the dereplication and sorting 
+This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory certain steps. Alternative scripts for dereplication and sorting are supplied.
 
 ```shell
 #denoise
@@ -49,7 +49,6 @@ sed -i -e 's/Zotu/OTU/' 16S.zotus.fa
 ```
 
 ### Assign taxonomy
-NOTE:- I still need to build nematode utax taxonomy database from Silva_SSU.
 
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU 
@@ -58,7 +57,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJEC
 ### OTU evolutionary distance
 
 Output a phylogentic tree in phylip format (both upper and lower triangles)
-(usearch9 doesn't work)
+(usearch9 doesn't work - 10 does work, but the syntax is slightly diffrent, need to update this...)
 ```shell
 usearch8.1 -calc_distmx 16S.otus.fa -distmxout 16S.phy -distmo fractdiff -format phylip_square
 ```
