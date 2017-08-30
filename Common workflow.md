@@ -56,14 +56,15 @@ Possible primers:
 <tr><td>Nematode<td>CGCGAATRGCTCATTACAACAGC<td>GGCGGTATCTGATCGCC</tr>
 </table>
 
-If the primers are unknown, running something like the below should give a good indication of what they are. It will also give a good indication of how many mismatches (if any) to use for demulti.pl. 
+If the primers are unknown, running something like the below should give a good indication of what they are (run from folder of decompressed fastq files). It will also give a good indication of how many mismatches (if any) to use for demulti.pl. 
 ```shell
 sed -n '2~4p' $(ls|head -n1)|grep -x "[ATCG]\+"|cut -c-16|sort|uniq| \
 tee zzexpressions.txt|xargs -I%  grep -c "^%" $(ls|head -n1) >zzcounts.txt
 ```
 
+Run below to demultiplex
 ```shell
-# e.g. for bacteria and fungi
+# Demultiplex bacterial and fungal amplicons
 P1F=CCTACGGGNGGCWGCAG
 P1R=GACTACHVGGGTATCTAATCC
 P2F=CTTGGTCATTTAGAGGAAGTAA
@@ -77,7 +78,7 @@ mv $PROJECT_FOLDER/data/$RUN/fastq/*ps1* $PROJECT_FOLDER/data/$RUN/BAC/fastq/.
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ps2* $PROJECT_FOLDER/data/$RUN/FUN/fastq/.
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ambig* $PROJECT_FOLDER/data/$RUN/ambiguous/.
 
-# e.g. nematode and oomycete
+# Demultiplex nematode and oomycete amplicons
 P1F=CGCGAATRGCTCATTACAACAGC
 P1R=GGCGGTATCTGATCGCC
 P2F=GAAGGTGAAGTCGTAACAAGG
@@ -93,7 +94,7 @@ mv $PROJECT_FOLDER/data/$RUN/fastq/*ambig* $PROJECT_FOLDER/data/$RUN/ambiguous/.
 ```
 ### Ambiguous data
 Ambiguous data should not be used for OTU clustering/denoising, but it can be counted in the OTU tables.
-Requires converting to FASTA with approprite labels
+Would require converting to FASTA with approprite labels
 
 ### [16S workflow](../master/16S%20%20workflow.md)
 ### [ITS workflow](../master//ITS%20workflow.md)
