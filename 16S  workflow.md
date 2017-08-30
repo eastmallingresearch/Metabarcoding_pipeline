@@ -86,6 +86,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/biom_maker.pl 16S.taxa 16S.otu_ta
 ### Poor quality data work round 
 Occasionally, due to v.poor reverse read quality, joining of f+r reads fails for the vast majority. The following will cluster f+r reads separately and then merge read counts which align to the same OTU. I've dropped the clustering down to 0.95 similarity - both reads aligning to the same OTU at this similarity, I'd suggest is pretty good evidence they're the same. 
 I've also added a rev compliment routine to fq2fa_v2.pl, means the reverse reads can be called as plus strand by usearch_global.
+(this needs testing with usearch10)
 
 ```shell
 for f in $PROJECT_FOLDER/data/$RUN/16S/fastq/*R1*; do
