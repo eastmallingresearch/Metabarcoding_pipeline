@@ -15,7 +15,7 @@ load_all("~/pipelines/metabarcoding/scripts/myfunctions")
 #       Load data 
 #===============================================================================
 
-# create a simulated OTU table
+# create a simulated OTU table (still need to write this - Grinder may do some of what I have in mind)
 countData <- otuSIM(samples=10,treatments=2,otus=100)
 
 ubiom_FUN <- list(
