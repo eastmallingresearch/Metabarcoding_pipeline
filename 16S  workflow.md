@@ -6,15 +6,15 @@ FPL is forward primer length
 RPL is reverse primer length  
 
 ```shell
-# all
-MINL=300
-MINOVER=5
-QUAL=0.5
-
 #bacteria
 SSU=BAC
 FPL=17
 RPL=21
+
+MINL=300
+MINOVER=5
+QUAL=0.5
+
 ```
 
 ## Pre-processing
