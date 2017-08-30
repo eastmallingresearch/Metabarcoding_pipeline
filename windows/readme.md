@@ -16,8 +16,8 @@ usearch version:
 ```
 usearch -fastx_demux reads.fq -index index.fq -barcodes bar.fa -filename_suffix .fq
 ```
-I don't like this at all  - requires an index and barcode file and is not read pair aware
-My version is far simpler (it's in Perl, so can run on Windows)
+I don't like this at all  - requires an index and barcode file and is not read pair aware.  
+My version is far simpler (it's written in Perl, so can be made to run on Windows )
 
 ## Preprocessing
 ``` #16S
