@@ -19,6 +19,8 @@ usearch -fastx_demux reads.fq -index index.fq -barcodes bar.fa -filename_suffix 
 I don't like this at all  - requires an index and barcode file and is not read pair aware.  
 My version is far simpler (it's written in Perl, so can be made to run on Windows )
 
+Note to self - still need to work on the rest of this. The pipeline uses a lot of shell/awk/sed scripts which will be a bit of a pain to convert to Windows. I have donea  bit of cdm/power shell scripting - 10 years ago... 
+
 ## Preprocessing
 ``` #16S
 $ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c 16Spre \
