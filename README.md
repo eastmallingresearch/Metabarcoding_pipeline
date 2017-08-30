@@ -28,18 +28,27 @@ The ITS pipelines are more involved and include scripts for removing common regi
 
 The HMM files need to be pepared before using the pipeline
 
+The script cut_hmm.pl splits the combined hmm into individual files, which allows the four parts (ssu end, 58S start, 58 end and lsu start) to be in their own files. This allows a roughly three to four fold speed increase for the whole pipeline.  
+NOTE: This is dependent on the hmm files downloaded from ITSx - if they change the format it may no longer work.
+
+
 ```shell
-perl $MBPL/scripts/cut_hmm.pl v.3.1 $MBPL/hmm/F.hmm fungi
-cd $MBPL/metabarcoding_pipeline/hmm/chopped_hmm
+perl $MBPL/scripts/cut_hmm.pl $MBPL/hmm/F.hmm $MBPL/hmm/chopped_hmm Fungi
+
+cd $MBPL/hmm/chopped_hmm
+
 cat *SSU*> t1
 cat *58S_start* > t2
 cat *58S_end* > t3
 cat *LSU* > t4
-hmmconvert t1 > ssu_end.hmm
-hmmconvert t2 > 58s_end.hmm
-hmmconvert t3 > 58s_start.hmm
-hmmconvert t4 > lsu_start.hmm
-rm t1 t2 t3 t4
+
+hmmconvert t1 > $MBPL/hmm/Fun/ssu_end.hmm
+hmmconvert t2 > $MBPL/hmm/Fun/58s_end.hmm
+hmmconvert t3 > $MBPL/hmm/Fun/58s_start.hmm
+hmmconvert t4 > $MBPL/hmm/Fun/lsu_start.hmm
+
+cd $MBPL/hmm/Fun
+rm -r $MBPL/hmm/chopped_hmm
 
 for f in *.hmm
 do
@@ -53,7 +62,7 @@ hmmpress lsu_start.hmm
 ```
 #### NOTES
 Files copied to $MBPL/hmm  
-Repeat for O.hmm for oomycetes (or for any of the other HMMs you want to include)
+Repeat for O.hmm for oomycetes (or for any of the other HMMs you want to include) and set Fungi to Oomycota in the call to cut_hmm.pl . The output files from hmmpress will need to be copied to another location e.g. $MBL/hmm/OO
 
 ## Taxonomy reference databases
 Assigning taxonomy to OTUs requires a reference database(s) and these will need to be configured for use with the pipeline.
