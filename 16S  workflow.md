@@ -1,9 +1,9 @@
 # Bacteria workflow
 
 ## Conditions
-SSU determines the file location
-FPL is forward primer length
-RPL is reverse primer length
+SSU determines the file location  
+FPL is forward primer length  
+RPL is reverse primer length  
 
 ```shell
 # all
