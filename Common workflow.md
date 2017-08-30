@@ -45,7 +45,7 @@ done
 
 ## Demultiplexing
 
-Script demulti.pl demultiplexs mixed (e.g. ITS and 16S) libraries based on the primer sequence. Number of acceptable mismatches in the primer sequence can be specified (0 by default). Any sequence which has too many mismatches, or none mathching primers is removed is written to ambiguous.fq (f & r seperately). The script accepts multiple primer pairs.
+Script demulti.pl demultiplexs mixed (e.g. ITS and 16S) libraries based on the primer sequence. Number of acceptable mismatches in the primer sequence can be specified (0 by default). Any sequence which has too many mismatches, or none mathching primers is written to ambiguous.fq (f & r seperately). The script accepts multiple primer pairs.
 
 <table>
 Possible primers:
