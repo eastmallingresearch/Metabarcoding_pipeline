@@ -29,6 +29,7 @@ The ITS pipelines are more involved and include scripts for removing common regi
 The HMM files need to be pepared before using the pipeline
 
 The script cut_hmm.pl splits the combined hmm into individual files, which allows the four parts (ssu end, 58S start, 58 end and lsu start) to be in their own files. This allows a roughly three to four fold speed increase for the whole pipeline.  
+
 NOTE: This is dependent on the hmm files downloaded from ITSx - if they change the format it may no longer work.
 
 
