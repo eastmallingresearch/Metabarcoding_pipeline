@@ -136,7 +136,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FO
 
 Work around for usearch bug 10.1
 ```shell
-sed -ie 's/Zotu/OTU/' ITS.zotus.fa
+sed -i -e 's/Zotu/OTU/' FUN.zotus.fa
 ```
 
 ### Assign taxonomy
@@ -149,12 +149,14 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJEC
 Output a phylogentic tree in phylip format (both upper and lower triangles)
 (usearch9 doesn't work - haven't tested v10)
 ```shell
-usearch8.1 -calc_distmx ITS.otus.fa -distmxout ITS.phy -distmo fractdiff -format phylip_square
+usearch -calc_distmx FUN.otus.fa -distmxout FUN.phy -distmo fractdiff -format phylip_square
 ```
 
 ### Create OTU tables
 
 Concatenates unfiltered reads, then assigns forward reads to OTUs. For any non-hits, attemps to assign reverse read (ITS2) to an OTU. 
+
+For forward only remove the true (or set to false) at the end of the command
 
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDER $RUN $SSU $FPL $RPL true
