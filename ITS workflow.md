@@ -30,9 +30,14 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
 
 ### SSU/58S/LSU removal 
 
-It is debatable whether this is necessary - and it can take a while to run. Quick method (for forward reads is to trim off the first 65 or so and the final 90 (final 50 are almost always part of 5.8)  in the UPARSE Cluster step (fourth and fifth parameters). 
+It is debatable whether this is necessary - and it can take a while to run (on a buzy cluster). Quick method (for forward reads is to trim off the first 65 or so and the final 90 (final 50 are almost always part of 5.8)  in the UPARSE Cluster step (fourth and fifth parameters). 
 
-#### Identify SSU, 5.8S  and LSU regions
+I've split this into a forward only and a forward and reverse pipeline.  
+The forward pipeline will need to be run for both (except where stated)
+
+#### Forward pipeline
+
+##### Identify SSU, 5.8S  and LSU regions
 
 This will create a large number of array jobs on the cluster
 
@@ -44,22 +49,9 @@ R1 \
 $PROJECT_FOLDER/metabarcoding_pipeline/hmm/ssu_end.hmm \
 $PROJECT_FOLDER/metabarcoding_pipeline/hmm/58s_start.hmm \
 ssu 58ss 20
-
-# reverse reads
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
- $PROJECT_FOLDER/data/$RUN/$SSU/fasta \
- R2 \
- $PROJECT_FOLDER/metabarcoding_pipeline/hmm/lsu_start.hmm \
- $PROJECT_FOLDER/metabarcoding_pipeline/hmm/58s_end.hmm \
- lsu 58se 20
 ```
 
-#### Remove SSU, 5.8S  and LSU regions and merge output
-
-If reverse read quality was poor and it was necessary to truncate reads to get more than a couple of reads past set LOWQUAL to TRUE
-
-LOWQUAL keeps reads which lack 5.8S homology - this is necessary as trimming will in most instances have removed the homologous region
-
+##### Remove SSU, 5.8S  and LSU regions
 ```shell
 # forward reads
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
@@ -67,7 +59,40 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
  "*.\\.ssu" \
  "*.\\.58"
+```
 
+##### Run if using forward only
+Move fasta and rename fasta header
+```shell
+for D in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*1; do 
+ F=$(echo $D|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}'); 
+ L=$(echo $D|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") ;
+ awk -v L=$L '/>/{sub(".*",">"L"."(++i))}1' $D/$F > $F.tmp && mv $F.tmp $PROJECT_FOLDER/data/$RUN/$SSU/filtered/$F;
+# mv $PROJECT_FOLDER/data/$RUN/$SSU/fasta/${L}_R1/$F $PROJECT_FOLDER/data/$RUN/$SSU/filtered/$L; 
+done
+```
+
+#### Forward and reverse pipeline
+
+##### Identify SSU, 5.8S  and LSU regions
+
+This will create a large number of array jobs on the cluster
+
+```shell
+# reverse reads
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
+ $PROJECT_FOLDER/data/$RUN/$SSU/fasta \
+ R2 \
+ $PROJECT_FOLDER/metabarcoding_pipeline/hmm/lsu_start.hmm \
+ $PROJECT_FOLDER/metabarcoding_pipeline/hmm/58s_end.hmm \
+ lsu 
+```
+
+##### Remove SSU, 5.8S  and LSU regions and merge output
+If reverse read quality was poor and it was necessary to truncate reads to get more than a couple of reads past set LOWQUAL to TRUE
+
+LOWQUAL keeps reads which lack 5.8S homology - this is necessary as trimming will in most instances have removed the homologous region
+```shell
 # reverse reads
 LOWQUAL=FALSE   
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
@@ -76,49 +101,6 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
  "*.\\.58" \
  "*.\\.lsu" \
  $LOWQUAL
-```
-
-##### Forward only pipeline
-Move merged fasta if just forward read is to be used
-```shell
-for f in $PROJECT_FOLDER/data/$RUN/$SSU/unfiltered/*r1*; do 
- F=$(echo $f|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}'); 
- L=$(echo $f|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") ; 
- mv ../fasta/${L}_R1/$F ../filtered/$L; done
-```
-#### Remove identified SSU and 5.8S regions
-```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
-  "$PROJECT_FOLDER/data/$RUN/$SSU/fasta/*[^fa]" \
-  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
-  "*.\\.ssu" "*.\\.58"
-```
-
-There's a slight problem with one of the scripts and the fasta names...
-```shell
-find $PROJECT_FOLDER/data/$RUN/$SSU/fasta -type f -name *r1.fa|xargs -I myfile mv myfile $PROJECT_FOLDER/data/$RUN/$SSU/filtered/.
-
-#mkdir $PROJECT_FOLDER/data/$RUN/$SSU/filtered/intermediate
-#mv *filtered* $PROJECT_FOLDER/data/$RUN/$SSU/filtered/intermediate/.
-#find . -maxdepth 1 -type d -name "S*" -exec mv '{}' intermediate \;
-
-rename 's/\.r1//' *.fa
-
-#for f in *.fa; do
-#	sed -i -e 's/ .*//' $f
-#done
-```
-
-
-#### Forward and reverse pipeline
-
- Not certain what this is for (correcting the fasta headers???)...
-```shell
-for f in $PROJECT_FOLDER/data/$RUN/$SSU/unfiltered/*r1*; do
-F=$(echo $f|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}')
-L=$(echo $f|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") 
-awk -v L=$L '/>/{sub(".*",">"L"."(++i))}1' $F > $F.tmp && mv $F.tmp $F
-done
 ```
 
 ##### Return ITS1 where fasta header matches ITS2, unique ITS1 and unique ITS2
