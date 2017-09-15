@@ -81,12 +81,14 @@ This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory 
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FOLDER $RUN $SSU 0 0
 ```
+### UPARSE Bug workaround
+```shell
+sed -i -e 's/Zotu/OTU/' $PROJECT_FOLDER/data/$RUN/OO.zotus.fa # workaround for uparse bug
+```
+
 ### Assign taxonomy
 ```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU 
-cp $SSU.otus.fa $SSU_v2.otus.fa
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU_v2
-rm $SSU_v2.otus.fa
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU sintax
 ```
 
 ### Create OTU tables
