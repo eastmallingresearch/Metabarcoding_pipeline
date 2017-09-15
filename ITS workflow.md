@@ -1,4 +1,7 @@
 # Fungi workflow
+This workflow is for none overlapping ITS primers, i.e. covering both ITS regions.
+The Oomycete workflow is more appopriate if the primers do overlap.
+
 ```shell
 SSU=FUN
 FPL=23 
@@ -8,7 +11,7 @@ MINL=200
 MAXR2=250
 QUAL=1
 ```
-
+the
 ## Pre-processing
 Script will:<br>
 1. Remove reads with both forward and reverse primers<br>
@@ -75,7 +78,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
  $LOWQUAL
 ```
 
-#### Forward only pipeline
+##### Forward only pipeline
 Move merged fasta if just forward read is to be used
 ```shell
 for f in $PROJECT_FOLDER/data/$RUN/$SSU/unfiltered/*r1*; do 
@@ -83,6 +86,29 @@ for f in $PROJECT_FOLDER/data/$RUN/$SSU/unfiltered/*r1*; do
  L=$(echo $f|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") ; 
  mv ../fasta/${L}_R1/$F ../filtered/$L; done
 ```
+#### Remove identified SSU and 5.8S regions
+```shell
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
+  "$PROJECT_FOLDER/data/$RUN/$SSU/fasta/*[^fa]" \
+  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
+  "*.\\.ssu" "*.\\.58"
+```
+
+There's a slight problem with one of the scripts and the fasta names...
+```shell
+find $PROJECT_FOLDER/data/$RUN/$SSU/fasta -type f -name *r1.fa|xargs -I myfile mv myfile $PROJECT_FOLDER/data/$RUN/$SSU/filtered/.
+
+#mkdir $PROJECT_FOLDER/data/$RUN/$SSU/filtered/intermediate
+#mv *filtered* $PROJECT_FOLDER/data/$RUN/$SSU/filtered/intermediate/.
+#find . -maxdepth 1 -type d -name "S*" -exec mv '{}' intermediate \;
+
+rename 's/\.r1//' *.fa
+
+#for f in *.fa; do
+#	sed -i -e 's/ .*//' $f
+#done
+```
+
 
 #### Forward and reverse pipeline
 
