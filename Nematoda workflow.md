@@ -26,26 +26,26 @@ Script will:<br>
 4. Convert FASTQ to single line FASTA
 
 ```shell
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c NEMpre \
- "$ARDERI/data/$RUN/$SSU/fastq/*R1*.fastq" \
- $ARDERI/data/$RUN/$SSU/fasta \
- $ARDERI/metabarcoding_pipeline/primers/nematode.db \
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c NEMpre \
+ "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
+ $PROJECT_FOLDER/data/$RUN/$SSU/fasta \
+ $PROJECT_FOLDER/metabarcoding_pipeline/primers/nematode.db \
  $MINL $MAXL $QUAL
 ```
 
 #### Return ITS1 where fasta header matches ITS2, unique ITS1 and unique ITS2
 
 ```shell
-mkdir -p $ARDERI/data/$RUN/$SSU/filtered
-find $ARDERI/data/$RUN/$SSU/fasta -type f -name *_R*|xargs -I myfile mv myfile $ARDERI/data/$RUN/$SSU/filtered/.
+mkdir -p $PROJECT_FOLDER/data/$RUN/$SSU/filtered
+find $PROJECT_FOLDER/data/$RUN/$SSU/fasta -type f -name *_R*|xargs -I myfile mv myfile $PROJECT_FOLDER/data/$RUN/$SSU/filtered/.
 
-cd $ARDERI/data/$RUN/$SSU/filtered
-for f in $ARDERI/data/$RUN/$SSU/filtered/*R1.fa
+cd $PROJECT_FOLDER/data/$RUN/$SSU/filtered
+for f in $PROJECT_FOLDER/data/$RUN/$SSU/filtered/*R1.fa
 do
     R1=$f
     R2=$(echo $R1|sed 's/_R1\.fa/_R2\.fa/')
     S=$(echo $f|awk -F"_" '{print $1}'|awk -F"/" '{print $NF}')
-    $ARDERI/metabarcoding_pipeline/scripts/catfiles_v2.pl $R1 $R2 $S;
+    $PROJECT_FOLDER/metabarcoding_pipeline/scripts/catfiles_v2.pl $R1 $R2 $S;
 done
 
 mkdir R1
@@ -59,18 +59,18 @@ mv *_R2* R2/
 ### Cluster 
 
 ```shell
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE \ $ARDERI $RUN $SSU 0 0
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE \ $PROJECT_FOLDER $RUN $SSU 0 0
 ```
 ### Assign taxonomy
 
 ```shell
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign \ $ARDERI $RUN $SSU 
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign \ $PROJECT_FOLDER $RUN $SSU 
 ```
 
 ### Create OTU tables
 
 ```shell
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU \ $ARDERI $RUN $SSU $FPL $RPL true
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU \ $PROJECT_FOLDER $RUN $SSU $FPL $RPL true
 ```
 
 
