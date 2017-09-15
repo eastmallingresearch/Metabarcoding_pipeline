@@ -12,12 +12,10 @@ FPL=23
 RPL=18
 
 # all
-MINL=200
+MINL=100
 MAXL=300
 QUAL=1
-
 ```
-
 ## Pre-processing
 Script will:<br>
 1. Remove reads with both forward and reverse primers<br>
@@ -28,30 +26,25 @@ Script will:<br>
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c NEMpre \
  "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
- $PROJECT_FOLDER/data/$RUN/$SSU/fasta \
+ $PROJECT_FOLDER/data/$RUN/$SSU \
  $PROJECT_FOLDER/metabarcoding_pipeline/primers/nematode.db \
  $MINL $MAXL $QUAL
 ```
 
-#### Return ITS1 where fasta header matches ITS2, unique ITS1 and unique ITS2
 
+### SSU/58S/LSU removal 
+Prbably best to skip this part - doesn't work too well (or at all) with the primer set we use.  
+I've removed it form the pipeline for now.
+
+If you really want to run it, it's the same as the fungal version, but will require additional HMM files.  
+
+### Move (forward) fasta and rename headers
 ```shell
-mkdir -p $PROJECT_FOLDER/data/$RUN/$SSU/filtered
-find $PROJECT_FOLDER/data/$RUN/$SSU/fasta -type f -name *_R*|xargs -I myfile mv myfile $PROJECT_FOLDER/data/$RUN/$SSU/filtered/.
-
-cd $PROJECT_FOLDER/data/$RUN/$SSU/filtered
-for f in $PROJECT_FOLDER/data/$RUN/$SSU/filtered/*R1.fa
-do
-    R1=$f
-    R2=$(echo $R1|sed 's/_R1\.fa/_R2\.fa/')
-    S=$(echo $f|awk -F"_" '{print $1}'|awk -F"/" '{print $NF}')
-    $PROJECT_FOLDER/metabarcoding_pipeline/scripts/catfiles_v2.pl $R1 $R2 $S;
+for f in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*.fa; do 
+ F=$(echo $f|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}'); 
+ L=$(echo $f|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") ;
+ awk -v L=$L '/>/{sub(".*",">"L"."(++i))}1' $f > $F.tmp && mv $F.tmp $PROJECT_FOLDER/data/$RUN/$SSU/filtered/$F;
 done
-
-mkdir R1
-mkdir R2
-mv *_R1* R1/.
-mv *_R2* R2/
 ```
 
 ## UPARSE
