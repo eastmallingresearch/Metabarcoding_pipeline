@@ -34,6 +34,7 @@ It is debatable whether this is necessary - and it can take a while to run. Quic
 This will create a large number of array jobs on the cluster
 
 ```shell
+# forward reads
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
 $PROJECT_FOLDER/data/$RUN/$SSU/fasta \
 R1 \
@@ -41,14 +42,13 @@ $PROJECT_FOLDER/metabarcoding_pipeline/hmm/ssu_end.hmm \
 $PROJECT_FOLDER/metabarcoding_pipeline/hmm/58s_start.hmm \
 ssu 58ss 20
 
+# reverse reads
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
  $PROJECT_FOLDER/data/$RUN/$SSU/fasta \
  R2 \
  $PROJECT_FOLDER/metabarcoding_pipeline/hmm/lsu_start.hmm \
  $PROJECT_FOLDER/metabarcoding_pipeline/hmm/58s_end.hmm \
  lsu 58se 20
-
-
 ```
 
 #### Remove SSU, 5.8S  and LSU regions and merge output
@@ -58,12 +58,14 @@ If reverse read quality was poor and it was necessary to truncate reads to get m
 LOWQUAL keeps reads which lack 5.8S homology - this is necessary as trimming will in most instances have removed the homologous region
 
 ```shell
+# forward reads
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
  "$PROJECT_FOLDER/data/$RUN/$SSU/fasta/*R1" \
  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
  "*.\\.ssu" \
  "*.\\.58"
 
+# reverse reads
 LOWQUAL=FALSE   
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
  "$PROJECT_FOLDER/data/$RUN/$SSU/fasta/*R2" \
@@ -73,7 +75,16 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
  $LOWQUAL
 ```
 
+#### Forward only pipeline
+Move merged fasta if just forward read is to be used
+```shell
+for f in $PROJECT_FOLDER/data/$RUN/$SSU/unfiltered/*r1*; do 
+ F=$(echo $f|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}'); 
+ L=$(echo $f|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") ; 
+ mv ../fasta/${L}_R1/$F ../filtered/$L; done
+```
 
+#### Forward and reverse pipeline
 
  Not certain what this is for (correcting the fasta headers???)...
 ```shell
@@ -84,17 +95,9 @@ awk -v L=$L '/>/{sub(".*",">"L"."(++i))}1' $F > $F.tmp && mv $F.tmp $F
 done
 ```
 
-#### Return ITS1 where fasta header matches ITS2, unique ITS1 and unique ITS2
-Move merged fasta if just R1 is to be used
-```shell
-for f in $PROJECT_FOLDER/data/$RUN/$SSU/unfiltered/*r1*; do 
- F=$(echo $f|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}'); 
- L=$(echo $f|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") ; 
- mv ../fasta/${L}_R1/$F ../filtered/$L; done
-```
+##### Return ITS1 where fasta header matches ITS2, unique ITS1 and unique ITS2
 
 ```shell
-mkdir -p $PROJECT_FOLDER/data/$RUN/$SSU/filtered
 find $PROJECT_FOLDER/data/$RUN/$SSU/fasta -type f -name *.r*.fa|xargs -I myfile mv myfile $PROJECT_FOLDER/data/$RUN/$SSU/filtered/.
 
 cd $PROJECT_FOLDER/data/$RUN/$SSU/filtered
