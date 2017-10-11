@@ -125,8 +125,8 @@ sed -f - Eumetazoa.fa|awk -F";" '{if(NF>1){print $1";tax=k:Metazoa;p:"$6}else {p
 
 cat nem_tax.fasta nonem_tax.fasta > Eumetazoa_tax.fasta
 
-usearch9 -makeudb_sintax nem_tax.fasta -output nematode.udp
-usearch9 -makeudb_sintax Eumetazoa_tax.fasta -output nematode2.udp
+usearch -makeudb_sintax nem_tax.fasta -output NEM_ref.udp
+usearch -makeudb_sintax Eumetazoa_tax.fasta -output xNEM_ref.udp
 ```
 
 ___
