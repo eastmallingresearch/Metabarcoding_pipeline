@@ -171,8 +171,7 @@ biom_maker.pl will take a hacked rdp taxonomy file (mod_taxa.pl) and UPARSE biom
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/biom_maker.pl ITS.taxa ITS.otu_table.biom >ITS.taxa.biom
 ```
 
-
-### [16S workflow](../master/16S%20%20workflow.md)
-
-### [Statistical analysis](../master/statistical%20analysis.md)
+### [Bacteria workflow](../master/16S%20%20workflow.md)  
+### [Nematode workflow](../master/Nematoda%20workflow.md)
+### [Oomycete workflow](../master/Oomycota%20workflow.md)
 
