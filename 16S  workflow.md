@@ -59,7 +59,8 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJEC
 Output a phylogentic tree in phylip format (both upper and lower triangles)
 (usearch9 doesn't work - 10 does work, but the syntax is slightly diffrent, need to update this...)
 ```shell
-usearch8.1 -calc_distmx 16S.otus.fa -distmxout 16S.phy -distmo fractdiff -format phylip_square
+usearch -calc_distmx BAC.zotus.fa -distmxout BACZ.phy -format phylip_square
+usearch -calc_distmx BAC.otus.fa -distmxout BAC.phy -format phylip_square
 ```
 
 ### Create OTU table 
