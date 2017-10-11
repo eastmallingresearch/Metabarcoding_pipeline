@@ -5,7 +5,7 @@
  7. [Bacterial 16S workflow](../master/16S%20%20workflow.md)
  18. [Fungal ITS workflow](../master/ITS%20workflow.md)
  20. [Oomycete ITS workflow](../master/Oomycota%20workflow.md)
- 22. [Nematode workflow](../master/Nematoda%20workflow.md)
+ 22. [Nematode 18S workflow](../master/Nematoda%20workflow.md)
  24. [Statistical analysis](../master/statistical%20analysis.md)
  
 
