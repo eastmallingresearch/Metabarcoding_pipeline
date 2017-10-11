@@ -99,5 +99,3 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDE
 ### [Bacteria workflow](../master/16S%20%20workflow.md)  
 ### [Fungi workflow](../master//ITS%20workflow.md)  
 ### [Nematode workflow](../master/Nematoda%20workflow.md)
-### [Oomycete workflow](../master/Oomycota%20workflow.md)
-
