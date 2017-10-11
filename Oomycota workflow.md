@@ -1,4 +1,4 @@
-# Oomycota workflow
+# Oomycete workflow
 
 ## Conditions
 SSU determines the file location
@@ -100,7 +100,4 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDE
 ### [Fungi workflow](../master//ITS%20workflow.md)  
 ### [Nematode workflow](../master/Nematoda%20workflow.md)
 ### [Oomycete workflow](../master/Oomycota%20workflow.md)
-### [Statistical analysis](../master/statistical%20analysis.md)  
-
-
 
