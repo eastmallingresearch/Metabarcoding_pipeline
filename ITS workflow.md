@@ -11,7 +11,7 @@ MINL=200
 MAXR2=250
 QUAL=1
 ```
-the
+
 ## Pre-processing
 Script will:<br>
 1. Remove reads with both forward and reverse primers<br>
