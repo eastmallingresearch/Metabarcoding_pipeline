@@ -31,13 +31,6 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c NEMpre \
  $MINL $MAXL $QUAL
 ```
 
-
-### SSU/58S/LSU removal 
-Prbably best to skip this part - doesn't work too well (or at all) with the primer set we use.  
-I've removed it form the pipeline for now.
-
-If you really want to run it, it's the same as the fungal version, but will require additional HMM files.  
-
 ### Move (forward) fasta and rename headers
 ```shell
 for f in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*.fa; do 
@@ -52,7 +45,7 @@ done
 ### Cluster 
 
 ```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE \ $PROJECT_FOLDER $RUN $SSU 0 0
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE \ $PROJECT_FOLDER $RUN $SSU 23 18
 ```
 ### Assign taxonomy
 
