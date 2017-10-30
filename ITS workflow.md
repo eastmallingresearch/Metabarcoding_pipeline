@@ -25,7 +25,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
  "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
  $PROJECT_FOLDER/data/$RUN/$SSU \
  $PROJECT_FOLDER/metabarcoding_pipeline/primers/primers.db \
- $MINL $MAXL $QUAL; 
+ $MINL $MAXL $QUAL
 ```
 
 ### SSU/58S/LSU removal 
