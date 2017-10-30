@@ -32,6 +32,18 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
 
 It is debatable whether this is necessary - and it can take a while to run (on a buzy cluster). Quick method (for forward reads) is to trim off the first 68 or so and the final 66 (the first and final 45 are almost always not part of the ITS region)  in the UPARSE Cluster step (fourth and fifth parameters). It's debatable whether this is of any use either, espesially if using denoised OTUs
 
+If not using any further preprocessing the  below should be run to get forward reads in the correct format for the UPARSE stages
+```
+for F in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*_R1.fa; do 
+ FO=$(echo $F|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}'); 
+ L=$(echo $F|awk -F"/" '{print $NF}'|awk -F"_" '{print $1}') ;
+ echo $F
+ echo $FO
+ echo $L
+ awk -v L=$L '/>/{sub(".*",">"L"."(++i))}1' $F > $FO.tmp && mv $FO.tmp $PROJECT_FOLDER/data/$RUN/$SSU/filtered/$FO;
+done
+```
+
 I've split this into a forward only and a forward and reverse pipeline.  
 The forward pipeline will need to be run for both (except where stated)
 
