@@ -30,7 +30,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
 
 ### SSU/58S/LSU removal 
 
-It is debatable whether this is necessary - and it can take a while to run (on a buzy cluster). Quick method (for forward reads is to trim off the first 68 or so and the final 66 (the first and final 45 are almost always not part of the ITS region)  in the UPARSE Cluster step (fourth and fifth parameters). 
+It is debatable whether this is necessary - and it can take a while to run (on a buzy cluster). Quick method (for forward reads) is to trim off the first 68 or so and the final 66 (the first and final 45 are almost always not part of the ITS region)  in the UPARSE Cluster step (fourth and fifth parameters). 
 
 I've split this into a forward only and a forward and reverse pipeline.  
 The forward pipeline will need to be run for both (except where stated)
