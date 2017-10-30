@@ -94,14 +94,13 @@ mv $PROJECT_FOLDER/data/$RUN/fastq/*ambig* $PROJECT_FOLDER/data/$RUN/ambiguous/.
 ```
 ### Ambiguous data
 Ambiguous data should not be used for OTU clustering/denoising, but it can be counted in the OTU tables.
-Would require converting to FASTA with approprite labels
-```shell
+Would require converting to FASTA with approprite labels  - the below should do this will join PE and remove adapters/primers
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c AMBIGpre \
 "$PROJECT_FOLDER/data/$RUN/ambiguous/*R1*.fastq" \
 $PROJECT_FOLDER/data/$RUN/ambiguous \
 $PROJECT_FOLDER/metabarcoding_pipeline/primers/primers.db \
 $PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
-300 100
+300 5
 ```
 
 ### [16S workflow](../master/16S%20%20workflow.md)
