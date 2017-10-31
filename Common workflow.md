@@ -104,8 +104,8 @@ $PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
 300 5
 ```
 
-### [16S workflow](../master/16S%20%20workflow.md)
-### [ITS workflow](../master//ITS%20workflow.md)
+### [BAC workflow](../master/BAC%20%20workflow.md)
+### [FUN workflow](../master//FUN%20workflow.md)
 ### [Oomycete workflow](../master/Oomycota%20workflow.md)
 ### [Nematode workflow](../master/Nematoda%20workflow.md)
 ### [Statistical analysis](../master/statistical%20analysis.md)
