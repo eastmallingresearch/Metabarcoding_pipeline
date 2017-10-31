@@ -104,6 +104,6 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/otu_to_biom.pl row_biom col_biom 
 rm row_biom col_biom data_biom
 ```
 
-### [Fungi workflow](../master//ITS%20workflow.md)  
+### [Fungi workflow](../master//FUN%20workflow.md)  
 ### [Nematode workflow](../master/Nematoda%20workflow.md)
 ### [Oomycete workflow](../master/Oomycota%20workflow.md)
