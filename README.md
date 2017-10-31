@@ -2,8 +2,8 @@
  1. Description
  3. HMM Preperation for ITS analysis  
  5. [Common workflow](../master/Common%20workflow.md)
- 7. [Bacterial 16S workflow](../master/16S%20%20workflow.md)
- 18. [Fungal ITS workflow](../master/ITS%20workflow.md)
+ 7. [Bacterial 16S workflow](../master/BAC%20%20workflow.md)
+ 18. [Fungal ITS workflow](../master/FUN%20workflow.md)
  20. [Oomycete ITS workflow](../master/Oomycota%20workflow.md)
  22. [Nematode 18S workflow](../master/Nematoda%20workflow.md)
  24. [Statistical analysis](../master/statistical%20analysis.md)
@@ -12,7 +12,7 @@
 ## Description
 Metabarcoding pipeline for Illumina MiSeq data. This pipeline is base in the main part on usearch (v10 currently) 32 bit (http://www.drive5.com/usearch/) and is designed to run on a Sun Grid Engine cluster. 
 
-Tested for bacterial 16S, fungal ITS, Oomycete ITS and Nematode amplicons
+Tested for bacterial 16S, fungal ITS, Oomycete ITS and Nematode 18S amplicons
 
 ## Setup pipeline
 ```shell
