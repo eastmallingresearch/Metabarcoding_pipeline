@@ -96,6 +96,6 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJEC
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDER $RUN $SSU $FPL $RPL
 ```
 
-### [Bacteria workflow](../master/16S%20%20workflow.md)  
-### [Fungi workflow](../master//ITS%20workflow.md)  
+### [Bacteria workflow](../master/BAC%20%20workflow.md)  
+### [Fungi workflow](../master//FUN%20workflow.md)  
 ### [Nematode workflow](../master/Nematoda%20workflow.md)
