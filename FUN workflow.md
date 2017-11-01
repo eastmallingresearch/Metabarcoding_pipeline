@@ -71,6 +71,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/rm_SSU_58Ss.R \
  "*.\\.ssu" \
  "*.\\.58"
+ $FPL $RPL
 ```
 
 ##### Run if using forward only
