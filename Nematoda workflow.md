@@ -12,7 +12,7 @@ FPL=23
 RPL=18
 
 # all
-MINL=100
+MINL=300
 MAXL=300
 QUAL=1
 ```
@@ -28,7 +28,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c NEMpre \
  "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
  $PROJECT_FOLDER/data/$RUN/$SSU \
  $PROJECT_FOLDER/metabarcoding_pipeline/primers/nematode.db \
- $MINL $MAXL $QUAL
+ $MINL $MAXL $QUAL $FPL $RPL
 ```
 
 ### Move (forward) fasta and rename headers
