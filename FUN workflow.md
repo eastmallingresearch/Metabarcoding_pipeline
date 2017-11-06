@@ -33,7 +33,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
 
 ### SSU/58S/LSU removal 
 
-It is debatable whether this is necessary - and it can take a while to run (on a buzy cluster). The SSU/LSU shared region should be about 45 bases after the forward or reverse primers are removed. This can be removed in the pre-processing step. It's more tricky to get  the start postion for the 58S shared region due to variable length of the ITS region. Just trimming off the final 60 odd bases gives good results. It's debatable whether this is of any use either.
+It is debatable whether this is necessary - and it can take a while to run (on a buzy cluster). The SSU/LSU shared region should be about 45 bases after the forward or reverse primers are removed. This can be removed in the pre-processing step. It's more tricky to get  the start postion for the 58S shared region due to variable length of the ITS region. Just trimming off the final 60 odd bases gives good results. It's debatable whether this is of any use either - especially if using denoising (potentially with 97% clustering it could be an issue).
 
 If not using any further preprocessing the  below should be run to get forward reads in the correct format for the UPARSE stages
 ```
