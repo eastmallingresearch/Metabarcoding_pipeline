@@ -8,7 +8,6 @@ FPL=23
 RPL=21
 
 MINL=200
-MAXL=300
 QUAL=1
 ```
 
@@ -25,7 +24,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
  "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
  $PROJECT_FOLDER/data/$RUN/$SSU \
  $PROJECT_FOLDER/metabarcoding_pipeline/primers/primers.db \
- $MINL $MAXL $QUAL
+ $MINL $QUAL $FPL $RPL
 ```
 
 ### SSU/58S/LSU removal 
