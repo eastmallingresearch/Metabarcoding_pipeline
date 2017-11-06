@@ -20,6 +20,8 @@ Script will:<br>
 4. Filter for quality and minimum length<br>
 5. Convert FASTQ to single line FASTA
 
+If not running SSU/58S/LSU removal, set FPL to 68  and RPL to 66 for the below. 
+
 ```shell
 
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
@@ -31,7 +33,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
 
 ### SSU/58S/LSU removal 
 
-It is debatable whether this is necessary - and it can take a while to run (on a buzy cluster). Quick method (for forward reads) is to trim off the first 68 or so and the final 66 (the first and final 45 are almost always not part of the ITS region)  in the UPARSE Cluster step (fourth and fifth parameters). It's debatable whether this is of any use either, espesially if using denoised OTUs
+It is debatable whether this is necessary - and it can take a while to run (on a buzy cluster). The SSU/LSU shared region should be about 45 bases after the forward or reverse primers are removed. This can be removed in the pre-processing step. It's more tricky to get  the start postion for the 58S shared region due to variable length of the ITS region. Just trimming off the final 60 odd bases gives good results. It's debatable whether this is of any use either.
 
 If not using any further preprocessing the  below should be run to get forward reads in the correct format for the UPARSE stages
 ```
