@@ -28,7 +28,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c 16Spre \
 "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
 $PROJECT_FOLDER/data/$RUN/$SSU \
 $PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
-$MINL $MINOVER $QUAL
+$MINL $MINOVER $QUAL $FPL $RPL 
 ```
 ## UPARSE
 
