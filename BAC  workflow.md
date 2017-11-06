@@ -33,11 +33,11 @@ $MINL $MINOVER $QUAL $FPL $RPL
 ## UPARSE
 
 ### Cluster 
-This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory certain steps. Alternative scripts for dereplication and sorting are supplied.
+This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory certain steps. Alternative scripts for dereplication and sorting are supplied. The final two command arguments will strip bases, left and right respectively.
 
 ```shell
 #denoise
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FOLDER $RUN $SSU
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FOLDER $RUN $SSU 0 0
 #clustering with cluser_otu
 #$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UCLUS $PROJECT_FOLDER $RUN $SSU $FPL $RPL
 ```
