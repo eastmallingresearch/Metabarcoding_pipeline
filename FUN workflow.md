@@ -7,7 +7,8 @@ SSU=FUN
 FPL=23 
 RPL=21
 
-MINL=200
+MAXL=300
+MINL=300
 QUAL=1
 ```
 
@@ -15,8 +16,9 @@ QUAL=1
 Script will:<br>
 1. Remove reads with both forward and reverse primers<br>
 2. Remove reads with adapter contamination<br>
-3. Filter for quality and minimum length (with UTRIM)<br>
-4. Convert FASTQ to single line FASTA
+3. Remove primers
+4. Filter for quality and minimum length<br>
+5. Convert FASTQ to single line FASTA
 
 ```shell
 
@@ -24,7 +26,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
  "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
  $PROJECT_FOLDER/data/$RUN/$SSU \
  $PROJECT_FOLDER/metabarcoding_pipeline/primers/primers.db \
- $MINL $QUAL $FPL $RPL
+ $MINL $MAXL $QUAL $FPL $RPL
 ```
 
 ### SSU/58S/LSU removal 
