@@ -67,6 +67,20 @@ ITSpre|NEMpre)
 	done
 	exit 1
 	;;
+AMBIGpre)
+	LOC=$1
+	shift
+	for f in $LOC
+	do     
+		R1=$f;     
+		R2=$(echo $R1|sed 's/_R1_/_R2_/');
+		#S=$(echo $f|awk -F"_" -v D=$(echo $LOC|awk -F"/" '{print($(NF-3))}') '{print $2"D"D}');
+		S=$(echo $f|awk -F"/" '{print $NF'}|awk -F"_" {'print $1,$2'} OFS="_")	
+		qsub $SCRIPT_DIR/submit_AMBIGpre.sh $R1 $R2 $S $@ $SCRIPT_DIR
+	done
+	exit 1
+	;;
+
 procends)
 	LOC=$1
 	shift	

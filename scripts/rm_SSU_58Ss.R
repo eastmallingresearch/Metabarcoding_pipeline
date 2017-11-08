@@ -45,26 +45,34 @@ load_table <- function(file,func,End) {
 print("loading ssu tables")
 r_start <- load_tables(list.files(args[1],args[2],full.names=T),max,T)
 print("loading 58S tables")
-r_end <- load_tables(list.files(args[1],args[3],full.names=T),min)
+r_end   <- load_tables(list.files(args[1],args[3],full.names=T),min)
 
 print("reading DNA table")
 myfasta <- readDNAStringSet(args[4])
 
+library(data.table)
+library(dplyr)
+mytable <- data.table(seq=names(myfasta))
+mytable <- as.data.table(left_join(mytable,r_start))
+mytable <- as.data.table(left_join(mytable,r_end))
+mytable$start[is.na(mytable$start)] <- (width(myfasta[mytable$seq[is.na(mytable$start)]])-as.numeric(args[6]))
+mytable$end[is.na(mytable$end)] <- as.numeric(args[7])
+
 print("merging tables")
-mytable <- merge(r_start,r_end,by.all=T,all.x=T)
-if(args[6]){mytable$start<-myfasta[mytable$seq]@ranges@width}
+#mytable <- merge(r_start,r_end,by.all=T,all.x=T)
+#if(exists(args[6])){mytable$start<-myfasta[mytable$seq]@ranges@width}
 
 print("removing NAs")
-mytable <- na.omit(mytable)
+#mytable <- na.omit(mytable)
 mytable <- mytable[((mytable$start-mytable$end)>40),]
-myfasta <- myfasta[mytable$seq]
+#myfasta <- myfasta[mytable$seq]
 
 print("set ITS_IR")
 ITS_IR <- IRanges(start=mytable$end+1,end=mytable$start-1,names=mytable$seq)
 
 print("set ITS")
 ITS <- DNAStringSet(myfasta,start=ITS_IR@start,width=(ITS_IR@width-1))
-ITS <- ITS[ITS@ranges@width>=140]
+#ITS <- ITS[ITS@ranges@width>=140]
 
 
 print("write ITS")

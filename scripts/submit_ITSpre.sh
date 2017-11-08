@@ -3,15 +3,16 @@
 #$ -cwd
 #$ -l virtual_free=4G
 
-F=$1
-R=$2
-OUTFILE=$3
-OUTDIR=$4
-PRIMERS=$5
-MINL=$6
-MAXR2=$7
-QUAL=$8
-SCRIPT_DIR=$9
+F=$1;shift
+R=$1;shift
+OUTFILE=$1;shift
+OUTDIR=$1;shift
+PRIMERS=$1;shift
+MINL=$1;shift
+QUAL=$1;shift
+FPL=$1;shift
+RPL=$1;shift
+SCRIPT_DIR=$1;shift
 
 mkdir -p $OUTDIR/filtered 
 mkdir -p $OUTDIR/unfiltered 
@@ -24,8 +25,8 @@ usearch -search_oligodb $R -db $PRIMERS -strand both -userout ${R}.t1.txt -userf
 grep primer1 -v ${F}.t1.txt|awk -F"\t" '{print $1}'|sort|uniq|$SCRIPT_DIR/adapt_delete.pl $F > ${F}.t2.fastq
 grep primer2 -v ${R}.t1.txt|awk -F"\t" '{print $1}'|sort|uniq|$SCRIPT_DIR/adapt_delete.pl $R > ${R}.t2.fastq
 
-usearch -fastq_filter ${F}.t2.fastq -fastq_trunclen $MAXR2 -fastq_minlen $MINL -fastq_maxee $QUAL -fastaout ${OUTFILE}_t1.fa  #-fastq_truncqual 26
-usearch -fastq_filter ${R}.t2.fastq -fastq_minlen $MINL -fastq_trunclen $MAXR2 -fastq_maxee $QUAL -fastaout ${OUTFILE}_t2.fa #-fastq_truncqual 26
+usearch -fastq_filter ${F}.t2.fastq -fastq_trunclen $(( MINL - $FPL ))  -fastq_stripleft $FPL -fastq_maxee $QUAL -fastaout ${OUTFILE}_t1.fa  
+usearch -fastq_filter ${R}.t2.fastq -fastq_trunclen $(( MINL - $RPL )) -fastq_stripleft $RPL -fastq_maxee $QUAL -fastaout ${OUTFILE}_t2.fa  
 
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}'  <${OUTFILE}_t1.fa > ${OUTFILE}_R1.fa
 sed -i -e '1d' ${OUTFILE}_R1.fa
