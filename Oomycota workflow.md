@@ -93,7 +93,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJEC
 
 ### Create OTU tables
 ```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDER $RUN $SSU $FPL $RPL
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDER $RUN $SSU 0 0
 ```
 
 ### [Bacteria workflow](../master/BAC%20%20workflow.md)  
