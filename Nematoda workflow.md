@@ -1,7 +1,7 @@
 # Nematode workflow
 
 The 18S primers we use will not produce overlapping reads (in the majority of cases) with the MiSeq V2 chemistry.  
-This pipeline uses only the forward reads.
+This pipeline treats reads as SE
 
 ## Conditions
 SSU determines the file location
@@ -34,8 +34,9 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c NEMpre \
 ```
 
 ### Move (forward) fasta and rename headers
+Change _R1 to _R2 for reverse reads 
 ```shell
-for f in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*.fa; do 
+for f in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*_R1.fa; do 
  F=$(echo $f|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}'); 
  L=$(echo $f|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") ;
  awk -v L=$L '/>/{sub(".*",">"L"."(++i))}1' $f > $F.tmp && mv $F.tmp $PROJECT_FOLDER/data/$RUN/$SSU/filtered/$F;
