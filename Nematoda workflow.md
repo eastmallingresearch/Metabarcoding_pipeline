@@ -1,5 +1,8 @@
 # Nematode workflow
 
+The 18S primers we use will not produce overlapping reads (in the majority of cases) with the MiSeq V2 chemistry.  
+This pipeline uses only the forward reads.
+
 ## Conditions
 SSU determines the file location
 FPL is forward primer length
@@ -12,23 +15,22 @@ FPL=23
 RPL=18
 
 # all
-MINL=300
-MAXL=300
+MINL=200
 QUAL=1
 ```
 ## Pre-processing
-Script will:<br>
-1. Remove reads with both forward and reverse primers<br>
-2. Remove reads with adapter contamination<br>
-3. Filter for quality and minimum length (with UTRIM)<br>
-4. Convert FASTQ to single line FASTA
+Script will:  
+1. Remove reads with both forward and reverse primers  
+2. Remove reads with adapter contamination  
+3. Filter for quality and minimum length  
+4. Convert FASTQ to single line FASTA  
 
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c NEMpre \
  "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
  $PROJECT_FOLDER/data/$RUN/$SSU \
  $PROJECT_FOLDER/metabarcoding_pipeline/primers/nematode.db \
- $MINL $MAXL $QUAL $FPL $RPL
+ $MINL $QUAL $FPL $RPL
 ```
 
 ### Move (forward) fasta and rename headers
