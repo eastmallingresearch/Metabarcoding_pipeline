@@ -31,8 +31,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
 ```
 
 ### SSU/58S/LSU removal 
-
-It is debatable whether this is necessary - and it can take a while to run (on a buzy cluster). The SSU/LSU shared region should be about 45 bases after the forward or reverse primers are removed. This can be removed in the pre-processing step. It's more tricky to get  the start postion for the 58S shared region due to variable length of the ITS region. Just trimming off the final 60 odd bases gives good results. It's debatable whether this is of any use either - especially if using denoising (potentially with 97% clustering it could be an issue).
+UPDATE - I no longer remove these regions for OTU creation. It has very little effect on the number of OTUs or number of reads assigned to each OTU. But, it might still make sense to remove the regions from the final OTU tables for taxanomic assignment (especially if using BLAST to check the sequences) 
 
 If not using any further preprocessing the  below should be run to get forward reads in the correct format for the UPARSE stages
 ```
@@ -45,6 +44,9 @@ for F in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*_R1.fa; do
  awk -v L=$L '/>/{sub(".*",">"L"."(++i))}1' $F > $FO.tmp && mv $FO.tmp $PROJECT_FOLDER/data/$RUN/$SSU/filtered/$FO;
 done
 ```
+
+#### Removal stuff from here - not implemented in standard pipeline
+It is debatable whether this is necessary - and it can take a while to run (on a buzy cluster). The SSU/LSU shared region should be about 45 bases after the forward or reverse primers are removed. This can be removed in the pre-processing step. It's more tricky to get  the start postion for the 58S shared region due to variable length of the ITS region. Just trimming off the final 60 odd bases gives good results. It's debatable whether this is of any use either - especially if using denoising (potentially with 97% clustering it could be an issue).
 
 I've split this into a forward only and a forward and reverse pipeline.  
 The forward pipeline will need to be run for both (except where stated)
@@ -138,6 +140,7 @@ mv *r1* R1/.
 mv *r2* R2/.
 ```
 
+
 ## UPARSE
 FPL=23 
 RPL=21
@@ -176,6 +179,16 @@ For forward only remove the true (or set to false) at the end of the command
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDER $RUN $SSU $FPL $RPL true
 ```
+
+
+### Remove SSU, 5.8S  and LSU regions for taxonomic assignment (OTUs from forward reads only)
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
+$PROJECT_FOLDER/data/$RUN/FUN*.fa \
+R1 \
+$PROJECT_FOLDER/metabarcoding_pipeline/hmm/ssu_end.hmm \
+$PROJECT_FOLDER/metabarcoding_pipeline/hmm/58s_start.hmm \
+ssu 58ss 20
+
 
 
 ### Combine biome and taxa
