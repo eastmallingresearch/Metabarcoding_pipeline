@@ -86,7 +86,7 @@ Implemented for forward reads only
 ```shell
 for F in  $PROJECT_FOLDER/data/$RUN/FUN*otus.fa; do
   $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS_regions \
-  $PROJECT_FOLDER/data/$RUN/$F \
+  $F \
   $PROJECT_FOLDER/metabarcoding_pipeline/hmm/ssu_end.hmm \
   $PROJECT_FOLDER/metabarcoding_pipeline/hmm/58s_start.hmm \
   20
