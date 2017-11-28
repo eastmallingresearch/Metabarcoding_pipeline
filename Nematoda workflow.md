@@ -1,7 +1,11 @@
 # Nematode workflow
 
-The 18S primers we use will not produce overlapping reads (in the majority of cases) with the MiSeq V2 chemistry.  
-This pipeline treats reads as SE
+The 18S primers we use will not produce overlapping reads (in the majority of cases) with the MiSeq V3 chemistry.  
+This pipeline treats reads as SE...
+
+Hum - the above is wrong.  
+Pipeline updated to use PE workflow
+
 
 ## Conditions
 SSU determines the file location
@@ -15,7 +19,7 @@ FPL=23
 RPL=18
 
 # all
-MINL=200
+MINL=150
 QUAL=1
 ```
 ## Pre-processing
