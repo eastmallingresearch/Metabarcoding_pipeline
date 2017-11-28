@@ -1,6 +1,6 @@
 # Nematode workflow
 
-Pipeline updated to use PE workflow
+The  primers are further apart than the MiSeq V3 chemistry can sequence. But the (nested) PCR produces a lot of junk sequence and bacterial sequence. Fortunatley most of this can be merged and then dumped, which is a nice way of cleaning the dataset. This will inevitably lose any nematodes with an unusually short 18S region.
 
 ## Conditions
 SSU determines the file location
@@ -29,7 +29,7 @@ Unfiltered joined reads are saved to unfiltered folder, filtered reads are saved
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c NEMpre \
   "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
   $PROJECT_FOLDER/data/$RUN/$SSU \
-  $PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
+  $PROJECT_FOLDER/metabarcoding_pipeline/primers/nematode.db \
   $MINL $MINOVER $QUAL $FPL $RPL
 ```
 
