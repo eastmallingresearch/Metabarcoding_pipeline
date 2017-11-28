@@ -65,6 +65,8 @@ hmmpress lsu_start.hmm
 Files copied to $MBPL/hmm  
 Repeat for O.hmm for oomycetes (or for any of the other HMMs you want to include) and set Fungi to Oomycota in the call to cut_hmm.pl . The output files from hmmpress will need to be copied to another location e.g. $MBL/hmm/OO
 
+<red> I no longer bother with removal of the none ITS regions</red>
+
 ## Taxonomy reference databases
 Assigning taxonomy to OTUs requires a reference database(s) and these will need to be configured for use with the pipeline.
 
