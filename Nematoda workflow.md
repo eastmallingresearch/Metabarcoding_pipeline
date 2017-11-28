@@ -20,22 +20,24 @@ RPL=18
 
 # all
 MINL=150
-QUAL=1
+MINOVER=10
+QUAL=0.5
 ```
+
 ## Pre-processing
-Script will:  
-1. Remove reads with both forward and reverse primers  
-2. Remove reads with adapter contamination  
-3. Filter for quality and minimum length  
-4. Convert FASTQ to single line FASTA  
+Script will join PE reads (with a maximum % difference in overlap) remove adapter contamination and filter on minimum size and quality threshold.
+Unfiltered joined reads are saved to unfiltered folder, filtered reads are saved to filtered folder.
+
+16Spre.sh forward_read reverse_read output_file_name output_directory adapters min_size min_join_overlap max_errrors 
 
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c NEMpre \
- "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
- $PROJECT_FOLDER/data/$RUN/$SSU \
- $PROJECT_FOLDER/metabarcoding_pipeline/primers/nematode.db \
- $MINL $QUAL $FPL $RPL
+  "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
+  $PROJECT_FOLDER/data/$RUN/$SSU \
+  $PROJECT_FOLDER/metabarcoding_pipeline/primers/nematode.db \
+  $MINL $MINOVER $QUAL $FPL $RPL
 ```
+
 
 ### Move (forward) fasta and rename headers
 Change _R1 to _R2 for reverse reads 
