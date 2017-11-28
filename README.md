@@ -24,6 +24,8 @@ echo export MBPL=~/metabarcoding_pipeline >>~/.bash_profile
 
 ## HMM Preperation for ITS analysis
 
+- ![#f03c15](https://placehold.it/15/f03c15/000000?text=+)  NOTE: I no longer bother with removal of the none ITS regions
+
 The ITS pipelines are more involved and include scripts for removing common regions of 18S (SSU, 5.8S and LSU). The current implementation uses hidden markov models provided with ITSx (http://microbiology.se/software/itsx/) of these regions and HHMMER v 3.1b2 (http://hmmer.janelia.org/) to find them within the seqeunces. Scripts are provided to then remove the regions. 
 
 The HMM files need to be pepared before using the pipeline
@@ -64,8 +66,6 @@ hmmpress lsu_start.hmm
 #### NOTES
 Files copied to $MBPL/hmm  
 Repeat for O.hmm for oomycetes (or for any of the other HMMs you want to include) and set Fungi to Oomycota in the call to cut_hmm.pl . The output files from hmmpress will need to be copied to another location e.g. $MBL/hmm/OO
-
-![#f03c15](https://placehold.it/15/f03c15/000000?text=+) ` I no longer bother with removal of the none ITS regions</red>`
 
 ## Taxonomy reference databases
 Assigning taxonomy to OTUs requires a reference database(s) and these will need to be configured for use with the pipeline.
