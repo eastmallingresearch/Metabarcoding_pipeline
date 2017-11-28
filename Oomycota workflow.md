@@ -30,7 +30,31 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OOpre \
   $PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
   $MINL $MINOVER $QUAL $FPL $RPL
 ```
-### SSU and 5.8S removal 
+
+## OTU assignment 
+This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory for dereplication and subsequent steps. I've written my own scripts to do the dereplication and sorting 
+
+### Cluster 
+```shell
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FOLDER $RUN $SSU 0 0
+```
+### UPARSE Bug workaround
+```shell
+sed -i -e 's/Zotu/OTU/' $PROJECT_FOLDER/data/$RUN/OO.zotus.fa # workaround for uparse bug
+```
+
+### Assign taxonomy
+```shell
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU sintax
+```
+
+### Create OTU tables
+```shell
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDER $RUN $SSU 0 0
+```
+
+###  SSU and 5.8S removal 
+I no longer use these methods
 
 #### move files to keep consistent with Fungal ITS workflow
 ```shell
@@ -72,28 +96,6 @@ rename 's/\.r1//' *.fa
 #for f in *.fa; do
 #	sed -i -e 's/ .*//' $f
 #done
-```
-
-## OTU assignment 
-This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory for dereplication and subsequent steps. I've written my own scripts to do the dereplication and sorting 
-
-### Cluster 
-```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FOLDER $RUN $SSU 0 0
-```
-### UPARSE Bug workaround
-```shell
-sed -i -e 's/Zotu/OTU/' $PROJECT_FOLDER/data/$RUN/OO.zotus.fa # workaround for uparse bug
-```
-
-### Assign taxonomy
-```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU sintax
-```
-
-### Create OTU tables
-```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c OTU $PROJECT_FOLDER $RUN $SSU 0 0
 ```
 
 ### [Bacteria workflow](../master/BAC%20%20workflow.md)  
