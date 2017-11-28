@@ -24,7 +24,7 @@ echo export MBPL=~/metabarcoding_pipeline >>~/.bash_profile
 
 ## HMM Preperation for ITS analysis
 
-- ![#f03c15](https://placehold.it/15/f03c15/000000?text=+)  NOTE: I no longer bother with removal of the none ITS regions
+![#f03c15](https://placehold.it/15/f03c15/000000?text=+)  NOTE: I no longer bother with removal of the none ITS regions
 
 The ITS pipelines are more involved and include scripts for removing common regions of 18S (SSU, 5.8S and LSU). The current implementation uses hidden markov models provided with ITSx (http://microbiology.se/software/itsx/) of these regions and HHMMER v 3.1b2 (http://hmmer.janelia.org/) to find them within the seqeunces. Scripts are provided to then remove the regions. 
 
