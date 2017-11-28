@@ -102,7 +102,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/biom_maker.pl ITS.taxa ITS.otu_ta
 ```
   
   
-### Remove SSU, 5.8S  and LSU regions pre OTU creation- not implemented in standard pipeline
+## Remove SSU, 5.8S  and LSU regions pre OTU creation- not implemented in standard pipeline
 It is debatable whether this is necessary - and it can take a while to run (couple of hours not days). The SSU/LSU shared region should be about 45 bases after the forward or reverse primers are removed. This could be removed in the pre-processing step. It's more tricky to get  the start postion for the 58S shared region due to variable length of the ITS region. Just trimming off the final 60 odd bases would probably be sufficient. It's debatable whether this is of any use either - especially if using denoising (potentially with 97% clustering it could be an issue).
 
 I've split this into a forward only and a forward and reverse pipeline.  
