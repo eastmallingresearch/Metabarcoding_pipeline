@@ -12,7 +12,7 @@ FPL=21
 RPL=20
 
 # all
-MINL=300
+MINL=150
 MINOVER=5
 QUAL=0.5
 ```
