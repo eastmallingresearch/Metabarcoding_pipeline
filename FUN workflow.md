@@ -33,8 +33,8 @@ UPDATE - I no longer remove these regions for OTU creation. It has very little e
 The pipeline requires the below script to be run to move files to the correct location for clustering 
 ``` shell
 for F in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*_R1.fa; do 
- FO=$(echo $F|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}'); 
- L=$(echo $F|awk -F"/" '{print $NF}'|awk -F"_" '{print $1}') ;
+ FO=$(awk -F"/" '{print $NF}' <<< $F|awk -F"_" '{print $1".r1.fa"}'); 
+ L=$(awk -F"/" '{print $NF}' <<< $F|awk -F"_" '{print $1}') ;
  echo $L
  awk -v L=$L '/>/{sub(".*",">"L"."(++i))}1' $F > $FO.tmp && mv $FO.tmp $PROJECT_FOLDER/data/$RUN/$SSU/filtered/$FO;
 done
@@ -139,8 +139,8 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
 Move fasta and rename fasta header
 ```shell
 for D in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*1; do 
- F=$(echo $D|awk -F"/" '{print $NF}'|awk -F"_" '{print $1".r1.fa"}'); 
- L=$(echo $D|awk -F"/" '{print $NF}'|awk -F"." '{print $1}' OFS=".") ;
+ F=$(awk -F"/" '{print $NF}' <<< $D|awk -F"_" '{print $1".r1.fa"}'); 
+ L=$(awk -F"/" '{print $NF}' <<< $D|awk -F"." '{print $1}' OFS=".") ;
  awk -v L=$L '/>/{sub(".*",">"L"."(++i))}1' $D/$F > $F.tmp && mv $F.tmp $PROJECT_FOLDER/data/$RUN/$SSU/filtered/$F;
 # mv $PROJECT_FOLDER/data/$RUN/$SSU/fasta/${L}_R1/$F $PROJECT_FOLDER/data/$RUN/$SSU/filtered/$L; 
 done
@@ -186,8 +186,8 @@ cd $PROJECT_FOLDER/data/$RUN/$SSU/filtered
 for f in $PROJECT_FOLDER/data/$RUN/$SSU/filtered/*r1.fa
 do
     R1=$f
-    R2=$(echo $R1|sed 's/\.r1\.fa/\.r2\.fa/')
-    S=$(echo $f|awk -F"." '{print $1}'|awk -F"/" '{print $NF}')
+    R2=$(sed 's/\.r1\.fa/\.r2\.fa/' <<< $R1)
+    S=$(awk -F"." '{print $1}' <<< $f|awk -F"/" '{print $NF}')
     $PROJECT_FOLDER/metabarcoding_pipeline/scripts/catfiles_v2.pl $R1 $R2 $S;
 done
 
