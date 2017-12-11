@@ -25,10 +25,10 @@ Unfiltered joined reads are saved to unfiltered folder, filtered reads are saved
 
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c 16Spre \
-"$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
-$PROJECT_FOLDER/data/$RUN/$SSU \
-$PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
-$MINL $MINOVER $QUAL $FPL $RPL 
+ "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
+ $PROJECT_FOLDER/data/$RUN/$SSU \
+ $PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
+ $MINL $MINOVER $QUAL $FPL $RPL 
 ```
 ## UPARSE
 
@@ -92,7 +92,7 @@ I've also added a rev compliment routine to fq2fa_v2.pl, means the reverse reads
 for f in $PROJECT_FOLDER/data/$RUN/16S/fastq/*R1*; do
  R1=$f
  R2=$(echo $R1|sed 's/\_R1_/\_R2_/')
- S=$(echo $f|awk -F"." '{print $1}'|awk -F"/" '{print $NF}')
+ S=$(awk -F"." '{print $1}' <<< $f|awk -F"/" '{print $NF}')
  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/fq2fa_v2.pl $R1 $PROJECT_FOLDER/data/$RUN/16S.r1.unfiltered.fa $S $fpl 0
  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/fq2fa_v2.pl $R2 $PROJECT_FOLDER/data/$RUN/16S.r2.unfiltered.fa $S $rpl 30 rev
 done
