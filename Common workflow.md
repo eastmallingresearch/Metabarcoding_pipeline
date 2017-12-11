@@ -14,12 +14,11 @@ mkdir -p $PROJECT_FOLDER/data/$RUN/fastq
 mkdir $PROJECT_FOLDER/data/$RUN/quality
 mkdir $PROJECT_FOLDER/data/$RUN/ambiguous
 
-RIB="BAC FUN OO NEM"
-for s in $RIB; do
-mkdir -p $PROJECT_FOLDER/data/$RUN/$s/fastq
-mkdir $PROJECT_FOLDER/data/$RUN/$s/filtered
-mkdir $PROJECT_FOLDER/data/$RUN/$s/unfiltered
-mkdir $PROJECT_FOLDER/data/$RUN/$s/fasta
+for s in "BAC FUN OO NEM"; do
+  mkdir -p $PROJECT_FOLDER/data/$RUN/$s/fastq
+  mkdir $PROJECT_FOLDER/data/$RUN/$s/filtered
+  mkdir $PROJECT_FOLDER/data/$RUN/$s/unfiltered
+  mkdir $PROJECT_FOLDER/data/$RUN/$s/fasta
 done
 ```
 
@@ -31,7 +30,7 @@ Append 2 to decompress sym links
 
 ```shell
 for FILE in $PROJECT_FOLDER/data/$RUN/fastq/*.gz; do 
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c unzip $FILE 2
+  $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c unzip $FILE 2
 done
 ```
 
@@ -71,8 +70,8 @@ P2F=CTTGGTCATTTAGAGGAAGTAA
 P2R=ATATGCTTAAGTTCAGCGGG
 
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c demultiplex \
-"$PROJECT_FOLDER/data/$RUN/fastq/*16s*_R1_*" 0 \
-$P1F $P1R $P2F $P2R
+ "$PROJECT_FOLDER/data/$RUN/fastq/*16s*_R1_*" 0 \
+ $P1F $P1R $P2F $P2R
 
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ps1* $PROJECT_FOLDER/data/$RUN/BAC/fastq/.
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ps2* $PROJECT_FOLDER/data/$RUN/FUN/fastq/.
@@ -85,8 +84,8 @@ P2F=GAAGGTGAAGTCGTAACAAGG
 P2R=AGCGTTCTTCATCGATGTGC
 
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c demultiplex \
-"$PROJECT_FOLDER/data/$RUN/fastq/*Oom*_R1_*" 0 \
-$P1F $P1R $P2F $P2R
+ "$PROJECT_FOLDER/data/$RUN/fastq/*Oom*_R1_*" 0 \
+ $P1F $P1R $P2F $P2R
 
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ps1* $PROJECT_FOLDER/data/$RUN/NEM/fastq/.
 mv $PROJECT_FOLDER/data/$RUN/fastq/*ps2* $PROJECT_FOLDER/data/$RUN/OO/fastq/.
@@ -97,11 +96,11 @@ Ambiguous data should not be used for OTU clustering/denoising, but it can be co
 Would require converting to FASTA with approprite labels  - the below should do this will join PE and remove adapters/primers
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c AMBIGpre \
-"$PROJECT_FOLDER/data/$RUN/ambiguous/*R1*.fastq" \
-$PROJECT_FOLDER/data/$RUN/ambiguous \
-$PROJECT_FOLDER/metabarcoding_pipeline/primers/primers.db \
-$PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
-300 5
+ "$PROJECT_FOLDER/data/$RUN/ambiguous/*R1*.fastq" \
+ $PROJECT_FOLDER/data/$RUN/ambiguous \
+ $PROJECT_FOLDER/metabarcoding_pipeline/primers/primers.db \
+ $PROJECT_FOLDER/metabarcoding_pipeline/primers/adapters.db \
+ 300 5
 ```
 
 ### [BAC workflow](../master/BAC%20%20workflow.md)
