@@ -14,7 +14,7 @@ mkdir -p $PROJECT_FOLDER/data/$RUN/fastq
 mkdir $PROJECT_FOLDER/data/$RUN/quality
 mkdir $PROJECT_FOLDER/data/$RUN/ambiguous
 
-for s in "BAC FUN OO NEM"; do
+for s in BAC FUN OO NEM; do
   mkdir -p $PROJECT_FOLDER/data/$RUN/$s/fastq
   mkdir $PROJECT_FOLDER/data/$RUN/$s/filtered
   mkdir $PROJECT_FOLDER/data/$RUN/$s/unfiltered
