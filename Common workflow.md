@@ -7,7 +7,7 @@ If the project has multiple sequencing runs, RUN should be set to location where
 ```shell
 PROJECT_FOLDER=~/projects/my_project_folder
 mkdir -p $PROJECT_FOLDER
-ln -s $PROJECT_FOLDER/metabarcoding_pipeline $MBPL
+ln -s $MBPL $PROJECT_FOLDER/metabarcoding_pipeline 
 
 RUN=.
 mkdir -p $PROJECT_FOLDER/data/$RUN/fastq
