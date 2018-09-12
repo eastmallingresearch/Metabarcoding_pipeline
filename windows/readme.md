@@ -1,4 +1,10 @@
 ## Introduction
+Metabarcoding pipeline for Windows  
+The pipeline should be able to run on Cygwin without modification...
+
+
+
+
 Because I've been asked...
 
 ## Demultiplexing
