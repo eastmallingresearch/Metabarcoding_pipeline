@@ -1,47 +1,93 @@
 ## Introduction
-Metabarcoding pipeline for Windows  
-The pipeline should be able to run on Cygwin without modification...
+Metabarcoding pipeline for Windows (because I've been asked...)
+
+The pipeline should be able to run on Cygwin without any modification (maybe).
+
+## Pure windows version
+Scripts are run in the following order:  
+
+decompress??
+demulti_v3.pl (this will need decompressed input - via zcat currently. Will need a windows tool to handle gz files??)
+submit_16Spre_v2.sh - this uses usearch, awk, sed and perl
+adapt_delete.pl stdin (sorted/unique usearch -search_oligodb -userout via awk scripts)
+submit_uparse_v2.sh 
+  dereplication and sorting via get_uniq.pl (this takes single line fasta as input - easy to make it take multiline)
+  usearch
+submit_taxonomy.sh
+  usearch 
+  mod_taxa.pl/mod_taxa_sintax.pl (uses stdin - can be adjusted)
+submit_cat_files.sh
+  cat only
+submit_global_search.sh
+  usearch
+  
+The quickest method (outside a Cygwin implementation) would be to use a Perl + Usearch implementation.
+Shouldn't be too hard to implement - I'll stay away from any powershell/vbscript for now.
+
+## Perl for Windows installation
+
+https://learn.perl.org/installing/windows.html
+
+Set path to perl\bin and perl\site\bin
+cpan App::cpanminus
+
+install modules
+
+cpanm Scalar::Util
+cpanm List::Util
+cpanm List::UtilsBy
+cpanm IO::Uncompress::Gunzip
 
 
-
-
-Because I've been asked...
+## Decompression
+Perl includes modules for decompression...
+ 
 
 ## Demultiplexing
-```
-P1F=CCTACGGGNGGCWGCAG # Bacteria
-P1R=GACTACHVGGGTATCTAATCC
-P2F=CTTGGTCATTTAGAGGAAGTAA # Fungi
-P2R=ATATGCTTAAGTTCAGCGGG
+demulti_v3.pl can handle both gz and uncompressed input fastq
 
-demulti_v2.pl forward_read reverse_read mismatches $P1F $P1R $P2F $P2R
-# set mismatches to number of allowed mismatches in index
-# Outputs three sets of files (F and R), primer pair1, primer pair2 and unassigned 
-```
-usearch version:
-```
-usearch -fastx_demux reads.fq -index index.fq -barcodes bar.fa -filename_suffix .fq
-```
-I don't like this at all  - requires an index and barcode file and is not read pair aware.  
-My version is far simpler (it's written in Perl, so can be made to run on Windows )
+demulti_v3.pl FORWARD_READ REVERSE_READ [MAX_ALLOWED_DIFF] FORWARD_PRIMER_1 REVERSE_PRIMER_1 [FORWARD_PRIMER_n] [REVERSE_PRIMER_n]
 
-Note to self - still need to work on the rest of this. The pipeline uses a lot of shell/awk/sed scripts which will be a bit of a pain to convert to Windows. I have donea  bit of cdm/power shell scripting - 10 years ago... 
+MAX_ALLOWED_DIFF has a max of 9 (default 0 if not set). Greater than 9, units digit indicates no. allowed mismtches and common adapter sequence will be identified in F/R reads as well as primer.
+
+No limit to number of primer pairs 
+
+Output files will have the same name as the input, but appended with ps1.fastq/ps2.fastq etc. or ambig.fastq
+
+```
+set P1F=CCTACGGGNGGCWGCAG
+set P1R=GACTACHVGGGTATCTAATCC
+set P2F=CTTGGTCATTTAGAGGAAGTAA
+set P2R=ATATGCTTAAGTTCAGCGGG
+
+perl demulti_v3.pl sample1_forward.fq.gz sample1_reverse.fq.gz 0 %P1F% %P1R% %P2F% %P2R%
+
+```
 
 ## Preprocessing
+
 ``` #16S
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c 16Spre \
-"$ARDERI/data/$RUN/$SSU/fastq/*R1*.fastq" \
-$ARDERI/data/$RUN/$SSU \
-$ARDERI/metabarcoding_pipeline/primers/adapters.db \
-$MINL $MINOVER $QUAL
+
+# merge f + r
+usearch -fastq_mergepairs FORWARD_READ -reverse REVERSE_READ -fastqout OUTFILE.t1.fq  -fastq_pctid 0 -fastq_maxdiffs (MINL * MAXDIFF)/100 -fastq_minlen MINL -fastq_minovlen 0
+
+# find adapter contamination
+usearch -search_oligodb OUTFILE.t1 -db ADAPTERS_DB -strand both -userout OUTFILE.t1.txt -userfields query+target+qstrand+diffs+tlo+thi+trowdots 
+
+# remove adapter contaminated reads and f + r primers (removes primers by length rather than by match - guaranteed exact if demultiplex set to 0)
+perl adapt_delete.pl OUTFILE.t1.txt OUTFILE.t1.fq FORWARD_PRIMER_LENGTH REVERSE_PRIMER_LENGTH > SAMPLE_NAME.unfiltered.fa
+
+# filter on quality
+usearch -fastq_filter SAMPLE_NAME.unfiltered.fa -fastq_maxee QUALITY_SCORE -relabel SAMPLE_NAME -fastaout SAMPLE_NAME.filtered.fa
+
+# convert to single line fasta - not required yet (or at all?)
+# awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}'  <${OUTFILE}.t3.fa > ${OUTFILE}.filtered.fa
+# sed -i -e '1d' ${OUTFILE}.filtered.fa
+
 ```
 
 ``` #ITS
-$ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
-"$ARDERI/data/$RUN/$SSU/fastq/*R1*.fastq" \
-$ARDERI/data/$RUN/$SSU/fasta \
-$ARDERI/metabarcoding_pipeline/primers/primers.db \
-$MINL $MAXR2 $QUAL; 
+# to do
 ```
 
 ## ITS specific (if wanted - R1 only)
@@ -79,6 +125,7 @@ done
 
 ### Cluster
 ```
+
 #denoise
 $ARDERI/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $ARDERI $RUN $SSU $FPL $RPL
 
