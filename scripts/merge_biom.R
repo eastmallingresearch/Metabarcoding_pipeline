@@ -6,6 +6,9 @@ args <- commandArgs(TRUE)
 
 tmpdir <- paste0(args[2],"/")
 qq <- lapply(list.files(tmpdir,args[3],full.names=T),function(x) fread(x))
+
+
+
 qm <- as.data.table(melt(qq,id.vars="#OTU ID",))
 
 colnames(qm)[1] <- c("OTU")

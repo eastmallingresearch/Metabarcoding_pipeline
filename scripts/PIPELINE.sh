@@ -54,7 +54,7 @@ demulti|demultiplex)
 	done
 	exit 1
 	;;
-ITSpre|NEMpre)
+ITSpre)
 	LOC=$1
 	shift
 	for f in $LOC
@@ -67,13 +67,24 @@ ITSpre|NEMpre)
 	done
 	exit 1
 	;;
+NEMpre)
+	LOC=$1;	shift
+	for f in $LOC
+	do     
+		R1=$f;     
+		R2=$(echo $R1|sed 's/_R1_/_R2_/');
+		S=$(echo $f|awk -F"/" '{print $NF'}|awk -F"_" {'print $1,$2'} OFS="_")	
+		qsub $SCRIPT_DIR/submit_NEMpre.sh $R1 $R2 $S $@ $SCRIPT_DIR
+	done
+	exit 1
+	;;
 AMBIGpre)
 	LOC=$1
 	shift
 	for f in $LOC
 	do     
 		R1=$f;     
-		R2=$(echo $R1|sed 's/_R1_/_R2_/');
+		R2=$(echo $R1|sed 's/_R1/_R2/');
 		#S=$(echo $f|awk -F"_" -v D=$(echo $LOC|awk -F"/" '{print($(NF-3))}') '{print $2"D"D}');
 		S=$(echo $f|awk -F"/" '{print $NF'}|awk -F"_" {'print $1,$2'} OFS="_")	
 		qsub $SCRIPT_DIR/submit_AMBIGpre.sh $R1 $R2 $S $@ $SCRIPT_DIR
@@ -111,6 +122,11 @@ ITS)
 	done
 	exit 1
 	;;
+ITS_regions)
+	qsub $SCRIPT_DIR/sub_ITS_regions.sh $@ $SCRIPT_DIR
+	exit 1
+	;;
+
 merge_hits)
 	qsub $SCRIPT_DIR/submit_merge_hits.sh $@ $SCRIPT_DIR
 	exit 1
@@ -193,10 +209,11 @@ OTU|otu)
 OTUS)
 	OUTDIR=$1/data/$2
 	PREFIX=$3
-	UNFILTDIR=$OUTDIR/$PREFIX/unfiltered
 	SL=$4
 	SR=$5
-	R2=${6:-false}
+	OTU=$6
+    VER=${7:-0}
+	UNFILTDIR=$OUTDIR/$PREFIX/unfiltered	
 	
 	JOBNAME=OTU_$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
 
@@ -204,14 +221,18 @@ OTUS)
 	dir=`mktemp -d -p $OUTDIR`
 	find $UNFILTDIR -name '*.fastq' >$dir/files.txt
 	TASKS=$(wc -l $dir/files.txt|awk -F" " '{print $1}')
-	qsub -N ${JOBNAME}_1 -t 1-$TASKS:1 $SCRIPT_DIR/submit_fq-fa_global.sh $dir/files.txt $dir $SL $SR $OUTDIR/${PREFIX}.otus.fa $SCRIPT_DIR
-	qsub -hold_jid ${JOBNAME}_1 -N ${JOBNAME}_2 $SCRIPT_DIR/submit_cat_global.sh $dir $OUTDIR $PREFIX $SCRIPT_DIR
-	qsub -hold_jid ${JOBNAME}_2 -N ${JOBNAME}_3 $SCRIPT_DIR/submit_otu_biome.sh $dir $OUTDIR $PREFIX $SCRIPT_DIR
-	qsub -hold_jid ${JOBNAME}_3 $SCRIPT_DIR/submit_tidy.sh $dir OTU_*_1.*
+	qsub -N ${JOBNAME}_1 -t 1-$TASKS:1 -tc 10 $SCRIPT_DIR/submit_fq-fa_global.sh $dir/files.txt $dir $SL $SR ${OUTDIR}/${OTU} $SCRIPT_DIR
+	qsub -hold_jid ${JOBNAME}_1 -N ${JOBNAME}_2 $SCRIPT_DIR/submit_cat_global.sh $dir $OUTDIR $PREFIX $VER $SCRIPT_DIR
+	# qsub -hold_jid ${JOBNAME}_2 -N ${JOBNAME}_3 $SCRIPT_DIR/submit_otu_biome.sh $dir $OUTDIR $PREFIX $SCRIPT_DIR
+	  qsub -hold_jid ${JOBNAME}_2 $SCRIPT_DIR/submit_tidy.sh $dir OTU_*_1.*
 	exit 1
 	;;
 tax_assign)
 	qsub $SCRIPT_DIR/submit_taxonomy.sh $SCRIPT_DIR $@ 
+	exit 1
+	;;
+dist)
+	qsub $SCRIPT_DIR/submit_dist.sh $SCRIPT_DIR $@
 	exit 1
 	;;
 denoise)

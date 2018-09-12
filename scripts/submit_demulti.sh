@@ -24,7 +24,7 @@ mkfifo $R.de
 zcat -f -- $R1 > $F.de &
 zcat -f -- $R2 > $R.de &
 
-${SCRIPT_DIR}/demulti_v2.pl $F.de $R.de $@
+${SCRIPT_DIR}/demulti_v3.pl $F.de $R.de $@
 
 rm $F.de $R.de
 

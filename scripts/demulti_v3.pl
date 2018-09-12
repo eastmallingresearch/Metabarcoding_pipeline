@@ -8,14 +8,13 @@ use List::UtilsBy qw(max_by);
 
 #############################################################################################
 #
-# Demultiplex paired fastq with a set of primers
+# Demultiplex paired fastq with a set of (IPAC) primers
 # Unidentified sequences are written ambig output files
 #
-# Usage: demulti_v2.pl forward_read reverse_read mismatch* i1 i2 i..n i..n+1
+# Usage: demulti_v3.pl forward_read reverse_read mismatch* i1 i2 i..n i..n+1
 #
-# * Mismatch has max of 9. If negative forward reads only. 
-# If >9 adapters are added to regex 
-# Final digit is no. allowed mismatches 
+# * Mismatch has max of 9. If negative forward reads only. Final digit is no. allowed mismatches
+#  
 #
 ###################################################################################################
 
@@ -32,6 +31,11 @@ my $R2_l = "";
 my $counter=1;
 my %output;
 my $destringyfied;
+my @f4000;
+my @r4000;
+
+# constants
+use constant N => 4000;
 
 # final command line argument when run from PIPELINE.sh must be removed
 pop(@ARGV);
@@ -67,8 +71,17 @@ while(scalar(@ARGV)>0) {
 chomp(@ind_f);
 chomp(@ind_r);
 
+while (<$R1>) {
+	push @f4000, $_;
+	last if @f4000 == N || eof;
+}
+while (<$R2>) {
+	push @r4000, $_;
+	last if @r4000 == N || eof;
+}
+
 # if the mismatch argument is also set to look for adapters - find them and append to the primer arrays
-grab_adapters() if $adapter_length;# (\@ind_f, \@ind_r ) no point passing by ref set globaly
+grab_adapters() if $adapter_length; # (\@ind_f, \@ind_r ) no point passing by ref, set globaly
 
 #my $x=0;
 
@@ -86,10 +99,21 @@ for my $filename (keys %fileNames) {
     open $fileHandles{$filename}, '>', $fileNames{$filename} or die "Can't open $filename: $!";
 }
 
-do {
-	my $l1 = <$R1>;
-	my $l2 = <$R2>;
+for($counter;$counter<=scalar(@r4000);$counter++){
+	do_things($f4000[($counter-1)],$r4000[($counter-1)])
+}
 
+do {
+	my $in1 = <$R1>;
+	my $in2 = <$R2>;
+	do_things($in1,$in2);
+	$counter++;
+} until eof $R1;
+
+sub do_things {
+	my $l1 = shift;
+	my $l2 = shift;
+	
 	$R1_l.=$l1;
 	$R2_l.=$l2;
 	
@@ -132,9 +156,9 @@ do {
 		$R2_l="";
 		%output=();
 	}
+}
 
-	$counter++;
-} until eof $R1;
+
 
 sub count_match {
 	my $str1 = uc(shift);
@@ -147,7 +171,6 @@ sub count_match {
 		$count -- if $x&$y;
  	}
 	return($count);
-	
 }
 
 sub to_bin{
@@ -164,40 +187,35 @@ sub grab_adapters {
 # finds (probable) adapter sequence by searching first 4000 lines of fastq files
 # NOTE: is not primer specific - i.e. different multiplexed primer sets can't have unique adapters
 # implementation of this is not too hard, convert adapter_match_x to a hash of arrays keyed by primer would work  - number of lines to search should probably be increased as well
-	my $c=1;
 	my %F;
 	my %R;
-	do {	
-		my $l1 = <$R1>;
-		my $l2 = <$R2>;
+	for(my $c=1;$c<scalar(@f4000);$c+=4) {
+		my $l1 = $f4000[$c];
+		my $l2 = $r4000[$c];
 		my $x = length($l1);my $y=length($l2);
-		if(($c+2)%4==0) {
-			if((length($l1)>30)&&(length($l2)>30)){
-				my @adapter_match_f;
-				my @adapter_match_r;
-	
-				for(my $i=0;$i<20;$i++) {
-					foreach(@ind_f) {
-						$adapter_match_f[$i]=count_match(substr($l1,$i,5),substr($_,0,5));
-					}
-					foreach(@ind_r) {
-						$adapter_match_r[$i]=count_match(substr($l2,$i,5),substr($_,0,5));
-					}			
-				}
-		
-				my $idxMax_f = 0;
-				my $idxMax_r = 0;
-		
-				$adapter_match_f[$idxMax_f] < $adapter_match_f[$_] or $idxMax_f = $_ for 1 .. $#adapter_match_f;
-				$adapter_match_r[$idxMax_r] < $adapter_match_r[$_] or $idxMax_r = $_ for 1 .. $#adapter_match_r;
-			
-				$F{substr($l1,0,($idxMax_f))}++;
-				$R{substr($l2,0,($idxMax_r))}++;
-			}
-		}	
+		if((length($l1)>30)&&(length($l2)>30)){
+			my @adapter_match_f;
+			my @adapter_match_r;
 
-		$c++;
-	} until ($c==4000|eof $R1); 
+			for(my $i=0;$i<20;$i++) {
+				foreach(@ind_f) {
+					$adapter_match_f[$i]=count_match(substr($l1,$i,5),substr($_,0,5));
+				}
+				foreach(@ind_r) {
+					$adapter_match_r[$i]=count_match(substr($l2,$i,5),substr($_,0,5));
+				}			
+			}
+
+			my $idxMax_f = 0;
+			my $idxMax_r = 0;
+
+			$adapter_match_f[$idxMax_f] < $adapter_match_f[$_] or $idxMax_f = $_ for 1 .. $#adapter_match_f;
+			$adapter_match_r[$idxMax_r] < $adapter_match_r[$_] or $idxMax_r = $_ for 1 .. $#adapter_match_r;
+
+			$F{substr($l1,0,($idxMax_f))}++;
+			$R{substr($l2,0,($idxMax_r))}++;
+		}
+	} 
 	
 	my $adapter_f = max_by { $F{$_} } keys %F;
 	my $adapter_r = max_by { $R{$_} } keys %R;
@@ -218,5 +236,4 @@ sub grab_adapters {
 	foreach(@ind_r) {
 		print"Full reverse    $_\n";
 	}
-#	exit;
 }

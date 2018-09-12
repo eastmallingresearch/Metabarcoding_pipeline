@@ -19,10 +19,13 @@ cd $TMP
 cat ${FILTDIR}/*.fa > ${PREFIX}.temp.fa
 echo $(ls -gh ${PREFIX}.temp.fa)
 
-#### Remove multiplex primers and pad reads to same length
-X=`awk '{if ($1!~/>/){mylen=mylen+length($0)}else{print mylen;mylen=0};}' ${PREFIX}.temp.fa|awk '$0>x{x=$0};END{print x}'`
-usearch -fastx_truncate ${PREFIX}.temp.fa -stripleft $SL -stripright $SR -trunclen $X -padlen $X -fastaout ${PREFIX}.fa
+#### Remove multiplex primers and pad reads to same length - I no longer use this step 
+# (there's also the problem of the usearch bit running out of memory, it wouldn't be much effort to implement my own version of this, could do it with within the get_uniq.pl script)
+# X=`awk '{if ($1!~/>/){mylen=mylen+length($0)}else{print mylen;mylen=0};}' ${PREFIX}.temp.fa|awk '$0>x{x=$0};END{print x}'`
+# usearch -fastx_truncate ${PREFIX}.temp.fa -stripleft $SL -stripright $SR -trunclen $X -padlen $X -fastaout ${PREFIX}.fa
 #rm ${PREFIX}.temp.fa
+
+mv ${PREFIX}.temp.fa ${PREFIX}.fa
 
 #### Dereplication
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' ${PREFIX}.fa|$SCRIPT_DIR/get_uniq.pl > ${PREFIX}.sorted.fasta 

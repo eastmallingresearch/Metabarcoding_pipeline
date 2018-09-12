@@ -6,8 +6,11 @@
 dir=$1
 OUTDIR=$2
 PREFIX=$3
+VER=$4
 
 for SCRIPT_DIR; do true; done
 
-Rscript $SCRIPT_DIR/merge_biom.R $OUTDIR $dir ".*otu_table.*"  $PREFIX
+if  ! (( $VER )) ; then VER=""; fi
+
+Rscript $SCRIPT_DIR/merge_otu_tables.R $dir ".*otu_table.*" $OUTDIR  ${PREFIX}${VER}
 
