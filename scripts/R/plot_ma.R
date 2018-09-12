@@ -2,37 +2,39 @@ plot_ma <- function
 (
 	fitObj,
 	xlim=c(-6,6),
-	textsize=16,
+	textSize=16,
 	textFont="Helvetica",
 	pointSize=3,
 	legend=F,
+	LOG=2,
 	crush=T
 )
 {
 	cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
-	d <- fitObj[,c(2,3,6)]
+	d <- as.data.table(fitObj)
 	colnames(d) <- c("log2FoldChange","baseMean","padj")
-	d$group<-1
-	d[d$padj<=0.05,4]<-2 
-	d[abs(d$log2FoldChange)>1,4]<-3 
-	d[(d$padj<=0.05)&(abs(d$log2FoldChange)>1),4]<-4
-	d$group<-as.factor(d$group)
+	d$group<-"Not sig"
+	d$group[d$padj<=0.05]<- "p <= 0.05" 
+	d$group[abs(d$log2FoldChange)>1] <- "FC >= 2"	
+	d$group[(d$padj<=0.05&(abs(d$log2FoldChange)>1))] <- "p <= 0.05 &\nFC >= 2" 
 	d$shape<-16
+	d$group<-as.factor(d$group)
+	d$group<-factor(d$group,levels(d$group)[c(2,3,1,4)])
 
 	if(crush){
-		d[d$log2FoldChange<xlim[1],5]<-25
-		d[d$log2FoldChange<xlim[1],1]<-xlim[1]
-		d[d$log2FoldChange>xlim[2],5]<-24
-		d[d$log2FoldChange>xlim[2],1]<-xlim[2]
+		d$shape[d$log2FoldChange<xlim[1]] <- 25
+		d$log2FoldChange[d$log2FoldChange<xlim[1]] <-xlim[1]
+		d$shape[d$log2FoldChange>xlim[2]] <- 24
+		d$log2FoldChange[d$log2FoldChange>xlim[2]] <-xlim[2]
 	}
 
-	g <- ggplot(data=d,aes(x=log2FoldChange,y=baseMean,colour=group,shape=shape))
+	g <- ggplot(data=d,aes(x=log2FoldChange,y=log(baseMean,LOG),colour=group,shape=shape))
 	
 	if(!legend) {
 		g <- g + theme_classic_thin(textSize,textFont) %+replace% theme(legend.position="none")
 	} else {
-		g <- g + theme_classic_thin(textSize,textFont)
+		g <- g + theme_classic_thin(textSize,textFont) %+replace% theme(legend.title=element_blank())
 	}
 
 	g <- g + scale_shape_identity() 

@@ -1,7 +1,7 @@
 plotTaxa <- function(
 	obj=mybiom, 	# obj (phloseq) a phyloseq object which must include taxonomy and sample data (or alternatively an S3 list)
 	taxon="phylum", 	# taxon (str) is the taxonomic level of interest
-	design, 		# condition (str) describes how the samples should be grouped (must be column of sample data)
+	design="all", 		# condition (str) describes how the samples should be grouped (must be column of sample data)
 	proportional=T,	# proportional (bool) whether the graph should use proportional or absolute values
 	cutoff=1, 	# cutoff (double) for proportional graphs. 
 	topn=0, 		# topn (int)taxons to display (by total reads) for non-prortional graphs. T
@@ -17,8 +17,10 @@ plotTaxa <- function(
 	ylims=NULL,	# 
 	margins=c(0.2,0.2,0.2,1.5),
 	textSize=14,
-	ret_data=F,
+	returnData=F,
 	legend=T,
+	NEW=T,
+    conf=0.65,
 	transform=function(o,design,...) 
 	{	
 		suppressPackageStartupMessages(require(DESeq2))
@@ -28,37 +30,50 @@ plotTaxa <- function(
 			calcFactors <- dots$calcFactors
 			dots$calcFactors<-NULL
 			if(length(dots)>=1) {
-				assay(varianceStabilizingTransformation(ubiom_to_des(o,design,calcFactors=calcFactors),unlist(dots)))
+				 assay(varianceStabilizingTransformation(ubiom_to_des(o,design=design,calcFactors=calcFactors),unlist(dots)))
 			} else {
-				assay(varianceStabilizingTransformation(ubiom_to_des(o,design,calcFactors=calcFactors)))
+				 assay(varianceStabilizingTransformation(ubiom_to_des(o,desing=design,calcFactors=calcFactors)))
 			}
 		} else {
-			assay(varianceStabilizingTransformation(ubiom_to_des(o,as.formula(design)),...))
+			if(NEW) {
+				assay(varianceStabilizingTransformation(o$dds))
+			} else {
+				assay(varianceStabilizingTransformation(ubiom_to_des(o,design=as.formula(design)),...))
+			}
 		}
 	}, # data transformation function 
 	... # arguments to pass to transform function (obviously they could just be set in the function, but this looks neater)
 ) {
 	suppressPackageStartupMessages(require(ggplot2))
 	suppressPackageStartupMessages(require(scales))
-	
+
 	if(isS4(obj)) {
 		obj <- phylo_to_ubiom(obj)
 	} 
-	
+
+
 	if(trans) {
 		temp <- design
 		idx <- grep(design,colnames(obj[[3]]))
-		if(length(unique(obj[[3]][idx]))==1) {
+		if(length(unique(obj[[3]][idx]))<=1) {
 			design<-1
 		}
 		obj[[1]] <- as.data.frame(transform(obj,as.formula(paste0("~",design)),...))
+		#obj[[1]] <- as.data.frame(transform(obj,as.formula("~1"),...))
 		design<-temp
 	}
 	#obj[[1]][obj[[1]]] <- obj[[1]][obj[[1]]]+abs(min(obj[[1]][obj[[1]]]))
 
 	obj[[1]][obj[[1]]<0] <- 0
+
+
+	if(NEW) {
+		obj <- list(countData=obj$countData,taxData=obj$taxData,colData=obj$colData)
+	}
+
 	
-	taxa_sum <- sumTaxa(obj,taxon=taxon,design=design)
+
+	taxa_sum <- sumTaxa(obj,taxon=taxon,design=design,conf=conf)
 	taxa_sum$taxon[grep("\\(",taxa_sum$taxon)] <- taxa_sum$taxon[sub("\\(.*"," incertae sedis",taxa_sum$taxon)]
 
 	if(!topn) {
@@ -90,13 +105,15 @@ plotTaxa <- function(
 		taxa_cut <- taxa_cut[,-ncol(taxa_cut)]
 	}
 
-	if(ret_data) {
+	if(returnData) {
 		return(taxa_cut)
 	}
 
 	md2 <- melt(taxa_cut,id=colnames(taxa_cut)[1])
 
 	md2$variable <- factor(md2$variable, levels=levels(md2$variable)[order(levels(md2$variable))]  )
+
+	md2$value <- as.numeric(md2$value)
 
 	if (type==1) {
 		g <- ggplot(md2,aes_string(x=md2[,2],y=md2[,3],fill=taxon))
@@ -107,9 +124,9 @@ plotTaxa <- function(
 	
 
 	if(bw) {
-		g<-g+geom_bar(stat="identity",colour="white",fill="black",position=stack)
+		g<-g+geom_bar(stat="identity",colour="white",fill="black",position="stack")
 	} else {
-		g <- g + geom_bar(stat="identity",colour="white",position=stack)		
+		g <- g + geom_bar(stat="identity",colour="white",position="stack")		
 	}
 
 	g <- g  + xlab("")

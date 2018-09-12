@@ -1,16 +1,19 @@
 # collapses samples with unequal libraries to mean and recalculates size factors 
 
 collapseReplicates2 <- 
-function (object, groupby, run, renameCols = TRUE)
+function (object, groupby, run, renameCols = TRUE,simple=F,method=mean)
 {
-    if (!is.factor(groupby))
-        groupby <- factor(groupby)
+    if (!is.factor(groupby)) groupby <- factor(groupby)
     groupby <- droplevels(groupby)
     stopifnot(length(groupby) == ncol(object))
     sp <- split(seq(along = groupby), groupby)
+	if(simple) {sizeFactors(object) <- 1}
     sizefactors <- sapply(sp, function(i) prod(sizeFactors(object)[i,drop=F]))
+
     countdata <- sapply(sp, function(i) 
-	rowMeans(counts(object,normalize=T)[,i, drop = FALSE]*prod(sizeFactors(object)[i,drop=F])))
+		rowMeans(counts(object,normalize=T)[,i, drop = FALSE]*prod(sizeFactors(object)[i,drop=F]))
+	)
+
     mode(countdata) <- "integer"
     colsToKeep <- sapply(sp, `[`, 1)
     collapsed <- object[, colsToKeep]

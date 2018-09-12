@@ -15,6 +15,7 @@ plotCorrelog <- function(
 	cols=c("#edf8b1","#2c7fb8"),
 	lineWidth=1.5,
 	useMeans=F,
+	textSize=12,
 	design=c("Tree","Grass") 
 ) {
 
@@ -48,9 +49,9 @@ plotCorrelog <- function(
 # 	g <- g + theme(axis.line.x = element_line(size=0.5,colour = "black"),axis.line.y = element_line(size=0.5,colour = "black"),axis.text = element_text(colour = "black"))
 
 	if(!legend) {
-		g <- g + theme_classic() %+replace% theme(legend.position="none")
+		g <- g + theme_classic(base_size=textSize) %+replace% theme(legend.position="none")
 	} else {
-		g <- g + theme_classic() + 
+		g <- g + theme_classic(base_size=textSize) + 
 			theme(
 			legend.position=lpos,
 			legend.text=element_text(size=10),

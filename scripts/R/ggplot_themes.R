@@ -19,6 +19,15 @@ theme_classic_thin <- function(base_size = 11, base_family = "")
 }
 
 
+theme_facet_blank <- function(base_size = 11, base_family = "",angle=-90,vjust=0.5,hjust=0)
+{
+	theme_classic_thin(base_size = base_size, base_family = base_family) %+replace% 
+	theme(
+		panel.border = element_rect(colour = "black", fill=NA, size=0.5),
+		axis.text.x = element_text(angle = angle, vjust = vjust,hjust = hjust)
+	)
+}
+
 
 
 #  theme(

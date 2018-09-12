@@ -1,25 +1,41 @@
 plotCummulativeReads <- 
-function(countData,cutoffs=c(0.8,0.9,0.99,0.999))
+function(countData,cutoffs=c(0.8,0.9,0.99,0.999),returnData="dtt",plot=TRUE,bysample=F)
 {
 	
+	require(ggplot2)
+	require(data.table)
+	
 	# calculate row sums from normalised read counts
-	df <- data.table(CD=rowSums(countData),keep.rownames=F)
+    if(bysample){
+		DT <- data.table(apply(countData,2,sort,decreasing=T))
+   	} else {
+		DT <- data.table(CD=rowSums(countData),OTU=rownames(countData))
+		setorder(DT,-CD)
+	}
+
+
+#	DT <- DT[order("CD",decreasing=T)]
+	print(paste("Returning data table as",returnData))
+ 	assign(returnData, DT, envir=globalenv())
+	if(!plot)return("Not plotting")
 
 	# calculate cumulative sum of ordered OTU counts 
-	df <- cumsum(df[order("CD",decreasing=T)])
- 
-	suppressWarnings(if(cutoffs) {
+    #DT <- cumsum(DT)
+    if(!bysample){DT<-DT[-2]}
+	DT <- cumsum(DT)
+	#DT$CD <- cumsum(DT[,"CD"])
+
+	suppressWarnings(if(cutoffs&!bysample) {
 		# get cutoff poisiotns
-		mylines <- data.table(RHB=sapply(cutoffs,function(i) {nrow(df) - sum(df >= max(df,na.rm=T)*i)}),Cutoffs=cutoffs)	
+		mylines <- data.table(RHB=sapply(cutoffs,function(i) {nrow(DT) - sum(DT$CD >= max(DT$CD,na.rm=T)*i)}),Cutoffs=cutoffs)	
+#mylines <- data.table(RHB=sapply(cutoffs,function(i) {nrow(DT) - sum(DT >= max(DT,na.rm=T)*i)}),Cutoffs=cutoffs)	
 	}) 
 
 	# log the count values
-	df <- log10(df)
-
-	#if(returnData){return(df)}
+	DT$CD <- log10(DT[,"CD"])
 
 	# create an empty ggplot object from the data table
-	g <- ggplot(data=df,aes_string(x=seq(1,nrow(df)),y="CD"))
+	g <- ggplot(data=DT,aes_string(x=seq(1,nrow(DT)),y="CD"))
 
 	# remove plot background and etc.
 	g <- g + theme_classic_thin()

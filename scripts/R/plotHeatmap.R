@@ -28,7 +28,10 @@ function (dist,
 	g <- g + scale_y_discrete("Var2")
 
 	#g <- g + geom_tile(aes(fill=Unidist),colour="black")
-	g <- g + scale_fill_gradient(low="#000033", high = "#66CCFF", na.value = "black")
+	# g <- g + scale_fill_gradient(low="#000033", high = "#66CCFF", na.value = "black") # blue scale
+
+	g <- g + scale_fill_gradient(low="black", high = "lightgrey", na.value = "white") # greyscale
+	
 	return(g)
 
 }
