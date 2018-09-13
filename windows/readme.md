@@ -6,38 +6,42 @@ The pipeline should be able to run on Cygwin without any modification (maybe).
 ## Pure windows version
 Scripts are run in the following order:  
 
-decompress??
-demulti_v3.pl (this will need decompressed input - via zcat currently. Will need a windows tool to handle gz files??)
-submit_16Spre_v2.sh - this uses usearch, awk, sed and perl
-adapt_delete.pl stdin (sorted/unique usearch -search_oligodb -userout via awk scripts)
-submit_uparse_v2.sh 
-  dereplication and sorting via get_uniq.pl (this takes single line fasta as input - easy to make it take multiline)
-  usearch
-submit_taxonomy.sh
-  usearch 
-  mod_taxa.pl/mod_taxa_sintax.pl (uses stdin - can be adjusted)
-submit_cat_files.sh
-  cat only
-submit_global_search.sh
-  usearch
+decompress??  
+demulti_v3.pl (this will need decompressed input - via zcat currently. Will need a windows tool to handle gz files??)  
+submit_16Spre_v2.sh - this uses usearch, awk, sed and perl  
+adapt_delete.pl stdin (sorted/unique usearch -search_oligodb -userout via awk scripts)  
+submit_uparse_v2.sh   
+  dereplication and sorting via get_uniq.pl (this takes single line fasta as input - easy to make it take multiline)  
+  usearch  
+submit_taxonomy.sh  
+  usearch   
+  mod_taxa.pl/mod_taxa_sintax.pl (uses stdin - can be adjusted)  
+submit_cat_files.sh  
+  cat only  
+submit_global_search.sh  
+  usearch  
   
-The quickest method (outside a Cygwin implementation) would be to use a Perl + Usearch implementation.
+The quickest method (outside a Cygwin implementation) would be to use a Perl + usearch implementation.
 Shouldn't be too hard to implement - I'll stay away from any powershell/vbscript for now.
 
 ## Perl for Windows installation
 
 https://learn.perl.org/installing/windows.html
 
-Set path to perl\bin and perl\site\bin
+Set path to include perl\bin and perl\site\bin
+```cmd
+REM set perl paths
+setx path "c:\perl\bin;c:\perl\site\bin"
+
+REM install perl module installer
 cpan App::cpanminus
 
-install modules
-
+REM install modules
 cpanm Scalar::Util
 cpanm List::Util
 cpanm List::UtilsBy
 cpanm IO::Uncompress::Gunzip
-
+```
 
 ## Decompression
 Perl includes modules for decompression...
