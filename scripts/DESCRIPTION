@@ -1,7 +1,7 @@
-Package: myfunctions
+Package: metafuncs
 Title: Functions
 Description: Does stuff
-Version: 0.1
+Version: 0.2
 License: GNU
 Author: Greg Deakin <greg.deakin@emr.ac.uk>
 Maintainer: Greg Deakin <greg.deakin@emr.ac.uk>
