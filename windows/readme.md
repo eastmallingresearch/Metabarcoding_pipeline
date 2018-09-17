@@ -47,7 +47,9 @@ cpanm IO::Uncompress::Gunzip
 Perl includes modules for decompression...
  
 
-## Demultiplexing
+## Demultiplexing (and primer matching)
+This should always be run-even if not demuliplexing-to ensure both forawrd and reverse primers are present in a read pair 
+
 demulti_v3.pl can handle both gz and uncompressed input fastq
 
 ```cmd
