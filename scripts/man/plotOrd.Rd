@@ -10,8 +10,7 @@ plotOrd(obj, colData, design = NULL, shapes = NULL, label = NULL,
   colourScale = c(low = "red", high = "yellow"), cbPalette = F,
   pointSize = 2, textSize = 11, textFont = "Helvetica", xlims = NULL,
   ylims = NULL, legend = "right", title = NULL, xlabel, ylabel,
-  axes = c(1, 2), dimx = 1, dimy = 2, alpha = NULL, exclude = T,
-  noPlot = F, ...)
+  axes = c(1, 2), alpha = NULL, exclude = T, noPlot = F, ...)
 }
 \arguments{
 \item{obj}{a dataframe containing xy coordinates, e.g. principal component
@@ -25,9 +24,8 @@ scores}
 
 \item{label}{column(s) of colData to use for sample labeling}
 
-\item{facet}{column(s) of colData.
-This doesn't add a layer to the graph just adds facet as a data column,
-To use call g + facet_wrap(~facet)}
+\item{facet}{column(s) of colData. Adds a faceting column to the 
+returned ggplot object. To use call g + facet_wrap(~facet)'}
 
 \item{plot}{Plot either [point] or [label] (Default = "point")}
 
@@ -44,7 +42,7 @@ To use call g + facet_wrap(~facet)}
 \item{colourScale}{Vector used for continuous colour scales (Low to High)
 (Default = c(low="red", high="yellow")) #greyscale low="#000000", high="#DCDCDC"}
 
-\item{cbPalette}{Use a predefined colour blind palette
+\item{cbPalette}{Use a predefined colour blind palette 
 Max eight factors allowable in design (Default = F)}
 
 \item{pointSize}{The size of plot points (Default = 2)}
@@ -53,47 +51,45 @@ Max eight factors allowable in design (Default = F)}
 
 \item{textFont}{The base text font for the graph (Default = "Helvetica")}
 
-\item{xlims}{Numeric vector of x-axis limits, e.g. c(-8,8) (Default unlimited)}
+\item{xlims, }{ylims Numeric vectors of axis limits, 
+e.g. c(-8,8) (Default unlimited)}
 
-\item{ylims}{Numeric vector of y-axis limits, e.g. c(-4,6) (Default unlimited)}
+\item{legend}{Position of legend. 
+Set to "none" to remove legend (Default = "right").}
 
-\item{legend}{Position of legend.
-Set to "none" to remove legend (Default = "right")}
+\item{title}{Title (Default is to not use a title).}
 
-\item{title}{Title (Default is to not use a title)}
+\item{xlabel, }{ylabel Set axis labels.}
 
-\item{xlabel}{Set x-axis label}
+\item{axes}{Columns of obj to use for plotting (Default = c(1,2))}
 
-\item{ylabel}{Set y-axis label}
-
-\item{axes}{Column of obj to use for plotting (Default = c(1,2))}
-
-\item{dimx}{Not implemented use axes}
-
-\item{dimy}{Not implemented use axes}
-
-\item{alpha}{Numeric value, "prettifies" points by adding an extra outer circle
+\item{alpha}{Numeric value, "prettifies" points by adding an extra outer circle 
 with given alpha value}
 
 \item{exclude}{vector of points to exclude (Default show all points)}
 
-\item{noPlot}{T/F if set do not plot return list of:
+\item{noPlot}{T/F if set do not plot return list of: 
 [1] selected obj axes and [2] aesthetics (Default FALSE)}
 
 \item{...}{additional parameters pass to "no-where" (i.e does nothing)}
 }
 \value{
-A a ggplot scatter plot of the axes taken from obj,
+A a ggplot scatter plot of the axes taken from obj, 
 colours as per design and shapes as per shapes (unless noPlot set to TRUE)
 }
 \description{
-\code(plotOrd) can help in making pretty PCA plots
+plotOrd can help in making pretty PCA/Ordination plots
+}
+\details{
+This is a function for making simple ggplot ordination plots from two column data with 
+additional metadata. Based on DESeq2::plotPCA, but with extra functionality for labeling
+points, and etc. All the additional functionality can be applied post return of ggplot object
 }
 \examples{
 d <- data.frame(PCA1=runif(10,-8,8),PCA2=runif(10,-4,6))
 m <- data.frame(Sample=seq(1,10),
-	Condition=rep(c("H","D"),5),
-     Site=c(rep("A",5),rep("B",5)))
+Condition=rep(c("H","D"),5),
+Site=c(rep("A",5),rep("B",5))) 
 
 plotOrd(obj=d,colData=m,design="Condition")
 
