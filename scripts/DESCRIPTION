@@ -1,0 +1,7 @@
+Package: myfunction
+Title: Functions
+Description: Does stuff
+Version: 0.1
+License: GNU
+Author: Greg Deakin <greg.deakin@emr.ac.uk>
+Maintainer: Greg Deakin <greg.deakin@emr.ac.uk>
