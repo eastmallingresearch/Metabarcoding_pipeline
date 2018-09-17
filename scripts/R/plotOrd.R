@@ -1,3 +1,59 @@
+#' Ordination plot
+#'
+#' \code(plotOrd) can help in making pretty PCA plots
+#'
+#' @param obj a dataframe containing xy coordinates, e.g. principal component
+#'   scores
+#' @param colData dataframe containing sample metadata
+#' @param design column(s) of colData descriminating sample types (colour)
+#' @param shapes column(s) of colData descriminating sample types (shape)
+#' @param label column(s) of colData to use for sample labeling 
+#' @param facet column(s) of colData. 
+#'   This doesn't add a layer to the graph just adds facet as a data column, 
+#'   To use call g + facet_wrap(~facet) 
+#' @param plot Plot either [point] or [label] (Default = "point")
+#' @param labelSize Text size for labels(Default = 4)
+#' @param labelPosition Label position relative to point(Default = c(-1.5,0.5))
+#' @param sublabels a numeric vector of labels to remove (Default = F)
+#' @param cluster Set to turn on clustering, value is stat_sllipse confidence
+#' @param continuous T/F whether design is a continuos variable (default FALSE)
+#' @param colourScale Vector used for continuous colour scales (Low to High)
+#'   (Default = c(low="red", high="yellow")) #greyscale low="#000000", high="#DCDCDC"
+#' @param cbPalette Use a predefined colour blind palette 
+#'   Max eight factors allowable in design (Default = F)
+#' @param pointSize The size of plot points (Default = 2)
+#' @param textSize The base text size for the graph (Default = 11)
+#' @param textFont The base text font for the graph (Default = "Helvetica")
+#' @param xlims Numeric vector of x-axis limits, e.g. c(-8,8) (Default unlimited) 
+#' @param ylims Numeric vector of y-axis limits, e.g. c(-4,6) (Default unlimited) 
+#' @param legend Position of legend. 
+#'  Set to "none" to remove legend (Default = "right")
+#' @param title Title (Default is to not use a title)
+#' @param xlabel Set x-axis label
+#' @param ylabel Set y-axis label
+#' @param axes Column of obj to use for plotting (Default = c(1,2))
+#' @param dimx Not implemented use axes
+#' @param dimy Not implemented use axes
+#' @param alpha Numeric value, "prettifies" points by adding an extra outer circle 
+#'   with given alpha value
+#' @param exclude vector of points to exclude (Default show all points)
+#' @param noPlot T/F if set do not plot return list of: 
+#' [1] selected obj axes and [2] aesthetics (Default FALSE)
+#' @param ... additional parameters pass to "no-where" (i.e does nothing)
+#' @return A a ggplot scatter plot of the axes taken from obj, 
+#' colours as per design and shapes as per shapes (unless noPlot set to TRUE)
+#' @example
+#' d <- data.frame(PCA1=runif(10,-8,8),PCA2=runif(10,-4,6))
+#' m <- data.frame(Sample=seq(1,10),
+#' 	Condition=rep(c("H","D"),5),
+#'      Site=c(rep("A",5),rep("B",5))) 
+#' 
+#' plotOrd(obj=d,colData=m,design="Condition")
+#'
+#' plotOrd(obj=d,colData=m,design="Condition",shapes="Site")
+#'
+#' plotOrd(obj=d,colData=m,design="Condition",xlims=c(-2,2), label="Sample")
+
 plotOrd <- function (
 	obj,
 	colData,
