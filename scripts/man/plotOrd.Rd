@@ -14,45 +14,45 @@ plotOrd(obj, colData, design = NULL, shapes = NULL, label = NULL,
 }
 \arguments{
 \item{obj}{a dataframe containing xy coordinates, e.g. principal component
-scores}
+scores.}
 
-\item{colData}{dataframe containing sample metadata}
+\item{colData}{dataframe containing sample metadata.}
 
-\item{design}{column(s) of colData descriminating sample types (colour)}
+\item{design}{column(s) of colData to discriminate sample type (colour).}
 
-\item{shapes}{column(s) of colData descriminating sample types (shape)}
+\item{shapes}{column(s) of colData to discriminate sample type (shape).}
 
-\item{label}{column(s) of colData to use for sample labeling}
+\item{label}{column(s) of colData to use for sample labeling.}
 
 \item{facet}{column(s) of colData. Adds a faceting column to the 
-returned ggplot object. To use call g + facet_wrap(~facet)'}
+returned ggplot object. To use call g + facet_wrap(~facet).}
 
-\item{plot}{Plot either [point] or [label] (Default = "point")}
+\item{plot}{Plot either [point] or [label] (Default = "point").}
 
-\item{labelSize}{Text size for labels(Default = 4)}
+\item{labelSize}{Text size for labels(Default = 4).}
 
-\item{labelPosition}{Label position relative to point(Default = c(-1.5,0.5))}
+\item{labelPosition}{Label position relative to point(Default = c(-1.5,0.5)).}
 
-\item{sublabels}{a numeric vector of labels to remove (Default = F)}
+\item{sublabels}{a numeric vector of labels to remove (Default = F).}
 
-\item{cluster}{Set to turn on clustering, value is stat_sllipse confidence}
+\item{cluster}{Set to turn on clustering, value is stat_sllipse confidence.}
 
-\item{continuous}{T/F whether design is a continuos variable (default FALSE)}
+\item{continuous}{T/F whether design is a continuos variable (default FALSE).}
 
 \item{colourScale}{Vector used for continuous colour scales (Low to High)
-(Default = c(low="red", high="yellow")) #greyscale low="#000000", high="#DCDCDC"}
+(Default = c(low="red", high="yellow")) #greyscale low="#000000", high="#DCDCDC".}
 
-\item{cbPalette}{Use a predefined colour blind palette 
-Max eight factors allowable in design (Default = F)}
+\item{cbPalette}{Use a predefined colour blind palette.
+Max eight factors allowable in design (Default = F).}
 
-\item{pointSize}{The size of plot points (Default = 2)}
+\item{pointSize}{The size of plot points (Default = 2).}
 
-\item{textSize}{The base text size for the graph (Default = 11)}
+\item{textSize}{The base text size for the graph (Default = 11).}
 
-\item{textFont}{The base text font for the graph (Default = "Helvetica")}
+\item{textFont}{The base text font for the graph (Default = "Helvetica").}
 
 \item{xlims, }{ylims Numeric vectors of axis limits, 
-e.g. c(-8,8) (Default unlimited)}
+e.g. c(-8,8) (Default unlimited).}
 
 \item{legend}{Position of legend. 
 Set to "none" to remove legend (Default = "right").}
@@ -61,29 +61,29 @@ Set to "none" to remove legend (Default = "right").}
 
 \item{xlabel, }{ylabel Set axis labels.}
 
-\item{axes}{Columns of obj to use for plotting (Default = c(1,2))}
+\item{axes}{Columns of obj to use for plotting (Default = c(1,2)).}
 
 \item{alpha}{Numeric value, "prettifies" points by adding an extra outer circle 
-with given alpha value}
+with given alpha value.}
 
-\item{exclude}{vector of points to exclude (Default show all points)}
+\item{exclude}{vector of points to exclude (Default show all points).}
 
 \item{noPlot}{T/F if set do not plot return list of: 
-[1] selected obj axes and [2] aesthetics (Default FALSE)}
+[1] selected obj axes and [2] aesthetics (Default FALSE).}
 
-\item{...}{additional parameters pass to "no-where" (i.e does nothing)}
+\item{...}{additional parameters (unused).}
 }
 \value{
 A a ggplot scatter plot of the axes taken from obj, 
-colours as per design and shapes as per shapes (unless noPlot set to TRUE)
+colours as per design and shapes as per shapes (unless noPlot set to TRUE).
 }
 \description{
-plotOrd can help in making pretty PCA/Ordination plots
+plotOrd can help in making pretty PCA/Ordination plots.
 }
 \details{
 This is a function for making simple ggplot ordination plots from two column data with 
-additional metadata. Based on DESeq2::plotPCA, but with extra functionality for labeling
-points, and etc. All the additional functionality can be applied post return of ggplot object
+additional metadata. Based on \code{DESeq2::plotPCA}, but with extra functionality for labeling
+points, and etc. All the additional functionality can be applied post return of ggplot object.
 }
 \examples{
 d <- data.frame(PCA1=runif(10,-8,8),PCA2=runif(10,-4,6))
