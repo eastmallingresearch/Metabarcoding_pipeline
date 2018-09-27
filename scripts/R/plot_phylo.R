@@ -128,10 +128,10 @@ function (
 	suppressPackageStartupMessages(require(viridis))
 
 	simpleCap <- function(x) {
-        s <- strsplit(x, " ")[[1]]
-        paste(toupper(substring(s, 1,1)), substring(s, 2),
-        sep="", collapse=" ")
-    }
+        	s <- strsplit(x, " ")[[1]]
+        	paste(toupper(substring(s, 1,1)), substring(s, 2),
+        	sep="", collapse=" ")
+    	}
 
 	retain<-measures
 	# function to convet input to integer values with ceiling for values < 1
@@ -156,7 +156,7 @@ function (
 
 	if(returnData) {return(all_alpha)}
 
-	# set colData to a data table
+	# set colData to a data table (no ides why this is to data frame first...)
 	colData <- as.data.table(as.data.frame(colData),keep.rownames="Samples")
 
 	# get column names of all_alpha
@@ -181,7 +181,6 @@ function (
 	# melt the data table by Sample
 	mdf <- melt(all_alpha,meaures.vars=meaures,id.vars=id.vars,variable.factor = TRUE)
 
-
 	X<-all_alpha[,c(id.vars,selabs),with=F]
 	names(X) <- c(id.vars,names(selabs))
 	X <- melt(X,id.vars=id.vars,value="se",variable.factor = TRUE)
@@ -190,8 +189,8 @@ function (
 
 	# remove se rows
 	mdf <- mdf[as.character(mdf$variable) %in% measures,]
-
-    # capitalise indices
+	
+	# capitalise indices
 	mdf$variable <- sub("S\\.","",mdf$variable)
 	mdf$variable <- sapply(mdf$variable,simpleCap)
 
