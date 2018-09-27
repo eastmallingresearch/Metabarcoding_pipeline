@@ -242,9 +242,9 @@ function (
 
 	# change colours to viridis
 	if(cbPalette) {
-		g<-g+scale_colour_manual(values=cbbPalette)	+ guides(colour=guide_legend(title=design))
+		g<-g+scale_colour_manual(values=cbbPalette) #+ guides(colour=guide_legend(title=design))
 	} else {
-		g<-g+scale_colour_viridis(discrete=TRUE)+ guides(colour=guide_legend(title=design))
+		g<-g+scale_colour_viridis(discrete=TRUE) #+ guides(colour=guide_legend(title=design))
 	}
 
 	# Add heading to each graph
