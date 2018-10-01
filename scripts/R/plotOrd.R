@@ -141,9 +141,9 @@ plotOrd <- function (
 		}
 		d <- cbind(d,colour=colour)
 		if(continuous) {
-			aes_map <- modifyList(aes_map,aes_string(colour=as.number(colour)))
+			aes_map <- modifyList(aes_map,aes(colour=as.number(colour)))
 		} else {
-			aes_map <- modifyList(aes_map,aes_string(colour=colour))
+			aes_map <- modifyList(aes_map,aes_string(colour="colour"))
 		}
 	}
 
@@ -175,7 +175,7 @@ plotOrd <- function (
 			as.factor(colData[[facet]])
 		}
 		d <- cbind(d,facet = facet)
-		aes_map <- modifyList(aes_map,aes_string(facet=facet))
+		aes_map <- modifyList(aes_map,aes_string(facet="facet"))
 	}
 
 
