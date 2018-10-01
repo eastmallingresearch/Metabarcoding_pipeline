@@ -254,7 +254,7 @@ function (
 
 }
 
-# modified phyloseq ordination plot
+# modified phyloseq ordination plot (allows rescaling by percentage variation in the axes)
 plot_ordination <-
 function (
   physeq,
