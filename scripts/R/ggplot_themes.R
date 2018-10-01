@@ -19,7 +19,7 @@ theme_classic_thin <- function(base_size = 11, base_family = "")
 }
 
 
-theme_facet_blank <- function(base_size = 11, base_family = "",angle=-90,t=0.5,r=0,b=0,l=0,vjust=t,hjust=r)
+theme_facet_blank <- function(base_size = 11, base_family = "",angle=-90,t=2,r=0,b=0,l=0,vjust=t,hjust=r)
 {
 	theme_classic_thin(base_size = base_size, base_family = base_family) %+replace% 
 	theme(
