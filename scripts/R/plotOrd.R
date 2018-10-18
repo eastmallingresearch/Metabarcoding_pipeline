@@ -32,6 +32,8 @@
 #'  e.g. c(-8,8) (Default unlimited).
 #' @param legend Position of legend. 
 #'   Set to "none" to remove legend (Default = "right").
+#' @param legendDesign Display legend for design (Default=True).
+#' @param legendShape Display legend for shapes (Default=True).
 #' @param title Title (Default is to not use a title).
 #' @param xlabel, ylabel Set axis labels.
 #' @param axes Columns of obj to use for plotting (Default = c(1,2)).
@@ -76,6 +78,8 @@ plotOrd <- function (
 	xlims=NULL,
 	ylims=NULL,
 	legend="right",
+	legendDesign=T,
+	legendShape=T,
 	title=NULL,
 	xlabel,
 	ylabel,
@@ -197,18 +201,18 @@ plotOrd <- function (
 
 	if(!is.null(design)) {
 		if(continuous) {
-			g <- g + scale_colour_gradient(low=colourScale[1], high=colourScale[2],name=design)
+			g <- g + scale_colour_gradient(low=colourScale[1], high=colourScale[2],name=design,guide=legendDesign)
 		} else {
 			if(cbPalette) {
-				g<-g+scale_colour_manual(values=cbbPalette)	+ guides(colour=guide_legend(title=design))
+				g<-g+scale_colour_manual(values=cbbPalette) + guides(colour=guide_legend(title=design),guide=legendDesign)
 			} else {
-				g<-g+scale_colour_viridis(discrete=TRUE)+ guides(colour=guide_legend(title=design))
+				g<-g+scale_colour_viridis(discrete=TRUE) + guides(colour=guide_legend(title=design),guide=legendDesign)
 			}
 		}
 	}
 
 	if (!is.null(shapes)) {
-		g <- g + scale_shape_discrete(name=shapes)
+		g <- g + scale_shape_discrete(name=shapes,guide=shapeDesign)
 	}
 
 	if(!is.null(alpha)) g <-g+ geom_point(size=(pointSize+(pointSize*1.5)),alpha=alpha)
