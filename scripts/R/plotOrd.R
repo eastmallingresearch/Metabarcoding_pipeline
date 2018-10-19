@@ -204,15 +204,15 @@ plotOrd <- function (
 			g <- g + scale_colour_gradient(low=colourScale[1], high=colourScale[2],name=design,guide=legendDesign)
 		} else {
 			if(cbPalette) {
-				g<-g+scale_colour_manual(values=cbbPalette) + guides(colour=guide_legend(title=design),guide=legendDesign)
+				g<-g+scale_colour_manual(values=cbbPalette,guide=legendDesign) + guides(colour=guide_legend(title=design))
 			} else {
-				g<-g+scale_colour_viridis(discrete=TRUE) + guides(colour=guide_legend(title=design),guide=legendDesign)
+				g<-g+scale_colour_viridis(discrete=TRUE,guide=legendDesign) + guides(colour=guide_legend(title=design))
 			}
 		}
 	}
 
 	if (!is.null(shapes)) {
-		g <- g + scale_shape_discrete(name=shapes,guide=shapeDesign)
+		g <- g + scale_shape_discrete(name=shapes,guide=legendShape)
 	}
 
 	if(!is.null(alpha)) g <-g+ geom_point(size=(pointSize+(pointSize*1.5)),alpha=alpha)
