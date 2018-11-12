@@ -111,11 +111,12 @@ The forward pipeline will need to be run for both (except where stated)
 ## Match forward reads to reverse reads
 
 ### Join ITS1 and ITS2
+Joins ITS and ITS2 and removes primers. Optionally truncates the length of ITS2
 ```shell
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c join \
  "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
  $PROJECT_FOLDER/data/$RUN/$SSU \
- $FPL $RPL
+ $FPL $RPL 200
 ```
 ### set OTU
 ```shell
