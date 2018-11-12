@@ -123,6 +123,7 @@ OTU=OTU1
 ```
 ### Extract reads
 ```shell
+rm $PROJECT_FOLDER/data/$RUN/$SSU/extracts/*.fa
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c extract_seqs \
  "$PROJECT_FOLDER/data/$RUN/$SSU/joined/*joined.fq" \
  $PROJECT_FOLDER/data/$RUN/$SSU \
