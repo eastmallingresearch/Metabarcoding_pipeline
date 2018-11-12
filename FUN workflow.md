@@ -108,9 +108,9 @@ It is debatable whether this is necessary - and it can take a while to run (coup
 I've split this into a forward only and a forward and reverse pipeline.  
 The forward pipeline will need to be run for both (except where stated)
 
-#### Forward pipeline
+## Forward pipeline
 
-##### Identify SSU, 5.8S  and LSU regions
+####Identify SSU, 5.8S  and LSU regions
 
 This will create a large number of array jobs on the cluster
 
@@ -124,7 +124,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/hmm/58s_start.hmm \
 ssu 58ss 20
 ```
 
-##### Remove SSU, 5.8S  and LSU regions
+### Remove SSU, 5.8S  and LSU regions
 ```shell
 # forward reads
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
@@ -135,7 +135,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
  $FPL $RPL
 ```
 
-##### Run if using forward only
+### Run if using forward only
 Move fasta and rename fasta header
 ```shell
 for D in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*1; do 
@@ -146,9 +146,9 @@ for D in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*1; do
 done
 ```
 
-#### Forward and reverse pipeline
+## Forward and reverse pipeline
 
-##### Identify SSU, 5.8S  and LSU regions
+### Identify SSU, 5.8S  and LSU regions
 
 This will create a large number of array jobs on the cluster
 
@@ -162,7 +162,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c procends \
  lsu 
 ```
 
-##### Remove SSU, 5.8S  and LSU regions and merge output
+### Remove SSU, 5.8S  and LSU regions and merge output
 If reverse read quality was poor and it was necessary to truncate reads to get more than a couple of reads past set LOWQUAL to TRUE
 
 LOWQUAL keeps reads which lack 5.8S homology - this is necessary as trimming will in most instances have removed the homologous region
@@ -177,7 +177,7 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITS \
  $LOWQUAL
 ```
 
-##### Return ITS1 where fasta header matches ITS2, unique ITS1 and unique ITS2
+### Return ITS1 where fasta header matches ITS2, unique ITS1 and unique ITS2
 
 ```shell
 find $PROJECT_FOLDER/data/$RUN/$SSU/fasta -type f -name *.r*.fa|xargs -I myfile mv myfile $PROJECT_FOLDER/data/$RUN/$SSU/filtered/.
