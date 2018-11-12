@@ -108,6 +108,32 @@ It is debatable whether this is necessary - and it can take a while to run (coup
 I've split this into a forward only and a forward and reverse pipeline.  
 The forward pipeline will need to be run for both (except where stated)
 
+## Match forward reads to reverse reads
+
+### Join ITS1 and ITS2
+```shell
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c join \
+ "$PROJECT_FOLDER/data/$RUN/$SSU/fastq/*R1*.fastq" \
+ $PROJECT_FOLDER/data/$RUN/$SSU \
+ $FPL $RPL
+```
+### set OTU
+```shell
+OTU=OTU1
+```
+### Extract reads
+```shell
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c extract_seqs \
+ "$PROJECT_FOLDER/data/$RUN/$SSU/joined/*joined.fq" \
+ $PROJECT_FOLDER/data/$RUN/$SSU \
+ $PROJECT_FOLDER/data/$RUN/FUN.otus_hits.out \
+ $OTU $QUAL
+```
+### Cluster reads
+```shell
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE3 $PROJECT_FOLDER/data/$RUN/$SSU $PROJECT_FOLDER/data/$RUN/$SSU/extracts $OTU
+```
+
 ## Forward pipeline
 
 ####Identify SSU, 5.8S  and LSU regions
