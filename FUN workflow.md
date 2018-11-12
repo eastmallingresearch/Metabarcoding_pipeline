@@ -131,7 +131,10 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c extract_seqs \
 ```
 ### Cluster reads
 ```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE3 $PROJECT_FOLDER/data/$RUN/$SSU $PROJECT_FOLDER/data/$RUN/$SSU/extracts $OTU
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE3 \
+  $PROJECT_FOLDER/data/$RUN/$SSU \
+  $PROJECT_FOLDER/data/$RUN/$SSU/extracts \
+  $OTU
 ```
 
 ## Forward pipeline
