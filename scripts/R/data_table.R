@@ -1,7 +1,13 @@
-# function for use with data table
+# functions for use with data table
 
 unsetNA = function(DT) {
   # or by number (slightly faster than by name) :
   for (j in seq_len(ncol(DT)))
     set(DT,which(is.na(DT[[j]])),j,0)
 }
+
+setNA = function(DT) {
+  for (j in seq_len(ncol(DT)))
+    set(DT,which(DT[[j]]==0),j,NA)
+}
+  
