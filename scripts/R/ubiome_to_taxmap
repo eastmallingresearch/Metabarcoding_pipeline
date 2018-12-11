@@ -1,0 +1,13 @@
+ubiome_to_taxmap <- function(
+	obj
+){
+	suppressPackageStartupMessages(require(metacoder))
+  counts <-  as.data.frame(obj[[1]], stringsAsFactors = FALSE)
+  meta   <- obj[[2]]
+  tax    <- obj[[3]]
+	phyloseq(
+		otu_table(obj[[1]],taxa_are_rows=T),
+	 	tax_table(as.matrix(obj[[3]])),
+	 	sample_data(obj[[2]])
+	 )
+}
