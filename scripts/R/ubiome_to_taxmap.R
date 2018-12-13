@@ -34,3 +34,30 @@ ubiome_to_taxmap <- function(
 	)
 	output	
 }
+
+calc_taxon_abund <-
+function (obj, data, cols = NULL, groups = NULL, out_names = NULL)
+{
+  do_it <- function(count_table, cols = cols, groups = groups) {
+        my_print("Summing per-taxon counts from ", length(cols),
+            " columns ", ifelse(length(unique(groups)) == length(unique(cols)),
+                "", paste0("in ", length(unique(groups)), " groups ")),
+            "for ", length(obj$taxon_ids()), " taxa")
+        obs_indexes <- obj$obs(data)
+        output <- lapply(split(cols, groups), function(col_index) {
+            col_subset <- count_table[, col_index]
+            vapply(obs_indexes, function(i) {
+            	if(length(i)>0) {
+                	sum(col_subset[i, ])
+                } else 0
+            }, numeric(1))
+        })
+        output <- as.data.frame(output, stringsAsFactors = FALSE)
+        return(output)
+    }
+    output <- do_calc_on_num_cols(obj, data, cols = cols, groups = groups,
+        other_cols = NULL, out_names = out_names, func = do_it)
+    output <- cbind(data.frame(taxon_id = obj$taxon_ids(), stringsAsFactors = FALSE),
+        output)
+    dplyr::as.tbl(output)
+}		     
