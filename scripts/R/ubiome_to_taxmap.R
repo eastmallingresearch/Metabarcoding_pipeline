@@ -1,6 +1,6 @@
 ubiome_to_taxmap <- function(
-	obj,
-	filter="rowSums(otu_table[,c(-1,-2)])>=0"
+	obj#,
+	#filter="rowSums(otu_table[,c(-1,-2)])>=0"
 ){
 	suppressPackageStartupMessages(require(metacoder))
 	# tibblise data
@@ -26,11 +26,11 @@ ubiome_to_taxmap <- function(
 	t2 <- gsub("_"," ",t2)	
 	t3 <- sapply(t2,function(x) names(t1[t1==x])[1])
 	otu_table <- as.tibble(cbind(taxon_id=t3,otu_table,stringsAsFactors=F))
-	otu_counts <- otu_table[filter,]
+	#otu_counts <- otu_table[eval(filter),]
 	output$data <- list(
-		otu_table   = otu_table,
-		otu_counts  = otu_counts,
-		sample_data = sample_data
+		otu_table   = otu_table#,
+		#otu_counts  = otu_counts,
+		#sample_data = sample_data
 	)
 	output	
 }
