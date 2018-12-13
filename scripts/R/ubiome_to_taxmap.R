@@ -49,7 +49,7 @@ function (obj, data, cols = NULL, groups = NULL, out_names = NULL)
             vapply(obs_indexes, function(i) {
             	if(length(i)>0) {
                 	sum(col_subset[i, ])
-                } else 0
+                } else numeric(1)
             }, numeric(1))
         })
         output <- as.data.frame(output, stringsAsFactors = FALSE)
