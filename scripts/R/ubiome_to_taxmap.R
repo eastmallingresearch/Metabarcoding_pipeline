@@ -29,7 +29,7 @@ ubiome_to_taxmap <- function(
 	otu_counts <- otu_table[rowSums(otu_table[,c(-1,-2)])>=filter,]
 	output$data <- list(
 		otu_table   = otu_table,
-		otu_counts  = otu_table %>% select(-"otu_id"),
+		otu_counts  = otu_counts,
 		sample_data = sample_data
 	)
 	output	
