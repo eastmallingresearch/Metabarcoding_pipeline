@@ -79,7 +79,7 @@ plotOrd <- function (
 	ylims=NULL,
 	legend="right",
 	legendDesign=T,
-	legendShape=T",
+	legendShape=T,
 	title=NULL,
 	xlabel,
 	ylabel,
