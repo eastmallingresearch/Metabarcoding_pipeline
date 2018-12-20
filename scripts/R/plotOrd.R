@@ -33,8 +33,7 @@
 #' @param legend Position of legend. 
 #'   Set to "none" to remove legend (Default = "right").
 #' @param legendDesign Display legend for design (Default=True).
-#' @param legendShape Display legend for shapes (Default="shape").
-#'   Set to "none" to remove legend
+#' @param legendShape Display legend for shapes (Default=True).
 #' @param title Title (Default is to not use a title).
 #' @param xlabel, ylabel Set axis labels.
 #' @param axes Columns of obj to use for plotting (Default = c(1,2)).
@@ -80,7 +79,7 @@ plotOrd <- function (
 	ylims=NULL,
 	legend="right",
 	legendDesign=T,
-	legendShape="shapes",
+	legendShape=T",
 	title=NULL,
 	xlabel,
 	ylabel,
@@ -213,7 +212,8 @@ plotOrd <- function (
 	}
 
 	if (!is.null(shapes)) {
-		g <- g + scale_shape_discrete(name=shapes,guide=legendShape)
+		g <- g + scale_shape_discrete(name=shapes)
+		if(!legendShape) g <- g + guides(shapes="none")
 	}
 
 	if(!is.null(alpha)) g <-g+ geom_point(size=(pointSize+(pointSize*1.5)),alpha=alpha)
