@@ -33,7 +33,8 @@
 #' @param legend Position of legend. 
 #'   Set to "none" to remove legend (Default = "right").
 #' @param legendDesign Display legend for design (Default=True).
-#' @param legendShape Display legend for shapes (Default=True).
+#' @param legendShape Display legend for shapes (Default="shape").
+#'   Set to "none" to remove legend
 #' @param title Title (Default is to not use a title).
 #' @param xlabel, ylabel Set axis labels.
 #' @param axes Columns of obj to use for plotting (Default = c(1,2)).
@@ -79,7 +80,7 @@ plotOrd <- function (
 	ylims=NULL,
 	legend="right",
 	legendDesign=T,
-	legendShape=T,
+	legendShape="shapes",
 	title=NULL,
 	xlabel,
 	ylabel,
