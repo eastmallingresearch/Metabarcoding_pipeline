@@ -213,7 +213,7 @@ plotOrd <- function (
 
 	if (!is.null(shapes)) {
 		g <- g + scale_shape_discrete(name=shapes)
-		if(!legendShape) g <- g + guides(shapes="none")
+		if(!legendShape) {g <- g + guides(shapes="none")}
 	}
 
 	if(!is.null(alpha)) g <-g+ geom_point(size=(pointSize+(pointSize*1.5)),alpha=alpha)
