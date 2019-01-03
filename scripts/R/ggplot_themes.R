@@ -19,12 +19,12 @@ theme_classic_thin <- function(base_size = 11, base_family = "")
 }
 
 
-theme_facet_blank <- function(base_size = 11, base_family = "",angle=-90,t=2,r=0,b=0,l=0)
+theme_facet_blank <- function(base_size = 11, base_family = "",angle=-90,t=2,r=0,b=0,l=0,hjust=0)
 {
 	theme_classic_thin(base_size = base_size, base_family = base_family) %+replace% 
 	theme(
 		panel.border = element_rect(colour = "black", fill=NA, size=0.5),
-		axis.text.x = element_text(angle = angle, margin = margin(t=t,r=r,b=b,l=l))
+		axis.text.x = element_text(angle = angle, margin = margin(t=t,r=r,b=b,l=l),hjust=hjust)
 	)
 }
 
