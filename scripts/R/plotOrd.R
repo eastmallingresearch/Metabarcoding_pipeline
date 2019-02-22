@@ -19,7 +19,7 @@
 #' @param labelSize Text size for labels(Default = 4).
 #' @param labelPosition Label position relative to point(Default = c(-1.5,0.5)).
 #' @param sublabels a numeric vector of labels to remove (Default = F).
-#' @param cluster Set to turn on clustering, value is stat_sllipse confidence.
+#' @param cluster Set to turn on clustering, value is stat_ellipse confidence.
 #' @param continuous T/F whether design is a continuos variable (default FALSE).
 #' @param colourScale Vector used for continuous colour scales (Low to High)
 #'   (Default = c(low="red", high="yellow")) #greyscale low="#000000", high="#DCDCDC".
@@ -53,7 +53,7 @@
 #' 
 #' plotOrd(obj=d,colData=m,design="Condition")
 #'
-#' plotOrd(obj=d,colData=m,design="Condition",shapes="Site")
+#' plotOrd(obj=d,colData=m,design="Condition",shapes="Site", alpha=0.75)
 #'
 #' plotOrd(obj=d,colData=m,design="Condition",xlims=c(-2,2), label="Sample")
 
