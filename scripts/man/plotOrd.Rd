@@ -35,7 +35,7 @@ returned ggplot object. To use call g + facet_wrap(~facet).}
 
 \item{sublabels}{a numeric vector of labels to remove (Default = F).}
 
-\item{cluster}{Set to turn on clustering, value is stat_sllipse confidence.}
+\item{cluster}{Set to turn on clustering, value is stat_ellipse confidence.}
 
 \item{continuous}{T/F whether design is a continuos variable (default FALSE).}
 
@@ -93,7 +93,9 @@ Site=c(rep("A",5),rep("B",5)))
 
 plotOrd(obj=d,colData=m,design="Condition")
 
-plotOrd(obj=d,colData=m,design="Condition",shapes="Site")
+plotOrd(obj=d,colData=m,design="Condition",shapes="Site",alpha=0.75)
 
 plotOrd(obj=d,colData=m,design="Condition",xlims=c(-2,2), label="Sample")
+  
+plotOrd(obj=d,colData=m,design="Condition",pointSize=3, alpha=0.75, textSize=16, cluster=0.75)  
 }
