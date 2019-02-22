@@ -43,7 +43,7 @@
 #' @param noPlot T/F if set do not plot return list of: 
 #'   [1] selected obj axes and [2] aesthetics (Default FALSE).
 #' @param ... additional parameters (unused).
-#' @return A a ggplot scatter plot of the axes taken from obj, 
+#' @return A ggplot scatter plot of the axes taken from obj, 
 #' colours as per design and shapes as per shapes (unless noPlot set to TRUE).
 #' @examples
 #' d <- data.frame(PCA1=runif(10,-8,8),PCA2=runif(10,-4,6))
