@@ -56,6 +56,8 @@
 #' plotOrd(obj=d,colData=m,design="Condition",shapes="Site", alpha=0.75)
 #'
 #' plotOrd(obj=d,colData=m,design="Condition",xlims=c(-2,2), label="Sample")
+#'
+#' plotOrd(obj=d,colData=m,design="Condition",pointSize=3, alpha=0.75, textSize=16, cluster=0.75)  
 
 plotOrd <- function (
 	obj,
