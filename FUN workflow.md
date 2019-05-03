@@ -58,7 +58,7 @@ sed -i -e 's/Zotu/OTU/' FUN.zotus.fa
 
 ### Assign taxonomy
 ```shell
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU 
+$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c tax_assign $PROJECT_FOLDER $RUN $SSU sintax
 ```
 
 ### OTU evolutionary distance
