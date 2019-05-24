@@ -235,7 +235,7 @@ function (
 
 	if(type=="box") {
 	  g <- g + geom_boxplot( position = position_dodge(width = 1))
-	else {
+	} else {
 	  # add points
 	  g <- g + geom_point(na.rm = TRUE,position = position_dodge(width = 0.5),size=pointSize)
 
