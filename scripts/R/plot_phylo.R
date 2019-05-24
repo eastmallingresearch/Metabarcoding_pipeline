@@ -123,7 +123,7 @@ function (
   legend="right",
   pointSize=2,
   cbPalette=F,
-  type="dot" # or box	
+  type="dot", # or box	
   ...
 ){
 	suppressPackageStartupMessages(require(viridis))
