@@ -69,6 +69,7 @@ P1R=GACTACHVGGGTATCTAATCC
 P2F=CTTGGTCATTTAGAGGAAGTAA
 P2R=ATATGCTTAAGTTCAGCGGG
 
+# change *16s*_R1_* to whatever is required
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c demultiplex \
  "$PROJECT_FOLDER/data/$RUN/fastq/*16s*_R1_*" 0 \
  $P1F $P1R $P2F $P2R
