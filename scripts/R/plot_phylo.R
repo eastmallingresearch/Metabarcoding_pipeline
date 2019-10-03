@@ -123,9 +123,11 @@ function (
   legend="right",
   pointSize=2,
   cbPalette=F,
+  type="dot", # or box	
   ...
 ){
 	suppressPackageStartupMessages(require(viridis))
+	suppressPackageStartupMessages(require(vegan))
 
 	simpleCap <- function(x) {
         	s <- strsplit(x, " ")[[1]]
@@ -147,9 +149,9 @@ function (
 
 	# calculate diversity measures
 	all_alpha <- data.table(
-		t(estimateR(OTU)),
-		shannon = diversity(OTU, index = "shannon"),
-		simpson = diversity(OTU, index = "simpson"),
+		t(vegan::estimateR(OTU)),
+		shannon = vegan::diversity(OTU, index = "shannon"),
+		simpson = vegan::diversity(OTU, index = "simpson"),
 		keep.rownames="Samples"
 	)
 
@@ -231,12 +233,15 @@ function (
 		legend.position=legend
 	)
 
-	# add points
-	g <- g + geom_point(na.rm = TRUE,position = position_dodge(width = 0.5),size=pointSize)
+	if(type=="box") {
+	  g <- g + geom_boxplot( position = position_dodge(width = 1))
+	} else {
+	  # add points
+	  g <- g + geom_point(na.rm = TRUE,position = position_dodge(width = 0.5),size=pointSize)
 
-	# add error bars
-	g <- g + geom_errorbar(aes(ymax = value + se, ymin = value -  se), width = 0.5,position = position_dodge(width = 0.5))
-
+	  # add error bars
+	  g <- g + geom_errorbar(aes(ymax = value + se, ymin = value -  se), width = 0.5,position = position_dodge(width = 0.5))
+	}
 	# add y label
 	g <- g + ylab("Alpha Diversity Measure")
 
