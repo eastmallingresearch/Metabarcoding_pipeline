@@ -60,3 +60,26 @@ function(countData,cutoffs=c(0.8,0.9,0.99,0.999),returnData="dtt",plot=TRUE,bysa
 	# print the plot
 	g
 }
+
+
+plotRarefaction <- function(X,cutOff) {
+  
+  cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", 
+                 "#F0E442", "#0072B2", "#D55E00", "#CC79A7")  
+  DT <- as.data.table(X)
+  DT <- DT[,lapply(.SD,sort,decreasing=T)]
+  DT <- cumsum(DT)
+  
+  
+  DT <- DT[,lapply(.SD,log10)]
+  DT[,Count:=1:nrow(DT)]
+  
+  DT <- melt(DT,id.vars="Count")
+  
+  g <- ggplot(DT[Count<=cutOff,],aes(x=Count,y=value,colour=variable))    
+  g + 
+    geom_line(size = 1.5)  + 
+    scale_colour_manual(values = cbPalette) + 
+    theme_classic_thin() %+replace% theme(legend.position = "none") + 
+    xlab("Number of OTUs") + ylab(expression(~Log[10]~" sequence count"))
+}
