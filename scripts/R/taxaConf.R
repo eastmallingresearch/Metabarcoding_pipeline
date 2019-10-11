@@ -1,14 +1,20 @@
 taxaConf <- 
 function (obj,conf=0.65,level=7){
-	rank <- apply(obj,1,function(x){
+
+  isEmpty <- function(x) {
+    return(length(x)==0)
+  }
+  
+  	rank <- apply(obj,1,function(x){
 		l <- (level+7)
 		y <-abs(as.numeric(x[8:l]))
-		i <- last(which(y>=conf))
+		i <-  last(which(y>=conf))
 		#i <- which.max(y<conf)-1 # which.max can't distinguish between all or zero passing
 		#if(i<(level-2)&(y[(i+2)]>=conf)) {
 		#	i <- max.col((t(y)<conf),"last")-1
 		#}
-		i[is.na(i)] <-1 
+		i[isEmpty(i)] <-1 
+		print(i)
 		# i[i<1] <- sum(y>conf);
 		##edit
 		if(i==1){s="(k)"
