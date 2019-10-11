@@ -14,7 +14,7 @@ function (obj,conf=0.65,level=7){
 		#	i <- max.col((t(y)<conf),"last")-1
 		#}
 		i[isEmpty(i)] <-1 
-		print(i)
+		#print(i)
 		# i[i<1] <- sum(y>conf);
 		##edit
 		if(i==1){s="(k)"
