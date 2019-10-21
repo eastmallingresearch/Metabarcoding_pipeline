@@ -39,7 +39,8 @@ This is mostly a UPARSE pipeline, but usearch (free version) runs out of memory 
 #denoise
 $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UPARSE $PROJECT_FOLDER $RUN $SSU 0 0
 #clustering with cluser_otu
-$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UCLUS $PROJECT_FOLDER $RUN $SSU 0 0
+# The denoising does both denoising and clustering, so this is no longer needed
+#$PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c UCLUS $PROJECT_FOLDER $RUN $SSU 0 0
 ```
 
 #### Work around for usearch bug 10.1
