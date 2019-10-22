@@ -29,7 +29,8 @@ $PROJECT_FOLDER/metabarcoding_pipeline/scripts/PIPELINE.sh -c ITSpre \
 
 ### SSU/58S/LSU removal 
 UPDATE - I no longer remove these regions for OTU creation. It has very little effect on the number of OTUs or number of reads assigned to each OTU. But, it might still make sense to remove the regions from the final OTU tables for taxanomic assignment (especially if using BLAST to check the sequences).  
-  
+ 
+### File move 
 The pipeline requires the below script to be run to move files to the correct location for clustering 
 ``` shell
 for F in $PROJECT_FOLDER/data/$RUN/$SSU/fasta/*_R1.fa; do 
