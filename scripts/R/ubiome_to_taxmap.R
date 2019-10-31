@@ -35,7 +35,7 @@ ubiome_to_taxmap <- function(
 	output	
 }
 
-calc_taxon_abund <-
+calc_taxon_abund2 <-
 function (obj, data, cols = NULL, groups = NULL, out_names = NULL)
 {
   do_it <- function(count_table, cols = cols, groups = groups) {
