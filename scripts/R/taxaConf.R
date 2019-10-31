@@ -1,3 +1,4 @@
+taxaConf <-
 function (obj, conf = 0.65, level = 7) 
 {
   rank <- apply(obj, 1, function(x) {
