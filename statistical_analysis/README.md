@@ -2,7 +2,7 @@
 
 Install the R scripts
 ```R
-library(devtools
+library(devtools)
 install_github("eastmallingresearch/Metabarcoding_pipeline/scripts")
 library(metafuncs)
 ```
