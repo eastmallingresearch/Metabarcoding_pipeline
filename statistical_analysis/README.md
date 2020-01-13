@@ -146,22 +146,137 @@ summary(aovp(as.numeric(as.factor(all_alpha_ord$simpson))~Block + Treatment + Ge
 
 ## Beta diveristy
 
+Probably best to filter low count OTUs before doing beta diversity analyses
 
+This is a pretty conservative filter
 ```R
-
+dds <- dds[rowSums(counts(dds, normalize=T))>4,]
 ```
+
+Most of the analyses area going to require a model. 
 
 ### PCA analysis
+
+The count data should be transformed to make it homoskadistic - e.g. DESeq VST transformation
+
+#### PCA plot
 ```R
 
+# PC decomposition of variance stabilised reads reads
+mypca <- des_to_pca(dds)
+
+# to get pca plot axis into the same scale create a dataframe of PC scores multiplied by their variance
+d <-t(data.frame(t(mypca$x)*mypca$percentVar))
+
+# plot the PCA (plotOrd has a number of features - and a help file (wow))
+plotOrd(d,colData(dds), design="Treatment",alpha=0.75,cbPalette=T,axes=c(1,2))
+
 ```
-### NMDS
+
+#### PCA ANOVA and sum of squares
 ```R
+# statistical analysis of the first n PCs
+lapply(1:4,function(i){
+  summary(aov(mypca$x[,i]~ Block + Treatment,data=colData(dds)))
+})
+
+# Combined model sum of squares for all PCs
+sum_squares <- apply(mypca$x,2,function(x) 
+  summary(aov(x ~ Block + Treatment,data=colData(dds)))[[1]][2]
+)
+sum_squares <- do.call(cbind,sum_squares)
+x<-t(apply(sum_squares,2,prop.table))
+perVar <- x * mypca$percentVar
+
+# sum squares values
+colSums(perVar)
+
+# sum squares %
+colSums(perVar)/sum(colSums(perVar))*100
+```
+
+### ADONIS
+```R
+
+# calculate distance matrix
+vg <- vegdist(t(counts(dds,normalize=T)),method="bray")
+
+# ADONIS uses permutation - for replicable results seed needs to be set  
+set.seed(sum(utf8ToInt("Greg Deakin")))
+
+# run the analysis
+(fm1 <- adonis(vg ~ Block + Treatment,colData(dds),permutations = 1000))
+```
+
+### Make phyloseq object
+
+Phyloseq contains several useful functions for ordination analyses (they're actually wrapper scripts aroung Vegan functions)
+
+```R
+myphylo <- ubiom_to_phylo(list(counts(dds,normalize=T),as.data.frame(colData(dds)),taxData))
+```
+
+### NMDS
+
+```R
+# nmds ordination
+ord_rda <- phyloseq::ordinate(myphylo,method="NMDS",distance="bray",formula= ~ Block + Treatment)		
+
+otus <- scores(ord_rda,"species")
+nmds <- scores(ord_rda)
+
+# make plot
+g <- plotOrd(nmds,colData(dds),design=Treatment,alpha=0.75,cbPalette=T)
+
+# plot
+g
+
+# add OTUs to plot
+g + geom_point(data=as.data.frame(otus),inherit.aes = F,aes(x=NMDS1,y=NMDS2))
+
+# add some taxonomy arrows to the plot
+taxmerge <-data.table(inner_join(data.table(OTU=rownames(otus),as.data.frame(otus)),data.table(OTU=rownames(taxData),taxData)))
+taxmerge$phy <- taxaConfVec(taxData[,-8],conf=0.9,level=which(colnames(taxData)=="phylum"))
+taxmerge$cls <- taxaConfVec(taxData[,-8],conf=0.9,level=which(colnames(taxData)=="class"))
+
+phylum <- taxmerge[,lapply(.SD,mean),by=phy,.SDcols=c("NMDS1","NMDS2")]
+cls <- taxmerge[,lapply(.SD,mean),by=cls,.SDcols=c("NMDS1","NMDS2")]
+
+g + geom_segment(inherit.aes = F,data=cls,aes(xend=NMDS1,yend=NMDS2,x=0,y=0),size=1.5,arrow=arrow()) +
+  geom_text(inherit.aes = F,data=cls,aes(x=NMDS1,y=(NMDS2+sign(NMDS2)*0.05),label=cls))  
 
 ```
 
 ### CCA/RDA and etc.
 ```R
+# transform data using vst
+otu_table(myphylo) <-  otu_table(assay(varianceStabilizingTransformation(dds)),taxa_are_rows=T)
+
+# RDA
+ ord_rda <- ordinate(myphylo,method="RDA","samples",formula= ~ Block + Treatment)		
+anova.cca(ord_rda,permuations=1000)
+ anova.cca(ord_rda,permuations=1000,by="terms")
+
+# partial CCA
+
+ ord_cca_partial <- ordinate(myphylo,method="CCA","samples",formula= ~Condition(Block) + Treatment )
+ anova.cca(ord_cca_partial,permuations=1000)
+ anova.cca(ord_cca_partial,permuations=1000,by="terms")
+
+# plot 
+	
+#scores scaled by variation in each axes
+sscores <- function(ord,axes=c(1,2)) {
+	d <- scores(ord,axes)$sites 
+	eigvec = eigenvals(ord)
+	fracvar = eigvec[axes]/sum(eigvec)
+	percVar = fracvar * 100
+	d <- t(t(d)*percVar)
+	d
+}
+
+plotOrd(sscores(ord_rda),colData,design="Treatment",shape="Genotype",pointSize=1.5,alpha=0.75)
+plotOrd(sscores(ord_ccaa_partial),colData,design="Treatment",shape="Genotype",pointSize=1.5,alpha=0.75)
 
 ```
 
