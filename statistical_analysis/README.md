@@ -47,16 +47,6 @@ taxData <- combTaxa(combinedTaxa,taxData)
 ubiome_FUN$countData <- countData
 ubiome_FUN$taxData <- taxData
 
-# Make DESeq objects for library size normalisation
-ubiome_FUN$dds <- ubiom_to_des(ubiome_FUN,filter=expression(colSums(countData)>=1000))
-ubiome_BAC$dds <- ubiom_to_des(ubiome_BAC,filter=expression(colSums(countData)>=1000))
-
-# Assign objects to global environment (either/or)
-# for fungi
-invisible(mapply(assign, names(ubiome_FUN), ubiome_FUN, MoreArgs=list(envir = globalenv())))
-# for bacteria
-invisible(mapply(assign, names(ubiome_BAC), ubiome_BAC, MoreArgs=list(envir = globalenv())))
-
 ```
 
 ## Rarefaction curves
@@ -107,7 +97,23 @@ plotRarefaction <- function(countData) {
 then run
 
 ```R
-plotRarefaction(countData)
+plotRarefaction(ubiome_BAC$countData)
+plotRarefaction(ubiome_FUN$countData)
+```
+
+## Library size normalisation
+
+```r
+# Make DESeq objects for library size normalisation - filter based on rarefaction results
+ubiome_FUN$dds <- ubiom_to_des(ubiome_FUN,filter=expression(colSums(countData)>=1000))
+ubiome_BAC$dds <- ubiom_to_des(ubiome_BAC,filter=expression(colSums(countData)>=1000))
+
+# Assign ubiome objects to global environment (either/or)
+# for fungi
+invisible(mapply(assign, names(ubiome_FUN), ubiome_FUN, MoreArgs=list(envir = globalenv())))
+# for bacteria
+invisible(mapply(assign, names(ubiome_BAC), ubiome_BAC, MoreArgs=list(envir = globalenv())))
+
 ```
 
 ## Alpha diversity
@@ -117,7 +123,7 @@ plotRarefaction(countData)
 plot_alpha(counts(dds,normalize=T),colData(dds),design="Status",colour=NULL,measures=c("Chao1", "Shannon", "Simpson","Observed"),type="box")		   
 ```
 
-### Statistical analysis (permutation ANOVA)
+### Permutation ANOVA
 ```R
 # get the diversity index data
 all_alpha_ord <- plot_alpha(counts(dds,normalize=T),colData(dds),design="Treatment",returnData=T)
