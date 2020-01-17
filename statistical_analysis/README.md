@@ -195,17 +195,20 @@ colSums(perVar)
 colSums(perVar)/sum(colSums(perVar))*100
 ```
 
-### ADONIS
-```R
+### ADONIS and MRPP
 
-# calculate distance matrix
+```R
+# calculate bray-crtis distance matrix
 vg <- vegdist(t(counts(dds,normalize=T)),method="bray")
 
-# ADONIS uses permutation - for replicable results seed needs to be set  
+# for replicable results seed needs to be set  
 set.seed(sum(utf8ToInt("Greg Deakin")))
 
-# run the analysis
+# run ADONIS analysis
 (fm1 <- adonis(vg ~ Block + Treatment,colData(dds),permutations = 1000))
+
+# run MRPP analysis
+(fm2 <- MRPP(vg, colData$Treatment,permutations = 1000))
 ```
 
 ### Make phyloseq object
@@ -281,9 +284,51 @@ plotOrd(sscores(ord_ccaa_partial),colData,design="Treatment",shape="Genotype",po
 ```
 
 ## Differential OTUs
+
+Currently DESeq2 is the method of choice for differential OTU analysis
+
 ```R
+# p value for FDR cutoff
+alpha <- 0.05
+
+# the model
+design <- ~Block + Treatment
+ 
+# add design to dds object
+design(dds) <- design
+
+# run model
+dds <- DESeq(dds)
+
+# Extract results (this can get complex - see examples in ?results)
+res <- results(dds,alpha=alpha,contrast=c("Treatment","Treated","Control"))
 
 ```
+
+It is also posible to combine OTU counts at various taxonomic levels and run a differential analysis (there are some fairly good reasons why this mught not always be a good idea)
+
+The metafuncs combineTaxa function will produce a dataframe of every entry at a given taxonomic rank, and a list of OTUs for each entry.
+
+```R
+# get the combined OTU list
+combinedTaxa <- combineTaxa("FUN.utax.taxa",rank="family",confidence=0.8)
+
+# combine the counts for each OTU
+familyCounts <- combCounts(combinedTaxa,countData)
+
+# produce a new taxonomy table for the combined counts (this is not strictly necessary, but useful)
+familyTaxa <- combTaxa(combinedTaxa,taxData)
+
+# create a new DESeq object
+dds2 <- DESeqDataSetFromMatrix(familyCounts,colData,~1)
+# these should be similar to original; it's possibly better to copy them from the original dds object...
+sizeFactors(dds2) <- sizeFactors(estimateSizeFactors(dds2)) 
+
+# then run as above
+
+```
+
+
 ## Functional annotation 
 ```R
 
