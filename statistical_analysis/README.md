@@ -307,17 +307,51 @@ res <- results(dds,alpha=alpha,contrast=c("Treatment","Treated","Control"))
 
 It is also posible to combine OTU counts at various taxonomic levels and run a differential analysis (there are some fairly good reasons why this mught not always be a good idea)
 
-The metafuncs combineTaxa function will produce a dataframe of every entry at a given taxonomic rank, and a list of OTUs for each entry.
+The metafuncs combineTaxa function will produce a dataframe of every entry at a given taxonomic rank, and a list of OTUs for each entry.  
+Actually it doesn't (would do if you could specify level) - but the combineByTaxa function does
 
 ```R
+
+combineByTaxa <- 
+function (taxData,countData, rank = "species", confidence = 0.95, column_order = -8) 
+{
+  require(plyr)
+  require(data.table)
+  
+  # reorder taxonomy table (remove rank column by default)
+  taxData <- taxData[, column_order]
+  
+  # get rank level
+  level <- which(c("kingdom", "phylum", "class", "order", 
+                   "family", "genus", "species")==rank)
+  
+  # select taxonomy at given confidence
+  taxData <- phyloTaxaTidy(taxData, confidence,level=level)
+
+  # convert to data table
+  TD <- data.table(taxData, keep.rownames = "OTU")
+  
+  # get list of OTUs in each entry at the given rank
+  combinedOTUs <- ddply(TD, ~rank, summarize, OTUS = list(as.character(OTU)))
+  
+  # combine the OTUs into list format
+  combinedOTUs <- combinedOTUs[lapply(TD[, 2], function(x) length(unlist(x))) > 
+            1, ]
+  
+  list(countData = combCounts(combinedOTUs,ubiome_FUN$countData),
+       taxData   = combTaxa(combinedOTUs,taxData))
+
+}
+
+
 # get the combined OTU list
-combinedTaxa <- combineTaxa("FUN.utax.taxa",rank="family",confidence=0.8)
+mylist <- combineByTaxa(taxData,countData,rank="family",confidence=0.8)
 
 # combine the counts for each OTU
-familyCounts <- combCounts(combinedTaxa,countData)
+familyCounts <- mylist[[1]]
 
 # produce a new taxonomy table for the combined counts (this is not strictly necessary, but useful)
-familyTaxa <- combTaxa(combinedTaxa,taxData)
+familyTaxa <- mylist[[2]]
 
 # create a new DESeq object
 dds2 <- DESeqDataSetFromMatrix(familyCounts,colData,~1)
