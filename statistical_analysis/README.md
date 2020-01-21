@@ -208,7 +208,7 @@ set.seed(sum(utf8ToInt("Greg Deakin")))
 (fm1 <- adonis(vg ~ Block + Treatment,colData(dds),permutations = 1000))
 
 # run MRPP analysis
-(fm2 <- MRPP(vg, colData$Treatment,permutations = 1000))
+(fm2 <- mrpp(vg, colData$Treatment,permutations = 1000))
 ```
 
 ### Make phyloseq object
