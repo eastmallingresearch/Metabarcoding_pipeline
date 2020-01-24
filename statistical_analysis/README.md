@@ -368,4 +368,54 @@ sizeFactors(dds2) <- sizeFactors(estimateSizeFactors(dds2))
 
 ```
 
-## Network analyis
+## Network analysis
+
+R is not the best environment for network analysis, Cytoscape would probably be better. 
+There are some things which can be done in R such as co-occurance. I did find a package which would do this, but it was far too slow to cope with metabarcoding sized datasets. I've therefore rewritten it using a bit of matrix algebra - takes up a fair chunk of memory now, but is several orders of magnitude faster. 
+
+This R code all needs editing to remove the phyloseq stuff
+
+```R
+library(parallel)
+
+cotable <- as.data.frame(as.matrix(otu_table(myphylo)))
+cotable_h <-  cotable[,row.names(sample_data(prune_samples(sample_data(myphylo)$Treatment=="Control",myphylo)))]
+cotable_s <-  cotable[,row.names(sample_data(prune_samples(sample_data(myphylo)$Treatment=="Treated",myphylo)))]
+
+
+cotable_h <- cotable_h[rowSums(cotable_h)>5,colSums(cotable_h)>5])
+cotable_s <- cotable_s[rowSums(cotable_s)>5,colSums(cotable_s)>5])
+
+cotable_h[cotable_h>0] <- 1
+cotable_s[cotable_s>0] <- 1
+
+CFcoHmodels <- cooccur2(cotable_h,type = "spp_site",spp_names = T,thresh = T)
+CFcoSmodels <- cooccur2(cotable_s,type = "spp_site",spp_names = T,thresh = T)
+
+CFcoHmodels$results$padj <- p.adjust(apply(CFcoHmodels$results[,8:9],1, min),"BH")
+CFcoSmodels$results$padj <- p.adjust(apply(CFcoSmodels$results[,8:9],1, min),"BH")
+
+
+# nrow(CFcoHmodels$results[obj$results$padj<=0.1,])
+nrow(CFcoHmodels$results[CFcoHmodels$results$padj<=0.05&CFcoHmodels$results$p_gt<=0.05,])
+nrow(CFcoHmodels$results[CFcoHmodels$results$padj<=0.05&CFcoHmodels$results$p_lt<=0.05,])
+
+nrow(CFcoSmodels$results[CFcoSmodels$results$padj<=0.05&CFcoSmodels$results$p_gt<=0.05,])
+nrow(CFcoSmodels$results[CFcoSmodels$results$padj<=0.05&CFcoSmodels$results$p_lt<=0.05,])
+
+
+X <- rbind.fill(lapply(CFcoHmodels, function(obj) head(obj$results[order(obj$results$padj),],6)))
+Y <- rbind.fill(lapply(CFcoSmodels, function(obj) head(obj$results[order(obj$results$padj),],6)))
+
+
+HcoHmodel16$results$p_lt
+
+write.table(X,"cooc.healthy.txt",sep="\t",quote=F,row.names=F)
+
+head(CHcoHmodel$results[order(CHcoHmodel$results$p_lt,CHcoHmodel$results$padj),])
+X <- head(CHcoHmodel16$results[order(CHcoHmodel16$results$p_lt,CHcoHmodel16$results$padj),])
+X <- rbind(X,head(CHcoHmodel16$results[order(CHcoHmodel16$results$p_gt,CHcoHmodel16$results$padj),]))
+
+```
+
+
