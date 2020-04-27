@@ -1,4 +1,4 @@
-theme_blank <- function(base_size = 11, base_family = "")
+theme_blank <- function(base_size = 16, base_family = "")
 {
 	theme_bw(base_size = base_size, base_family = base_family) %+replace% 
 	theme(
@@ -8,7 +8,7 @@ theme_blank <- function(base_size = 11, base_family = "")
 	)
 }
 
-theme_classic_thin <- function(base_size = 11, base_family = "") 
+theme_classic_thin <- function(base_size = 16, base_family = "") 
 {
 	theme_blank(base_size = base_size, base_family = base_family) %+replace% 
 	theme(	
@@ -19,8 +19,16 @@ theme_classic_thin <- function(base_size = 11, base_family = "")
 }
 
 
-theme_facet_blank <- function(base_size = 11, base_family = "",angle=-90,t=2,r=0,b=0,l=0,hjust=0,vjust=0)
+theme_facet_blank <- function(base_size = 16, base_family = "",angle=-90,t=2,r=0,b=0,l=0,hjust=0,vjust=0.5,text_angle="vertical")
 {
+	# angle=-90,hjust=0,vjust=0.5
+	# angle=90,hjust=1,vjust=0.5
+	# angle=45, hjust=1, vjust=1
+	# angle=45, hjust=0.5, vjust=0.5 (centered)
+	# angle=-45, hjust=0.5, vjust=0.5 (centered)
+	# angle=-45, hjust=0, vjust=1
+	# angle =0,hjust=0.5
+	
 	theme_classic_thin(base_size = base_size, base_family = base_family) %+replace% 
 	theme(
 		panel.border = element_rect(colour = "black", fill=NA, size=0.5),
