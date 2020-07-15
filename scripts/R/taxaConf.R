@@ -4,7 +4,7 @@ function (obj, conf = 0.65, level = 7)
   rank <- apply(obj, 1, function(x) {
     l <- (level + 7)
     y <- abs(as.numeric(x[8:l]))
-    i <- last(which(y >= conf))
+    i <- last(c(1,which(y >= conf)))
     i[is.na(i)] <- 1
     if (i == 1) {
       s = "(k)"
@@ -40,7 +40,7 @@ function (obj,conf=0.65,level=7){
 	rank <- apply(obj,1,function(x){
 		l <- (level+7)
 		y <-abs(as.numeric(x[8:l]))
-		i <- last(which(y>=conf))
+		i <- last(c(1,which(y>=conf)))
 		i[is.na(i)] <-1 
 		##edit
   	    s=""
