@@ -1,0 +1,558 @@
+---
+title: "New analysis"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T)
+knitr::opts_chunk$set(message=F)
+knitr::opts_chunk$set(warning=F)
+knitr::opts_chunk$set(comment = NA)
+knitr::opts_chunk$set(fig.width=9, fig.height=9)
+```
+
+<!-- #=============================================================================== -->
+#       Load libraries
+<!-- #=============================================================================== -->
+```{r}
+## Load required libraries
+library(DESeq2)
+library(data.table)
+library(tidyverse)
+library(vegan)
+library(lmPerm)
+library(viridis)
+library(grid)
+library(gridExtra)
+library(cowplot)
+# library(devtools)
+# install_github("eastmallingresearch/Metabarcoding_pipeline/scripts")
+library(metafuncs)
+```
+
+<!-- #=============================================================================== -->
+#       Functions and constants
+<!-- #=============================================================================== -->
+```{r}
+# Run constants
+Factor1="Status"
+Factor2="Treatment
+Design=~Block+Treatment*Status
+
+# colour blind palette
+cbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", 
+    "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+## Custom functions
+
+gfunc <- function(countData,coldata,title) {
+#### Rarefaction curve plotter ####  
+  
+  colData <- colData[names(countData),]
+  
+  # descending order each sample 
+  DT <- data.table(apply(countData,2,sort,decreasing=T))
+  
+  # get cummulative sum of each sample
+  DT <- cumsum(DT)    
+  
+  # log the count values                            
+  DT <- log10(DT)
+  
+  # set values larger than maximum for each column to NA
+  DT <- data.table(apply(DT,2,function(x) {x[(which.max(x)+1):length(x)]<- NA;x}))
+  
+  # remove rows with all NA
+  DT <- DT[rowSums(is.na(DT)) != ncol(DT), ]
+  
+  # add a count column to the data table
+  DT$x <- seq(1,nrow(DT))
+  
+  # melt the data table for easy plotting 
+  MDT <- melt(DT,id.vars="x")
+  
+  # create an empty ggplot object from the data table
+  g <- ggplot(data=MDT,aes(x=x,y=value,colour=variable))
+  
+  # remove plot background and etc.
+  g <- g + theme_classic_thin() %+replace% 
+    theme(legend.position="none",axis.title=element_blank())
+  
+  # plot cumulative reads
+  g <- g + geom_line(size=1.5) + scale_colour_viridis(discrete=T)
+  
+  # add axis lables
+  g <- g + ggtitle(title)
+  #g <- g + ylab(expression("Log"[10]*" aligned sequenecs"))+xlab("OTU count")
+  
+  # print the plot
+  g
+}
+
+```
+
+
+<!-- #=============================================================================== -->
+#       Load data
+<!-- #=============================================================================== -->
+```{r}
+# Load 
+ubiome_BAC <- loadData("BAC.otu_table.txt","colData","BAC.sintax.taxa",RHB="BAC")
+ubiome_FUN <- loadData("FUN.otu_table.txt","colData","FUN.sintax.taxa",RHB="FUN")
+
+```
+
+<!-- #=============================================================================== -->
+#       Create DEseq objects
+<!-- #=============================================================================== -->
+```{r}
+
+# filtered for minimum of 1000 reads
+ubiome_FUN$dds2 <- ubiom_to_des(ubiome_FUN,filter=expression(colSums(countData)>=1000))
+ubiome_BAC$dds2 <- ubiom_to_des(ubiome_BAC,filter=expression(colSums(countData)>=1000))
+
+```
+
+<!-- #=============================================================================== -->
+#       Sample rarefaction plots
+<!-- #=============================================================================== -->        
+
+```{r}
+invisible(mapply(assign,names(ubiome_BAC),ubiome_BAC,MoreArgs=list(envir = globalenv())))
+g1 <- gfunc(as.data.frame(counts(dds)),as.data.frame(colData(dds)),"Bacteria")
+invisible(mapply(assign,names(ubiome_FUN),ubiome_FUN,MoreArgs=list(envir = globalenv())))
+g2 <-gfunc(as.data.frame(counts(dds)),as.data.frame(colData(dds)),"Fungi")
+
+grid.arrange(g1,g2,
+             left=textGrob(label=expression("Log"[10] * " aligned sequenecs"),rot=90),
+             bottom="OTU count",nrow=2)                        
+```
+
+<!-- #=============================================================================== -->
+#      ***FUNGI***
+<!-- #=============================================================================== -->
+```{r}
+# Fungi
+invisible(mapply(assign,names(ubiome_FUN),ubiome_FUN,MoreArgs=list(envir=globalenv())))
+
+```
+
+<!-- #=============================================================================== -->
+#       Alpha diversity analysis
+<!-- #=============================================================================== -->
+
+## Alpha diversity plot
+```{r}
+
+# plot alpha diversity - plot_alpha will convert normalised abundances to integer values
+plot_alpha(counts(dds,normalize=T),
+           colData(dds),
+           design=Factor1,
+           colour=Factor2,
+           measures=c("Chao1", "Shannon", "Simpson","Observed"),
+           type="box") + 
+  scale_colour_manual(values=cbPalette)+theme(axis.title.x =  element_blank())
+```
+
+## Permutation based anova on diversity index ranks
+```{r}
+# get the diversity index data
+all_alpha_ord <- plot_alpha(counts(dds,normalize=T),colData(dds),design="Status",returnData=T)
+
+# join diversity indices and metadata
+all_alpha_ord <- all_alpha_ord[as.data.table(colData(dds),keep.rownames="Samples"),
+                               on="Samples"]
+
+```
+
+### Chao1
+```{r}
+setkey(all_alpha_ord,S.chao1)
+all_alpha_ord[,measure:=as.numeric(as.factor(S.chao1))]
+summary(aovp(update(design,measure~.),all_alpha_ord,seqs=T))
+```
+
+### Shannon
+```{r}
+setkey(all_alpha_ord,shannon)
+all_alpha_ord[,measure:=as.numeric(as.factor(shannon))]
+summary(aovp(update(design,measure~.),all_alpha_ord,seqs=T))
+```  
+
+### Simpson
+```{r}
+setkey(all_alpha_ord,simpson)
+all_alpha_ord[,measure:=as.numeric(as.factor(shannon))]
+summary(aovp(update(design,measure~.),all_alpha_ord,seqs=T))
+```
+
+<!-- #=============================================================================== -->
+#       Filter data
+<!-- #============================================================================ -->
+
+```{r}
+dds <- dds[rowSums(counts(dds, normalize=T))>5,]
+```
+<!-- #=============================================================================== -->
+#       Beta diversity PCA/NMDS
+<!-- #=============================================================================== -->
+
+## PCA 
+```{r}
+### PCA ###
+
+# perform PC decomposition of DES object
+mypca <- des_to_pca(dds)
+
+# to get pca plot axis into the same scale create a dataframe of PC scores multiplied by their variance
+d <-t(data.frame(t(mypca$x)*mypca$percentVar))
+```
+
+### Percent variation in first 4 PCs 
+```{r}
+round(mypca$percentVar[1:4],3)
+```
+
+### ANOVA of first 4 PCs
+```{r} 
+apply(mypca$x[,1:4],2,function(x){
+  summary(aov(update(design,x~.),data=cbind(pc,colData(dds))))
+})
+```
+
+### PCA plot
+```{r, fig.width=8,fig.height=5}
+
+plotOrd(d,
+        colData(dds),
+        design=Factor1,
+        shape=Factor2,
+        axes=c(2,3),
+   #     facet="field_pair", 
+        cbPalette=T,
+        alpha=0.75,) #+ 
+  #geom_line(aes(group=facet),alpha=0.25,linetype=3,colour="#000000") + 
+  #theme(text = element_text(size=14))
+
+```
+
+### PCA sum of squares (% var)
+```{r}
+sum_squares <- apply(mypca$x,2,function(x) 
+  summary(aov(update(design,x~.),data=cbind(x,colData(dds))))[[1]][2]
+)
+sum_squares <- do.call(cbind,sum_squares)
+x<-t(apply(sum_squares,2,prop.table))
+perVar <- x * mypca$percentVar
+#colSums(perVar)
+round(colSums(perVar)/sum(colSums(perVar))*100,3)
+```
+
+## ADONIS
+```{r}
+vg <- vegdist(t(counts(dds,normalize=T)),method="bray")
+set.seed(sum(utf8ToInt("Xiangming Xu")))
+adonis(update(design,vg~.),colData(dds),permutations = 1000)
+
+```
+
+## NMDS ordination
+```{r}
+set.seed(sum(utf8ToInt("Xiangming Xu")))
+ord <- metaMDS(vg,trace=0) 
+#sratmax=20000,maxit=20000,try = 177, trymax = 177
+
+nmds <- scores(ord)
+
+g <- plotOrd(nmds,colData(dds),design=Factor1,shape=Factor2,alpha=0.75,cbPalette=T)
+g + theme(text=element_text(size=14))
+```
+
+### NMDS with phylum or class arrows 
+```{r} 
+otus <- scores(ord,"species") 
+
+taxmerge <-data.table(inner_join(data.table(OTU=rownames(otus),as.data.frame(otus)),data.table(OTU=rownames(taxData),taxData))) 
+taxmerge$phy <- taxaConfVec(taxmerge[,c(-1:-3,-8)],conf=0.9,level=which(colnames(taxmerge[,c(-1:-3,-8)])=="phylum"))
+taxmerge$cls <- taxaConfVec(taxmerge[,c(-1:-3,-8)],conf=0.9,level=which(colnames(taxmerge[,c(-1:-3,-8)])=="class")) 
+
+phy <- taxmerge[,lapply(.SD,mean),by=phy,.SDcols=c("NMDS1","NMDS2")]
+cls <- taxmerge[,lapply(.SD,mean),by=cls,.SDcols=c("NMDS1","NMDS2")]
+
+g + geom_segment(inherit.aes = F,data=phy,aes(xend=NMDS1,yend=NMDS2,x=0,y=0),size=1.5,arrow=arrow()) + 
+ geom_text(inherit.aes = F,data=phy,aes(x=NMDS1,y=(NMDS2+sign(NMDS2)*0.05),label=phy)) 
+``` 
+
+
+<!-- #=============================================================================== -->
+#       differential analysis
+<!-- #=============================================================================== -->
+
+## DESeq design 
+```{r}
+
+# p value for FDR cutoff
+alpha <- 0.1
+
+# add design to dds object
+design(dds) <- design
+
+# run model
+dds <- DESeq(dds,parallel=F)
+
+# build results table
+res <- results(dds,alpha=alpha,contrast=c("Status","Diseased","Healthy"))
+
+```
+
+## Result summary
+
+Rank is lowest taxonomic rank with >=0.65 confidence
+
+### All samples
+```{r}
+summary(res)
+
+# merge DESeq results with taxonomy
+res.merge <- as.data.table(res,keep.rownames="OTU")[
+  as.data.table(taxData,keep.rownames="OTU"),on="OTU"]
+
+# print sig. results
+res.merge[padj<=alpha,.(OTU,rank,
+                        baseMean=round(baseMean,2),
+                        FC=round(log2FoldChange,2),
+                        padj=round(padj,4))][order(FC,decreasing = T),]
+
+```
+
+<!-- ### Write results -->
+<!-- ```{r} -->
+
+<!-- fwrite(res.merge,paste(RHB,"_DES.txt"),quote=F,na="",sep="\t") -->
+<!-- fwrite(res2.merge,paste(RHB,"_DES_Paired.txt"),quote=F,na="",sep="\t") -->
+
+<!-- ``` -->
+
+
+#      ***BACTERIA***
+
+
+<!-- #=============================================================================== -->
+```{r}
+# Bacteria
+invisible(mapply(assign, names(ubiome_BAC), ubiome_BAC, MoreArgs=list(envir = globalenv())))
+
+# add nested pair column
+dds$field_pair <- as.factor(paste(dds$Field,dds$Pair,sep="_"))
+colData$field_pair <- as.factor(paste(colData$Field,colData$Pair,sep="_"))
+
+## collapse replicates
+dds <- collapseReplicates(dds,groupby = paste0(dds$Status,dds$field_pair))
+sizeFactors(dds) <- sizeFactors(estimateSizeFactors(dds))
+
+## remove chloroplasts/mitochondria
+dds <- dds[!rownames(dds)%in%c(rownames(taxData[taxData$rank=="Streptophyta(g)",]),"OTU3")]
+
+## filter
+keep <- c(which(duplicated(colData(dds)$field_pair,fromLast=T)),
+          which(duplicated(colData(dds)$field_pair,fromLast=F)))
+
+```
+
+<!-- #=============================================================================== -->
+#       Alpha diversity analysis
+<!-- #=============================================================================== -->
+
+## Alpha diversity plot
+```{r}
+
+# plot alpha diversity - plot_alpha will convert normalised abundances to integer values
+plot_alpha(counts(dds,normalize=T),
+           colData(dds),
+           design=Factor1,
+           colour=Factor2,
+           measures=c("Chao1", "Shannon", "Simpson","Observed"),
+           type="box") + 
+  scale_colour_manual(values=cbPalette)+theme(axis.title.x =  element_blank())
+```
+
+## Permutation based anova on diversity index ranks
+```{r}
+# get the diversity index data
+all_alpha_ord <- plot_alpha(counts(dds,normalize=T),colData(dds),design="Status",returnData=T)
+
+# join diversity indices and metadata
+all_alpha_ord <- all_alpha_ord[as.data.table(colData(dds),keep.rownames="Samples"),
+                               on="Samples"]
+
+```
+
+### Chao1
+```{r}
+setkey(all_alpha_ord,S.chao1)
+all_alpha_ord[,measure:=as.numeric(as.factor(S.chao1))]
+summary(aovp(update(design,measure~.),all_alpha_ord,seqs=T))
+```
+
+### Shannon
+```{r}
+setkey(all_alpha_ord,shannon)
+all_alpha_ord[,measure:=as.numeric(as.factor(shannon))]
+summary(aovp(update(design,measure~.),all_alpha_ord,seqs=T))
+```  
+
+### Simpson
+```{r}
+setkey(all_alpha_ord,simpson)
+all_alpha_ord[,measure:=as.numeric(as.factor(shannon))]
+summary(aovp(update(design,measure~.),all_alpha_ord,seqs=T))
+```
+
+<!-- #=============================================================================== -->
+#       Filter data
+<!-- #============================================================================ -->
+
+```{r}
+dds <- dds[rowSums(counts(dds, normalize=T))>5,]
+```
+<!-- #=============================================================================== -->
+#       Beta diversity PCA/NMDS
+<!-- #=============================================================================== -->
+
+## PCA 
+```{r}
+### PCA ###
+
+# perform PC decomposition of DES object
+mypca <- des_to_pca(dds)
+
+# to get pca plot axis into the same scale create a dataframe of PC scores multiplied by their variance
+d <-t(data.frame(t(mypca$x)*mypca$percentVar))
+```
+
+### Percent variation in first 4 PCs 
+```{r}
+round(mypca$percentVar[1:4],3)
+```
+
+### ANOVA of first 4 PCs
+```{r} 
+apply(mypca$x[,1:4],2,function(x){
+  summary(aov(update(design,x~.),data=cbind(pc,colData(dds))))
+})
+```
+
+### PCA plot
+```{r, fig.width=8,fig.height=5}
+
+plotOrd(d,
+        colData(dds),
+        design=Factor1,
+        shape=Factor2,
+        axes=c(2,3),
+   #     facet="field_pair", 
+        cbPalette=T,
+        alpha=0.75,) #+ 
+  #geom_line(aes(group=facet),alpha=0.25,linetype=3,colour="#000000") + 
+  #theme(text = element_text(size=14))
+
+```
+
+### PCA sum of squares (% var)
+```{r}
+sum_squares <- apply(mypca$x,2,function(x) 
+  summary(aov(update(design,x~.),data=cbind(x,colData(dds))))[[1]][2]
+)
+sum_squares <- do.call(cbind,sum_squares)
+x<-t(apply(sum_squares,2,prop.table))
+perVar <- x * mypca$percentVar
+#colSums(perVar)
+round(colSums(perVar)/sum(colSums(perVar))*100,3)
+```
+
+## ADONIS
+```{r}
+vg <- vegdist(t(counts(dds,normalize=T)),method="bray")
+set.seed(sum(utf8ToInt("Xiangming Xu")))
+adonis(update(design,vg~.),colData(dds),permutations = 1000)
+
+```
+
+## NMDS ordination
+```{r}
+set.seed(sum(utf8ToInt("Xiangming Xu")))
+ord <- metaMDS(vg,trace=0) 
+#sratmax=20000,maxit=20000,try = 177, trymax = 177
+
+nmds <- scores(ord)
+
+g <- plotOrd(nmds,colData(dds),design=Factor1,shape=Factor2,alpha=0.75,cbPalette=T)
+g + theme(text=element_text(size=14))
+```
+
+### NMDS with phylum or class arrows 
+```{r} 
+otus <- scores(ord,"species") 
+
+taxmerge <-data.table(inner_join(data.table(OTU=rownames(otus),as.data.frame(otus)),data.table(OTU=rownames(taxData),taxData))) 
+taxmerge$phy <- taxaConfVec(taxmerge[,c(-1:-3,-8)],conf=0.9,level=which(colnames(taxmerge[,c(-1:-3,-8)])=="phylum"))
+taxmerge$cls <- taxaConfVec(taxmerge[,c(-1:-3,-8)],conf=0.9,level=which(colnames(taxmerge[,c(-1:-3,-8)])=="class")) 
+
+phy <- taxmerge[,lapply(.SD,mean),by=phy,.SDcols=c("NMDS1","NMDS2")]
+cls <- taxmerge[,lapply(.SD,mean),by=cls,.SDcols=c("NMDS1","NMDS2")]
+
+g + geom_segment(inherit.aes = F,data=phy,aes(xend=NMDS1,yend=NMDS2,x=0,y=0),size=1.5,arrow=arrow()) + 
+ geom_text(inherit.aes = F,data=phy,aes(x=NMDS1,y=(NMDS2+sign(NMDS2)*0.05),label=phy)) 
+``` 
+
+
+<!-- #=============================================================================== -->
+#       differential analysis
+<!-- #=============================================================================== -->
+
+## DESeq design 
+```{r}
+
+# p value for FDR cutoff
+alpha <- 0.1
+
+# add design to dds object
+design(dds) <- design
+
+# run model
+dds <- DESeq(dds,parallel=F)
+
+# build results table
+res <- results(dds,alpha=alpha,contrast=c("Status","Diseased","Healthy"))
+
+```
+
+## Result summary
+
+Rank is lowest taxonomic rank with >=0.65 confidence
+
+### All samples
+```{r}
+summary(res)
+
+# merge DESeq results with taxonomy
+res.merge <- as.data.table(res,keep.rownames="OTU")[
+  as.data.table(taxData,keep.rownames="OTU"),on="OTU"]
+
+# print sig. results
+res.merge[padj<=alpha,.(OTU,rank,
+                        baseMean=round(baseMean,2),
+                        FC=round(log2FoldChange,2),
+                        padj=round(padj,4))][order(FC,decreasing = T),]
+
+```
+
+<!-- ### Write results -->
+<!-- ```{r} -->
+
+<!-- fwrite(res.merge,paste(RHB,"_DES.txt"),quote=F,na="",sep="\t") -->
+<!-- fwrite(res2.merge,paste(RHB,"_DES_Paired.txt"),quote=F,na="",sep="\t") -->
+
+<!-- ``` -->
