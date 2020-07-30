@@ -38,7 +38,7 @@ library(metafuncs)
 ```{r}
 # Run constants
 Factor1="Status"
-Factor2="Treatment
+Factor2="Treatment"
 Design=~Block+Treatment*Status
 
 # colour blind palette
