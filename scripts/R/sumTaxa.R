@@ -96,7 +96,7 @@ function (
 	if(ordered) {
 		taxa_cut <- taxa_cut[order(rowSums(as.data.frame(taxa_cut[,-1])),decreasing=T),]
 	}
-	
+	 
 	return(taxa_cut)
 
 }
