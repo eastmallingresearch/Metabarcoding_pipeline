@@ -67,7 +67,7 @@ function (
 ) {
 	
 	obj$taxData <- 
-	taxa_sum <- sumTaxa(obj,taxon=taxon,design=design)
+	taxa_sum <- sumTaxa(obj,taxon=taxon,design=design,conf=conf)
 	taxa_sum$taxon[grep("\\(",taxa_sum$taxon)] <- taxa_sum$taxon[sub("\\(.*"," incertae sedis",taxa_sum$taxon)]
 
 	if(!topn) {
