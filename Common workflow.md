@@ -46,6 +46,9 @@ done
 
 Script demulti.pl demultiplexs mixed (e.g. ITS and 16S) libraries based on the primer sequence. Number of acceptable mismatches in the primer sequence can be specified (0 by default). Any sequence which has too many mismatches, or none mathching primers is written to ambiguous.fq (f & r seperately). The script accepts multiple primer pairs.
 
+There's a new version of demultiplex (demulti_v3.pl) which will also identify barcode sequences.  
+Mismatches and barcode are defined as a single 2 digit number, e.g. 62 would be a barcode of length 6 and 2 mismatches. Mismatches are now limited to a max of 9.
+
 <table>
 Possible primers:
 <tr><td><td>Forward<td>Reverse</tr>
