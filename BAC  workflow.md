@@ -2,8 +2,8 @@
 
 ## Conditions
 SSU determines the file location  
-FPL is forward primer length (+ barcode length if required)
-RPL is reverse primer length (+ barcode length if required) 
+FPL is forward primer length (+ barcode length if required)  
+RPL is reverse primer length (+ barcode length if required)   
 
 ```shell
 #bacteria
