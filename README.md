@@ -10,7 +10,7 @@
  
 
 ## Description
-Metabarcoding pipeline for Illumina MiSeq data. This pipeline is base in the main part on usearch (v10 currently) 32 bit (http://www.drive5.com/usearch/) and is designed to run on a Sun Grid Engine Slurm cluster 
+Metabarcoding pipeline for Illumina MiSeq data. This pipeline is base in the main part on usearch (v10 currently) 32 bit (http://www.drive5.com/usearch/) and is designed to run on a Slurm cluster (orginally Sun grid engine - there may be a bit of legacy code hanging around)
 
 Tested for bacterial 16S, fungal ITS, Oomycete ITS and Nematode 18S amplicons
 
