@@ -76,7 +76,23 @@ Configuration has been tested with usearch8.1 (probably works the same for 10)
 ```shell
 usearch8.1 -makeudb_utax refdb.fa -output 16s_ref.udb -report 16s_report.txt
 usearch8.1 -makeudb_utax refdb.fa -utax_trainlevels kpcofgs ‑utax_splitlevels NVpcofgs -output ITS_ref.udb -report ITS_report.txt
+
 ```
+### Sintax
+ITS (fungi) Unite database v 20 download  
+https://files.plutof.ut.ee/public/orig/E8/83/E883EB19E3EA7B64C1F652521301239831FAFE0BFF015C9E2B4786DC0976C0FC.gz
+
+To convert to a Sintax db (usearch 11.x) run:
+```shell
+gunzip E883EB19E3EA7B64C1F652521301239831FAFE0BFF015C9E2B4786DC0976C0FC.gz
+mv E883EB19E3EA7B64C1F652521301239831FAFE0BFF015C9E2B4786DC0976C0FC.gz unite.fa
+usearch 
+usearch -makeudb_usearch unite.fa -output unite_ITS.udb
+```
+Obviously names will change with updates of the unite database
+
+
+
 
 ### Oomycota
 The oomycota database combines three sets of data; 1) a subset (stamenopiles) of the silva_ssu database https://www.arb-silva.de/browser/, 2) a supplied 3rd party database 3) and a usearch specific Unite database (https://unite.ut.ee/sh_files/utax_reference_dataset_28.06.2017.zip)
