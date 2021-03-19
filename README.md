@@ -86,7 +86,8 @@ To convert to a Sintax db (usearch 11.x) run:
 ```shell
 gunzip E883EB19E3EA7B64C1F652521301239831FAFE0BFF015C9E2B4786DC0976C0FC.gz
 mv E883EB19E3EA7B64C1F652521301239831FAFE0BFF015C9E2B4786DC0976C0FC.gz unite.fa
-usearch 
+sed -ie 's/[dpcofg]:,//g' unite.fa
+usearch -tax_stats taxdb.fa -log stats.txt
 usearch -makeudb_usearch unite.fa -output unite_ITS.udb
 ```
 Obviously names will change with updates of the unite database
