@@ -96,9 +96,7 @@ Obviously names will change with updates of the unite database
 
 
 ### Oomycota
-The oomycota database combines three sets of data; 1) a subset (stamenopiles) of the silva_ssu database https://www.arb-silva.de/browser/, 2) a supplied 3rd party database 3) and a usearch specific Unite database (https://unite.ut.ee/sh_files/utax_reference_dataset_28.06.2017.zip)
-
-NOTE: It is now possible to download just the stramenopiles subset from silva - the below code may need modifying 
+The oomycota database combines three sets of data; 1) a subset (stamenopiles) of the silva_ssu database https://www.arb-silva.de/browser/, 2) a supplied 3rd party database 3) and a usearch specific Unite fungi database
 
 The silva_ssu and 3rd party databases required slight modification before use with usearch
 
@@ -106,8 +104,36 @@ The silva_ssu and 3rd party databases required slight modification before use wi
 # convert silva_ssu multiline to single line fasta
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < SILVA_123_SSURef_Nr99_tax_silva.fasta | tail -n +2 >silva.fa
 
-grep Peronosporomycetes -A1 --no-group-separator silva.fa | sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes/;tax=tax=k:SAR;p:Heterokontophyta;c:Oomycota;/' > oomycota.silva.fa
+#sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes/;tax=k:SAR;p:Heterokontophyta;c:Oomycota;/' silva.fa > oomycota.silva.fa
 
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;/;tax=k:SAR;p:Oomycota;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/s:Achlya/g:Achlya;s:/' silva.fa > oomycota.silva.fa
+
+ 
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Achlya/;tax=k:SAR;p:Oomycota;o:Saprolegniales;f:Saprolegniaceae;g:Achlya;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Aphanomyces/;tax=k:SAR;p:Oomycota;o:Saprolegniales;f:Saprolegniaceae;g:Aphanomyces;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Aplanopsis/;tax=k:SAR;p:Oomycota;o:Saprolegniales;f:Saprolegniaceae;g:Aplanopsis;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Apodachlya/;tax=k:SAR;p:Oomycota;o:Leptomitales;c:Leptomitales incertae sedis;g:Apodachlya;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Atkinsiella/;tax=k:SAR;p:Oomycota;o:Lagenidiales;f:Haliphthoraceae;g:Atkinsiella;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Eurychasma/;tax=k:SAR;p:Oomycota;o:Myzocytiopsidales;f:Eurychasmataceae;g:Eurychasma;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Haliphthoros/;tax=k:SAR;p:Oomycota;o:Lagenidiales;f:Haliphthoraceae;g:Haliphthoros;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Halodaphnea/;tax=k:SAR;p:Oomycota;o:Lagenidiales;f:Haliphthoraceae;g:Halodaphnea;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Halophytophthora/;tax=k:SAR;p:Oomycota;o:Pythiales;f:Pythiaceae;g:Halophytophthora;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Haptoglossa/;tax=k:SAR;p:Oomycota;o:Oomycota incertae sedis;g:Haptoglossa;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Lagenidium/;tax=k:SAR;p:Oomycota;o:Lagenidiales;f:Lagenidiaceae;g:Lagenidium;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Leptolegnia/;tax=k:SAR;p:Oomycota;o:Saprolegniales;f:Saprolegniaceae;g:Leptolegnia;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Myzocytiopsis/;tax=k:SAR;p:Oomycota;o:Myzocytiopsidales;f:Myzocytiopsidaceae;g:Myzocytiopsis;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Olpidiopsis/;tax=k:SAR;p:Oomycota;o:Olpidiopsidales;f:Olpidiopsidaceae;g:Olpidiopsis;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Phytophthora/;tax=k:SAR;p:Oomycota;o:Peronosporales;f:Peronosporaceae;g:Phytophthora;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Phytopythium/;tax=k:SAR;p:Oomycota;o:Pythiales;f:Pythiaceae;g:Phytopythium;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Pythium/;tax=k:SAR;p:Oomycota;o:Pythiales;f:Pythiaceae;g:Pythium;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Salispina/;tax=k:SAR;p:Oomycota;o:Pythiales;f:Pythiaceae;g:Salispina;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Saprolegnia/;tax=k:SAR;p:Oomycota;o:Saprolegniales;f:Saprolegniaceae;g:Saprolegnia;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Sapromyces/;tax=k:SAR;p:Oomycota;o:Rhipidiales;f:Rhipidiaceae;g:Saprolegnia;s:/' silva.fa > oomycota.silva.fa
+ sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;uncultured/;tax=k:SAR;p:Oomycota;g:uncultured;s:/' silva.fa > oomycota.silva.fa
+
+
+AATU01005858.1444.3105 Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Phytophthora;Phytophthora infestans T30-4
 
 # combine and replace fasta headers with headers including full taxonomy
 awk -F";" 'NR==FNR{a[$1]=$0;next;}a[$1]{$0=a[$1]}1' Oomycota.txt Oomycota.fasta > Oomycota_new.fasta
