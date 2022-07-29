@@ -107,30 +107,29 @@ awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}'
 #sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes/;tax=k:SAR;p:Heterokontophyta;c:Oomycota;/' silva.fa > oomycota.silva.fa
 
  sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;/;tax=k:SAR;p:Oomycota;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/s:Achlya/g:Achlya;s:/' silva.fa > oomycota.silva.fa
+ sed -ie 's/s:Achlya;/o:Saprolegniales;f:Saprolegniaceae;g:Achlya;s:/' oomycota.silva.fa
+ sed -ie 's/s:Achlya sparrowii/o:Saprolegniales;f:Saprolegniaceae;g:Achlya;s:Achlya sparrowii/' oomycota.silva.fa
 
- 
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Achlya/;tax=k:SAR;p:Oomycota;o:Saprolegniales;f:Saprolegniaceae;g:Achlya;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Aphanomyces/;tax=k:SAR;p:Oomycota;o:Saprolegniales;f:Saprolegniaceae;g:Aphanomyces;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Aplanopsis/;tax=k:SAR;p:Oomycota;o:Saprolegniales;f:Saprolegniaceae;g:Aplanopsis;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Apodachlya/;tax=k:SAR;p:Oomycota;o:Leptomitales;c:Leptomitales incertae sedis;g:Apodachlya;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Atkinsiella/;tax=k:SAR;p:Oomycota;o:Lagenidiales;f:Haliphthoraceae;g:Atkinsiella;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Eurychasma/;tax=k:SAR;p:Oomycota;o:Myzocytiopsidales;f:Eurychasmataceae;g:Eurychasma;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Haliphthoros/;tax=k:SAR;p:Oomycota;o:Lagenidiales;f:Haliphthoraceae;g:Haliphthoros;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Halodaphnea/;tax=k:SAR;p:Oomycota;o:Lagenidiales;f:Haliphthoraceae;g:Halodaphnea;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Halophytophthora/;tax=k:SAR;p:Oomycota;o:Pythiales;f:Pythiaceae;g:Halophytophthora;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Haptoglossa/;tax=k:SAR;p:Oomycota;o:Oomycota incertae sedis;g:Haptoglossa;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Lagenidium/;tax=k:SAR;p:Oomycota;o:Lagenidiales;f:Lagenidiaceae;g:Lagenidium;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Leptolegnia/;tax=k:SAR;p:Oomycota;o:Saprolegniales;f:Saprolegniaceae;g:Leptolegnia;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Myzocytiopsis/;tax=k:SAR;p:Oomycota;o:Myzocytiopsidales;f:Myzocytiopsidaceae;g:Myzocytiopsis;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Olpidiopsis/;tax=k:SAR;p:Oomycota;o:Olpidiopsidales;f:Olpidiopsidaceae;g:Olpidiopsis;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Phytophthora/;tax=k:SAR;p:Oomycota;o:Peronosporales;f:Peronosporaceae;g:Phytophthora;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Phytopythium/;tax=k:SAR;p:Oomycota;o:Pythiales;f:Pythiaceae;g:Phytopythium;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Pythium/;tax=k:SAR;p:Oomycota;o:Pythiales;f:Pythiaceae;g:Pythium;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Salispina/;tax=k:SAR;p:Oomycota;o:Pythiales;f:Pythiaceae;g:Salispina;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Saprolegnia/;tax=k:SAR;p:Oomycota;o:Saprolegniales;f:Saprolegniaceae;g:Saprolegnia;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Sapromyces/;tax=k:SAR;p:Oomycota;o:Rhipidiales;f:Rhipidiaceae;g:Saprolegnia;s:/' silva.fa > oomycota.silva.fa
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;uncultured/;tax=k:SAR;p:Oomycota;g:uncultured;s:/' silva.fa > oomycota.silva.fa
+ sed -ie  's/s:Aphanomyces/;o:Saprolegniales;f:Saprolegniaceae;g:Aphanomyces;s:/'  oomycota.silva.fa
+ sed -ie 's/s:Aplanopsis/;o:Saprolegniales;f:Saprolegniaceae;g:Aplanopsis;s:/' oomycota.silva.fa
+ sed -ie 's/s:Apodachlya/;o:Leptomitales;c:Leptomitales incertae sedis;g:Apodachlya;s:/'  oomycota.silva.fa
+ sed -ie 's/s:Atkinsiella/o:Lagenidiales;f:Haliphthoraceae;g:Atkinsiella;s:/' oomycota.silva.fa
+ sed -ie 's/s:Eurychasma/o:Myzocytiopsidales;f:Eurychasmataceae;g:Eurychasma;s:/' oomycota.silva.fa
+ sed -ie 's/s:Haliphthoros/o:Lagenidiales;f:Haliphthoraceae;g:Haliphthoros;s:/'  oomycota.silva.fa
+ sed -ie 's/s:Halodaphnea/o:Lagenidiales;f:Haliphthoraceae;g:Halodaphnea;s:/' oomycota.silva.fa
+ sed -ie 's/s:Halophytophthora/o:Pythiales;f:Pythiaceae;g:Halophytophthora;s:/'  oomycota.silva.fa
+ sed -ie 's/s:Haptoglossa/o:Oomycota incertae sedis;g:Haptoglossa;s:/'  oomycota.silva.fa
+ sed -ie 's/s:Lagenidium/o:Lagenidiales;f:Lagenidiaceae;g:Lagenidium;s:/'  oomycota.silva.fa
+ sed -ie 's/s:Leptolegnia/o:Saprolegniales;f:Saprolegniaceae;g:Leptolegnia;s:/'  oomycota.silva.fa
+ sed -ie 's/s:Myzocytiopsis/o:Myzocytiopsidales;f:Myzocytiopsidaceae;g:Myzocytiopsis;s:/'oomycota.silva.fa
+ sed -ie 's/s:Olpidiopsis/o:Olpidiopsidales;f:Olpidiopsidaceae;g:Olpidiopsis;s:/' oomycota.silva.fa
+ sed -ie 's/s:Phytophthora/o:Peronosporales;f:Peronosporaceae;g:Phytophthora;s:/' oomycota.silva.fa
+ sed -ie 's/s:Phytopythium/o:Pythiales;f:Pythiaceae;g:Phytopythium;s:/' oomycota.silva.fa
+ sed -ie 's/s:Pythium/o:Pythiales;f:Pythiaceae;g:Pythium;s:/' oomycota.silva.fa
+ sed -ie 's/s:Salispina/o:Pythiales;f:Pythiaceae;g:Salispina;s:/' oomycota.silva.fa
+ sed -ie 's/s:Saprolegnia/o:Saprolegniales;f:Saprolegniaceae;g:Saprolegnia;s:/' oomycota.silva.fa
+ sed -ie 's/s:Sapromyces/o:Rhipidiales;f:Rhipidiaceae;g:Saprolegnia;s:/' oomycota.silva.fa
+ sed -ie 's/s:uncultured/g:uncultured;s:/' oomycota.silva.fa
 
 
 AATU01005858.1444.3105 Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Phytophthora;Phytophthora infestans T30-4
