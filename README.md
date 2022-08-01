@@ -92,7 +92,22 @@ usearch -makeudb_usearch unite.fa -output unite_ITS.udb
 ```
 Obviously names will change with updates of the unite database
 
+### Planta
+It can be useful to add plant species into the databases if searching for endophytes (to exclude the plant species form results
+Subsets of plant ssu data can be downloaded from the silva database. A few adjustments need to be made to the headers.
+```shell
+cat *.fasta|
+sed 's/c:unknown,//'|
+awk '{
+	if (match($0, /s:.*/)) { 
+		x=substr($0, RSTART, RLENGTH);++c[x];
+		if (c[x]>1) {print $0," PL_"c[x]} 
+		else {print $0}
+	} 
+	else {print $0}
+}' > plantae.fa
 
+```
 
 
 ### Oomycota
@@ -145,13 +160,13 @@ sed 's/o:Rhipidiales,f:Rhipidiaceae/o:Saprolegniales,f:Saprolegniaceae/'|
 awk '{
 	if (match($0, /s:.*/)) { 
 		x=substr($0, RSTART, RLENGTH);++c[x];
-		if (c[x]>1) {print $0," SC_"c[x]} 
+		if (c[x]>1) {print $0," OO_"c[x]} 
 		else {print $0}
 	} 
 	else {print $0}
 }' > oomycota.fa
 
-cat oomycota.fa unite_plus_plantae.fasta > oo_fungi_plant.fa
+cat oomycota.fa plantae.fa unite_8.3.fasta > oo_fungi_plant.fa
 
 usearch -makeudb_usearch oo_fungi_plant.fa -output OOM_ref.udp
 
