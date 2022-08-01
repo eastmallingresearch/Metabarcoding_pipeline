@@ -98,6 +98,7 @@ Subsets of plant ssu data can be downloaded from the silva database. A few adjus
 ```shell
 cat *.fasta|
 sed 's/c:unknown,//'|
+sed 's/;$//'|
 awk '{
 	if (match($0, /s:.*/)) { 
 		x=substr($0, RSTART, RLENGTH);++c[x];
@@ -168,7 +169,7 @@ awk '{
 
 cat oomycota.fa plantae.fa unite_8.3.fasta > oo_fungi_plant.fa
 
-usearch -makeudb_usearch oo_fungi_plant.fa -output OOM_ref.udp
+usearch -makeudb_usearch oo_fungi_plant.fa -output OOM_ref.udb
 
 ```
 ### Nematodes
