@@ -96,52 +96,64 @@ Obviously names will change with updates of the unite database
 
 
 ### Oomycota
-The oomycota database combines three sets of data; 1) a subset (stamenopiles) of the silva_ssu database https://www.arb-silva.de/browser/, 2) a supplied 3rd party database 3) and a usearch specific Unite fungi database
+The oomycota database combines three sets of data; 1) a subset (stamenopiles) of the silva_ssu database https://www.arb-silva.de/browser/, 2) a supplied 3rd party database 3) and a usearch specific Unite fungi database (donwloadable from the Unite website)
 
 The silva_ssu and 3rd party databases required slight modification before use with usearch
 
 ```shell
 # convert silva_ssu multiline to single line fasta
-awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < SILVA_123_SSURef_Nr99_tax_silva.fasta | tail -n +2 >silva.fa
+awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < arb-silva.de_2022-07-29_id1192699_tax_silva.fasta | tail -n +2 >silva.fa
 
-#sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes/;tax=k:SAR;p:Heterokontophyta;c:Oomycota;/' silva.fa > oomycota.silva.fa
+# rename taxonomy to be compatible withe other databases
+sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;/;tax=d:SAR;p:Oomycota;s:/' silva.fa > oomycota.silva.fa
+sed -ie 's/s:Achlya;/o:Saprolegniales;f:Saprolegniaceae;g:Achlya;s:/' oomycota.silva.fa
+sed -ie 's/s:Achlya sparrowii/o:Saprolegniales;f:Saprolegniaceae;g:Achlya;s:Achlya sparrowii/' oomycota.silva.fa
+sed -ie  's/s:Aphanomyces;/o:Saprolegniales;f:Saprolegniaceae;g:Aphanomyces;s:/'  oomycota.silva.fa
+sed -ie 's/s:Aplanopsis;/o:Saprolegniales;f:Saprolegniaceae;g:Aplanopsis;s:/' oomycota.silva.fa
+sed -ie 's/s:Apodachlya;/o:Leptomitales;c:Leptomitales incertae sedis;g:Apodachlya;s:/'  oomycota.silva.fa
+sed -ie 's/s:Atkinsiella;/o:Lagenidiales;f:Haliphthoraceae;g:Atkinsiella;s:/' oomycota.silva.fa
+sed -ie 's/s:Eurychasma;/o:Myzocytiopsidales;f:Eurychasmataceae;g:Eurychasma;s:/' oomycota.silva.fa
+sed -ie 's/s:Haliphthoros;/o:Lagenidiales;f:Haliphthoraceae;g:Haliphthoros;s:/'  oomycota.silva.fa
+sed -ie 's/s:Halodaphnea;/o:Lagenidiales;f:Haliphthoraceae;g:Halodaphnea;s:/' oomycota.silva.fa
+sed -ie 's/s:Halophytophthora;/o:Pythiales;f:Pythiaceae;g:Halophytophthora;s:/'  oomycota.silva.fa
+sed -ie 's/s:Haptoglossa;/o:Oomycota incertae sedis;g:Haptoglossa;s:/'  oomycota.silva.fa
+sed -ie 's/s:Lagenidium;/o:Lagenidiales;f:Lagenidiaceae;g:Lagenidium;s:/'  oomycota.silva.fa
+sed -ie 's/s:Leptolegnia;/o:Saprolegniales;f:Saprolegniaceae;g:Leptolegnia;s:/'  oomycota.silva.fa
+sed -ie 's/s:Myzocytiopsis;/o:Myzocytiopsidales;f:Myzocytiopsidaceae;g:Myzocytiopsis;s:/' oomycota.silva.fa
+sed -ie 's/s:Olpidiopsis;/o:Olpidiopsidales;f:Olpidiopsidaceae;g:Olpidiopsis;s:/' oomycota.silva.fa
+sed -ie 's/s:Phytophthora;/o:Peronosporales;f:Peronosporaceae;g:Phytophthora;s:/' oomycota.silva.fa
+sed -ie 's/s:Phytopythium;/o:Pythiales;f:Pythiaceae;g:Phytopythium;s:/' oomycota.silva.fa
+sed -ie 's/s:Pythium;/o:Pythiales;f:Pythiaceae;g:Pythium;s:/' oomycota.silva.fa
+sed -ie 's/s:Salispina;/o:Pythiales;f:Pythiaceae;g:Salispina;s:/' oomycota.silva.fa
+sed -ie 's/s:Saprolegnia;/o:Saprolegniales;f:Saprolegniaceae;g:Saprolegnia;s:/' oomycota.silva.fa
+sed -ie 's/s:Sapromyces;/o:Rhipidiales;f:Rhipidiaceae;g:Saprolegnia;s:/' oomycota.silva.fa
+sed -ie 's/s:uncultured;/g:uncultured;s:/' oomycota.silva.fa
 
- sed -e 's/ Eukaryota;SAR;Stramenopiles;Peronosporomycetes;/;tax=k:SAR;p:Oomycota;s:/' silva.fa > oomycota.silva.fa
- sed -ie 's/s:Achlya;/o:Saprolegniales;f:Saprolegniaceae;g:Achlya;s:/' oomycota.silva.fa
- sed -ie 's/s:Achlya sparrowii/o:Saprolegniales;f:Saprolegniaceae;g:Achlya;s:Achlya sparrowii/' oomycota.silva.fa
+sed -ie 's/;/,/2g'  oomycota.silva.fa
 
- sed -ie  's/s:Aphanomyces;/;o:Saprolegniales;f:Saprolegniaceae;g:Aphanomyces;s:/'  oomycota.silva.fa
- sed -ie 's/s:Aplanopsis;/;o:Saprolegniales;f:Saprolegniaceae;g:Aplanopsis;s:/' oomycota.silva.fa
- sed -ie 's/s:Apodachlya;/;o:Leptomitales;c:Leptomitales incertae sedis;g:Apodachlya;s:/'  oomycota.silva.fa
- sed -ie 's/s:Atkinsiella;/o:Lagenidiales;f:Haliphthoraceae;g:Atkinsiella;s:/' oomycota.silva.fa
- sed -ie 's/s:Eurychasma;/o:Myzocytiopsidales;f:Eurychasmataceae;g:Eurychasma;s:/' oomycota.silva.fa
- sed -ie 's/s:Haliphthoros;/o:Lagenidiales;f:Haliphthoraceae;g:Haliphthoros;s:/'  oomycota.silva.fa
- sed -ie 's/s:Halodaphnea;/o:Lagenidiales;f:Haliphthoraceae;g:Halodaphnea;s:/' oomycota.silva.fa
- sed -ie 's/s:Halophytophthora;/o:Pythiales;f:Pythiaceae;g:Halophytophthora;s:/'  oomycota.silva.fa
- sed -ie 's/s:Haptoglossa;/o:Oomycota incertae sedis;g:Haptoglossa;s:/'  oomycota.silva.fa
- sed -ie 's/s:Lagenidium;/o:Lagenidiales;f:Lagenidiaceae;g:Lagenidium;s:/'  oomycota.silva.fa
- sed -ie 's/s:Leptolegnia;/o:Saprolegniales;f:Saprolegniaceae;g:Leptolegnia;s:/'  oomycota.silva.fa
- sed -ie 's/s:Myzocytiopsis;/o:Myzocytiopsidales;f:Myzocytiopsidaceae;g:Myzocytiopsis;s:/' oomycota.silva.fa
- sed -ie 's/s:Olpidiopsis;/o:Olpidiopsidales;f:Olpidiopsidaceae;g:Olpidiopsis;s:/' oomycota.silva.fa
- sed -ie 's/s:Phytophthora;/o:Peronosporales;f:Peronosporaceae;g:Phytophthora;s:/' oomycota.silva.fa
- sed -ie 's/s:Phytopythium;/o:Pythiales;f:Pythiaceae;g:Phytopythium;s:/' oomycota.silva.fa
- sed -ie 's/s:Pythium;/o:Pythiales;f:Pythiaceae;g:Pythium;s:/' oomycota.silva.fa
- sed -ie 's/s:Salispina;/o:Pythiales;f:Pythiaceae;g:Salispina;s:/' oomycota.silva.fa
- sed -ie 's/s:Saprolegnia;/o:Saprolegniales;f:Saprolegniaceae;g:Saprolegnia;s:/' oomycota.silva.fa
- sed -ie 's/s:Sapromyces;/o:Rhipidiales;f:Rhipidiaceae;g:Saprolegnia;s:/' oomycota.silva.fa
- sed -ie 's/s:uncultured;/g:uncultured;s:/' oomycota.silva.fa
-
-
-AATU01005858.1444.3105 Eukaryota;SAR;Stramenopiles;Peronosporomycetes;Phytophthora;Phytophthora infestans T30-4
+usearch -tax_stats oomycota.silva.fa -log stats.txt
 
 # combine and replace fasta headers with headers including full taxonomy
-awk -F";" 'NR==FNR{a[$1]=$0;next;}a[$1]{$0=a[$1]}1' Oomycota.txt Oomycota.fasta > Oomycota_new.fasta
+awk -F";" 'NR==FNR{a[$1]=$0;next;}a[$1]{$0=a[$1]}1' Oomycota.txt Oomycota.fasta > oomycetes_taxonomy.fa
+sed -ie 's/k:SAR,p:Heterokontophyta,c:/d:SAR,p:/' oomycetes_taxonomy.fa
 
+# append files and remove duplicates (append +1 to duplicated species) and naming issues
 
-usearch9 -makeudb_sintax Oomycota_new.fasta -output Oomycota.udp
+cat oomycetes_taxonomy.fa  oomycota.silva.fa|
+sed 's/f:Pythiaceae,g:Phytophthora/f:Peronosporaceae,g:Phytophthora/'|
+sed 's/o:Rhipidiales,f:Rhipidiaceae/o:Saprolegniales,f:Saprolegniaceae/'|
+awk '{
+	if (match($0, /s:.*/)) { 
+		x=substr($0, RSTART, RLENGTH);++c[x];
+		if (c[x]>1) {print $0," SC_"c[x]} 
+		else {print $0}
+	} 
+	else {print $0}
+}' > oomycota.fa
 
-# convert multiline to single line fasta
-awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < oomycetes.ITS1.fa | tail -n +2 > out.fasta
+cat oomycota.fa unite_plus_plantae.fasta > oo_fungi_plant.fa
+
+usearch -makeudb_usearch oo_fungi_plant.fa -output OOM_ref.udp
 
 ```
 ### Nematodes
