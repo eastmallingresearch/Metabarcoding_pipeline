@@ -5,8 +5,7 @@ awk -F"," '{print $1,$2,$4,$6,$8,$10,$12,$14}' OFS="\t"  < FUN.sintax.taxa > tem
 # Then to run:
 FUNGuild.py guild -taxa temp.taxa
 # Output will be a file names "temp.guilds.txt" which can be analysed in R
-
-
+# Will also work on nematode data, add -db nematode 
 
 
 ##### OLD STUFF - NO LONGER REQUIRED #####
