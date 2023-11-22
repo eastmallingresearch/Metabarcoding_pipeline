@@ -1,3 +1,15 @@
+# FUNGuild has been updated and simplfied, and no longer requires a qiime format taxonmy file
+# The following will convert a the standard taxonomy file from the metabarcoding pipeline to FUNGuild compatible
+awk -F"," '{print $1,$2,$4,$6,$8,$10,$12,$14}' OFS="\t"  < FUN.sintax.taxa > temp.taxa
+
+# Then to run:
+FUNGuild.py guild -taxa temp.taxa
+# Output will be a file names "temp.guilds.txt" which can be analysed in R
+
+
+
+
+##### OLD STUFF - NO LONGER REQUIRED #####
 # requires a qiime formatted taxonomy file (with % identity)
 # probably best using a ssu/5.8s filtered otu file
 for F in  $PROJECT_FOLDER/data/$RUN/FUN.otus.fa; do   
