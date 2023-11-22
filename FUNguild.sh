@@ -1,6 +1,8 @@
-# FUNGuild has been updated and simplfied, and no longer requires a qiime format taxonmy file
+# FUNGuild has been updated and simplfied, and no longer requires a qiime format taxonomy file
 # The following will convert a the standard taxonomy file from the metabarcoding pipeline to FUNGuild compatible
 awk -F"," '{print $1,$2,$4,$6,$8,$10,$12,$14}' OFS="\t"  < FUN.sintax.taxa > temp.taxa
+# There is also an R script in metafuncs (taxa_to_funguild) which can output funguild configured taxonomy taking confidence into account
+
 
 # Then to run:
 FUNGuild.py guild -taxa temp.taxa
