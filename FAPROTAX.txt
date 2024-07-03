@@ -1,0 +1,26 @@
+# FAPROTAX is a python program for assigning functions to bacterial taxonomic table
+# http://www.loucalab.com/archive/FAPROTAX/lib/php/index.php?section=Home
+
+# Below is sone code to call from R (in Windows) to a wsl linux install (I guess this could also run via Windows - or just natively under Linux)
+
+PATH=gsub("C:","/mnt/c",getwd()) # get the Windows path and convert to equivelent path under wsl
+
+inp <- data.table(taxonomy=apply(taxData[res.merge[padj<=ALPHA&log2FoldChange>0,OTU],-1],1,paste0,collapse = "; ")) # this is using the output from DESeq to grab lines from taxData - the format needs to be changed to a single column ";" seperated
+# the above line might need adjusting to capture taxonomy (not confidence scores) info only
+
+fwrite(inp,"bacteria_increased_in_g.taxa",sep="\t",col.names = T) # write to file
+
+# call collapse_table.py (-h for comprehensive help for each available option)
+system2("wsl", args = c("collapse_table.py", 
+                        "-i bacteria_increased_in_g.taxa", # input taxonomy file
+                        "-g /usr/local/bin/FAPROTAX.txt", # the FAPROTAX database location
+                        "-r bacteria_increased_in_g.report.txt", # output file
+                        "-d 'taxonomy'", # column name containing taxonomy info
+                        "--group_leftovers_as 'other'", # combine taxons which can't be assigned into their own group
+                        "--verbose", # extra output to echo to the R console
+                        "--force") # force over writing of the output file (otherwise it bombs out if the file exists)
+, stdout = TRUE)
+
+
+
+
